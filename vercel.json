@@ -9,13 +9,5 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "env": {
-    "PAYSTACK_SECRET_KEY": "@paystack_secret_key",
-    "PAYSTACK_PUBLIC_KEY": "@paystack_public_key",
-    "OPENROUTER_API_KEY": "@openrouter_api_key",
-    "OPENROUTER_SITE_URL": "@openrouter_site_url",
-    "OPENROUTER_SITE_NAME": "@openrouter_site_name",
-    "OPENROUTER_MODEL": "@openrouter_model"
-  }
+  ]
 }
