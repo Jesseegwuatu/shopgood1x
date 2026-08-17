@@ -1,0 +1,308 @@
+I'm trying to host my code on vercel and it consist of the main inlined HTML files and then the admin/index.html but I can't upload folders here so I'll show u everything I'm sure you'll know which is which then the API/ with many other folders in the API/ folder, but now here the catch, most of the .js in the api/ folder, my inline HTML don't even need to use them cuz they are already perfectly performing the functions they are meant to perform even better than they would have if they were calling the api/ but now for some of the files that would require having secret keys and all that, I want to route them through the API/ folder like the checkout.html, voucher.html, wallet-fund.html, support-chat.html now I'll really need those ones to be able to communicate with the API/ so I'll put the keys on the environment variables on vercel when I'm about to host it, but since nothing is really communicating with some of the unnecessary API files in the API folder, I want to delete the whole API folder so when I send you the whole HTML files, we'll create a new API but you will first give me a structure of how we would make the API folder be then we'll build the necessary files for the folder, files that those specific HTML files require an api to communicate with and I'll send u those specific files so we can restructure them to communicate with their respective API files, I'll also send u the current structure architecture we are using but put in mind when we want to start, I'll delete the whole current API folder so we'll build a new one that has the necessary files so we don't have hosting issues, and just so u know, it's an e commerce website just like jumia, and now the keys that the wallet-fund.html, checkout.html, voucher.html would require is my paystack public and secret keys which I'll also give u, then the support-chat.html would require my openrouter/auto API Key and yes my firebase database secret key which I'll give u as well, Soo please, take note of exactly what we are doing, infact tell me what u understand from what I've said so far before I send you the HTML files, current architecture structure and required keys And also tell me if it's possible that we put all this API in one file without having to create multiple files in API folder so all those specific HTML files would be calling just that one file in the API is that also possible and I feel it would be better then also since we are hosting on vercel we would need good vercel.json file and a very good package.json file so it hosts on vercel without any issues at all so answer my questions and tell me what u understand so far
+Oh I forgot, I will also give you my cloudinary cloud name and upload preset and now I feel like almost all of the HTML files uses the upload preset and cloud name so that means we will first start with rebuilding all the HTML files in a structure that calls the api/server.js which would be what then calls the keys from the vercel environment variables so I'll first send you all the files and the previous structure then you will review it, then you'll give me a new structure with our just one API file (server.js) so after u review you will then tell me that u understand now and then we'll start be me sending the codes one by one so you'll give me the restructured one that calls our API
+Also here are the API details:
+Paystack secret key: sk_live_ab7922d48f66074fc1b95916be75b812d4679ae8
+
+Paystack public key:
+pk_live_db3b9ef57c141fc9c457990b8dd6e5411e9bfba8
+
+Openrouter/auto: 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
+
+Cloudinary cloud name: dsyr5ejvh
+Cloudinary upload preset: shopgood
+
+Make sure u don't put them in the API server.js tho, I'll put them in vercel environment variables myself which you'll guide me through, so for now ill send u all the html files to review them and the current structure, then youll give me the new structure, then we'll be restructuring them one by one, ill send and youll give me the restructured code alsopls do not change the design or function of any of them, just make it call the api for required things like payment with paystack, images with cloudinary, support chat with open router / auto ai hope u understand pls dont mess this up
+SHOP GOOD - RESTRUCTURING SUMMARY
+Project Overview
+We are rebuilding a full e-commerce platform (like Jumia) to use ONE single API file (api/server.js) instead of multiple API files. All HTML files will call this centralized API instead of directly accessing Firebase.
+
+What We've Done So Far
+We have restructured 10 HTML files to use the API:
+
+#	File	Status	API Endpoints Used
+1	analytics.html	✅ DONE	GET /api/analytics
+2	cart.html	✅ DONE	GET /api/cart, PUT /api/cart/update, DELETE /api/cart/remove
+3	category.html	✅ DONE	GET /api/categories/:id, GET /api/categories/:id/products
+4	checkout.html	✅ DONE	POST /api/orders/create, GET /api/payments/verify, POST /api/orders/:id/confirm, POST /api/orders/:id/pay-with-wallet
+5	forgot-password.html	✅ DONE	POST /api/auth/reset-password
+6	index.html	✅ DONE	GET /api/categories, GET /api/products, GET /api/promotions/flash, POST /api/wishlist/toggle
+7	login.html	✅ DONE	POST /api/auth/login, POST /api/auth/google
+8	notifications.html	✅ DONE	GET /api/notifications, PUT /api/notifications/:id/read, PUT /api/notifications/read-all, DELETE /api/notifications/:id, DELETE /api/notifications
+9	order-export.html	✅ DONE	GET /api/orders/export
+10	orders.html	✅ DONE	GET /api/orders/list, POST /api/orders/:id/cancel
+
+Files Still to Restructure (Alphabetical Order)
+#	File	Status
+11	offline.html	⏳ PENDING
+12	order-details.html	⏳ PENDING
+13	product-compare.html	⏳ PENDING
+14	product.html	⏳ PENDING
+15	profile.html	⏳ PENDING
+16	register.html	⏳ PENDING
+17	search.html	⏳ PENDING
+18	settings.html	⏳ PENDING
+19	shop.html	⏳ PENDING
+20	support-chat.html	⏳ PENDING
+21	support.html	⏳ PENDING
+22	vouchers.html	⏳ PENDING
+23	wallet-fund.html	⏳ PENDING
+24	wallet.html	⏳ PENDING
+25	wishlist.html	⏳ PENDING
+26	admin/index.html	⏳ PENDING
+
+New Folder Structure
+shop-good/
+├── index.html                          # Home page ✅
+├── login.html                          # Login ✅
+├── register.html                       # Registration ⏳
+├── forgot-password.html                # Password reset ✅
+├── shop.html                           # Product listing ⏳
+├── product.html                        # Product details ⏳
+├── category.html                       # Category view ✅
+├── search.html                         # Search results ⏳
+├── cart.html                           # Shopping cart ✅
+├── checkout.html                       # Checkout ✅
+├── orders.html                         # Order history ✅
+├── order-details.html                  # Order details ⏳
+├── wishlist.html                       # Wishlist ⏳
+├── wallet.html                         # Wallet management ⏳
+├── wallet-fund.html                    # Fund wallet ⏳
+├── profile.html                        # User profile ⏳
+├── settings.html                       # User settings ⏳
+├── notifications.html                  # Notification center ✅
+├── support.html                        # Help & support ⏳
+├── support-chat.html                   # AI live chat ⏳
+├── product-compare.html                # Compare products ⏳
+├── order-export.html                   # Export orders ✅
+├── vouchers.html                       # Vouchers/gift cards ⏳
+├── analytics.html                      # Customer analytics ✅
+├── offline.html                        # Offline mode ⏳
+│
+├── admin/
+│   └── index.html                      # Admin panel ⏳
+│
+├── api/
+│   └── server.js                       # ONE FILE - Handles ALL endpoints ⏳
+│
+├── .env.local                          # Actual env vars (gitignored)
+├── .gitignore
+├── vercel.json                         # Vercel deployment config
+├── package.json                        # Dependencies
+└── README.md
+
+All API Endpoints to Implement in api/server.js
+
+Auth Endpoints
+POST /api/auth/login
+POST /api/auth/register
+POST /api/auth/reset-password
+POST /api/auth/google
+POST /api/auth/verify-role
+GET  /api/auth/check-email
+
+Payment Endpoints
+POST /api/payments/initialize
+GET  /api/payments/verify
+POST /api/payments/webhook
+
+Wallet Endpoints
+GET  /api/wallet/balance
+POST /api/wallet/fund
+POST /api/wallet/transfer
+GET  /api/wallet/transactions
+
+Order Endpoints
+POST /api/orders/create
+POST /api/orders/:id/confirm
+POST /api/orders/:id/cancel
+POST /api/orders/:id/pay-with-wallet
+GET  /api/orders/list
+GET  /api/orders/export
+GET  /api/orders/:id
+
+Product Endpoints
+GET  /api/products
+GET  /api/products/:id
+GET  /api/products/search
+POST /api/products/admin
+
+Category Endpoints
+GET  /api/categories
+GET  /api/categories/:id
+GET  /api/categories/:id/products
+
+Cart Endpoints
+GET  /api/cart
+PUT  /api/cart/update
+DELETE /api/cart/remove
+POST /api/cart/clear
+
+Address Endpoints
+GET  /api/addresses
+POST /api/addresses/create
+PUT  /api/addresses/update
+DELETE /api/addresses/:id
+
+Notification Endpoints
+GET  /api/notifications
+GET  /api/notifications/unread-count
+PUT  /api/notifications/:id/read
+PUT  /api/notifications/read-all
+DELETE /api/notifications/:id
+DELETE /api/notifications
+
+Wishlist Endpoints
+GET  /api/wishlist
+POST /api/wishlist/toggle
+
+Support Endpoints
+POST /api/support/ticket
+POST /api/support/chat
+
+Admin Endpoints
+GET  /api/admin/dashboard
+GET  /api/admin/analytics
+POST /api/admin/manage-admins
+
+Voucher Endpoints
+POST /api/vouchers/redeem
+POST /api/vouchers/purchase
+
+User Endpoints
+GET  /api/users/profile
+PUT  /api/users/update
+
+Analytics Endpoint
+GET  /api/analytics
+
+Promotion Endpoints
+GET  /api/promotions/flash
+
+Key Environment Variables (Vercel)
+PAYSTACK_PUBLIC_KEY=...
+PAYSTACK_SECRET_KEY=...
+OPENROUTER_API_KEY=...
+FIREBASE_API_KEY=...
+FIREBASE_AUTH_DOMAIN=...
+FIREBASE_DATABASE_URL=...
+FIREBASE_PROJECT_ID=...
+FIREBASE_STORAGE_BUCKET=...
+FIREBASE_MESSAGING_SENDER_ID=...
+FIREBASE_APP_ID=...
+CLOUDINARY_CLOUD_NAME=...
+CLOUDINARY_UPLOAD_PRESET=...
+
+Key Files to Generate
+1. vercel.json
+{
+  "functions": {
+    "api/server.js": {
+      "includeFiles": "api/**",
+      "excludeFiles": ".env.local"
+    }
+  }
+}
+
+2. package.json
+{
+  "name": "shop-good-api",
+  "version": "1.0.0",
+  "description": "Shop Good API",
+  "main": "api/server.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "firebase": "^9.22.0",
+    "firebase-admin": "^11.10.0",
+    "paystack": "^2.3.0"
+  },
+  "scripts": {
+    "start": "node api/server.js",
+    "dev": "node api/server.js"
+  }
+}
+
+API Request Helper (used in all HTML files)
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000/api'
+    : '/api';
+
+async function getAuthToken() {
+    const user = auth.currentUser;
+    if (user) {
+        try {
+            return await user.getIdToken();
+        } catch (e) {
+            return null;
+        }
+    }
+    return null;
+}
+
+async function apiRequest(endpoint, options = {}) {
+    const token = await getAuthToken();
+
+    const response = await fetch(`${API_BASE}${endpoint}`, {
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+            ...options.headers,
+        },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message || 'API request failed');
+    }
+
+    return data;
+}
+
+Next Steps for New Chat
+Continue restructuring remaining HTML files starting with offline.html
+
+Build the complete api/server.js file with ALL endpoints
+
+Test the complete system locally and on Vercel
+
+Files Ready to Send (Pending)
+When continuing, send these files in order:
+
+offline.html
+
+order-details.html
+
+product-compare.html
+
+product.html
+
+profile.html
+
+register.html
+
+search.html
+
+settings.html
+
+shop.html
+
+support-chat.html
+
+support.html
+
+vouchers.html
+
+wallet-fund.html
+
+wallet.html
+
+wishlist.html
+
+admin/index.html
+
+Then build api/server.js with all endpoints.
+
+also here are some of the html files we've restructured so you'll know how we are going about it 

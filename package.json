@@ -1,0 +1,15 @@
+{
+  "name": "shop-good-api",
+  "version": "1.0.0",
+  "description": "API server for Shop Good e-commerce platform",
+  "main": "api/index.js",
+  "scripts": {
+    "dev": "node api/index.js",
+    "start": "node api/index.js"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.x"
+  }
+}

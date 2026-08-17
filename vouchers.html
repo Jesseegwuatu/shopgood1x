@@ -1,0 +1,2445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <meta name="theme-color" content="#6C3CE1" />
+    <meta name="description" content="Shop Good - Vouchers and Gift Cards" />
+    <title>Vouchers & Gift Cards — Shop Good</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <style>
+        /* ========================================
+           CSS VARIABLES / THEME SYSTEM
+           ======================================== */
+        :root {
+            --primary: #6C3CE1;
+            --primary-dark: #5A2FC0;
+            --primary-light: #8B6BE8;
+            --primary-gradient: linear-gradient(135deg, #6C3CE1 0%, #A855F7 100%);
+            --secondary: #1A1A2E;
+            --accent: #F59E0B;
+            --white: #FFFFFF;
+            --black: #0A0A0F;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1E293B;
+            --gray-900: #0F172A;
+            --success: #10B981;
+            --success-light: #D1FAE5;
+            --danger: #EF4444;
+            --danger-light: #FEE2E2;
+            --warning: #F59E0B;
+            --warning-light: #FEF3C7;
+            --info: #3B82F6;
+            --info-light: #DBEAFE;
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+            --shadow-primary: 0 8px 32px rgba(108, 60, 225, 0.35);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-2xl: 32px;
+            --radius-full: 9999px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-xs: 12px;
+            --font-sm: 14px;
+            --font-base: 16px;
+            --font-lg: 18px;
+            --font-xl: 20px;
+            --font-2xl: 24px;
+            --font-3xl: 30px;
+            --font-4xl: 36px;
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+            --space-16: 64px;
+            --z-dropdown: 1000;
+            --z-sticky: 1020;
+            --z-fixed: 1030;
+            --z-modal-backdrop: 1040;
+            --z-modal: 1050;
+            --z-toast: 1080;
+        }
+
+        [data-theme="dark"] {
+            --gray-50: #0F172A;
+            --gray-100: #1E293B;
+            --gray-200: #334155;
+            --gray-300: #475569;
+            --gray-400: #64748B;
+            --gray-500: #94A3B8;
+            --gray-600: #CBD5E1;
+            --gray-700: #E2E8F0;
+            --gray-800: #F1F5F9;
+            --gray-900: #F8FAFC;
+            --white: #0A0A0F;
+            --black: #FFFFFF;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+            min-height: 100vh;
+            min-height: 100dvh;
+            transition: background 0.3s ease, color 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        button {
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
+            background: none;
+            color: inherit;
+        }
+        input {
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
+            background: none;
+            border: none;
+            outline: none;
+        }
+        img {
+            display: block;
+            max-width: 100%;
+        }
+        ul {
+            list-style: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: var(--radius-full);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: var(--radius-full);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-4);
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-4);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            padding: 12px 28px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: var(--font-sm);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            min-height: 48px;
+            min-width: 48px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: var(--white);
+            box-shadow: var(--shadow-primary);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(108, 60, 225, 0.45);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-800);
+        }
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+        .btn-danger:hover {
+            background: #DC2626;
+        }
+
+        .btn-ghost {
+            color: var(--gray-600);
+        }
+        .btn-ghost:hover {
+            color: var(--gray-900);
+            background: var(--gray-100);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: var(--font-xs);
+            min-height: 36px;
+        }
+
+        .btn-icon {
+            width: 48px;
+            height: 48px;
+            padding: 0;
+            border-radius: var(--radius-full);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+            pointer-events: none;
+        }
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-xs);
+            font-weight: 600;
+        }
+        .badge-success {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .badge-danger {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+        .badge-warning {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+        .badge-info {
+            background: var(--info-light);
+            color: var(--info);
+        }
+        .badge-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: var(--z-modal-backdrop);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: var(--transition);
+            box-shadow: var(--shadow-2xl);
+            position: relative;
+        }
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto var(--space-4);
+        }
+        .modal-icon.success {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .modal-icon.error {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+        .modal-icon.warning {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+        .modal-icon.info {
+            background: var(--info-light);
+            color: var(--info);
+        }
+
+        .modal-title {
+            font-size: var(--font-xl);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: var(--space-2);
+        }
+        .modal-message {
+            text-align: center;
+            color: var(--gray-500);
+            font-size: var(--font-sm);
+            line-height: 1.6;
+            margin-bottom: var(--space-6);
+        }
+        .modal-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .modal-actions .btn {
+            width: auto;
+            min-width: 100px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            color: var(--gray-500);
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            background: var(--gray-200);
+            color: var(--gray-900);
+        }
+
+        .toast-container {
+            position: fixed;
+            top: var(--space-4);
+            right: var(--space-4);
+            z-index: var(--z-toast);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            max-width: 400px;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .toast {
+            pointer-events: auto;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            box-shadow: var(--shadow-lg);
+            border-left: 4px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            transform: translateX(120%);
+            opacity: 0;
+            transition: var(--transition);
+            border: 1px solid var(--gray-100);
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.success {
+            border-left-color: var(--success);
+        }
+        .toast.error {
+            border-left-color: var(--danger);
+        }
+        .toast.warning {
+            border-left-color: var(--warning);
+        }
+
+        .toast-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+        .toast.error .toast-icon {
+            color: var(--danger);
+        }
+        .toast.warning .toast-icon {
+            color: var(--warning);
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+        .toast-title {
+            font-weight: 600;
+            font-size: var(--font-sm);
+        }
+        .toast-message {
+            font-size: var(--font-xs);
+            color: var(--gray-500);
+        }
+
+        .toast-close {
+            color: var(--gray-400);
+            padding: 4px;
+            transition: var(--transition);
+            background: none;
+            border: none;
+            font-size: 16px;
+        }
+        .toast-close:hover {
+            color: var(--gray-600);
+        }
+
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid var(--gray-200);
+            border-top-color: var(--primary);
+            animation: spin 0.8s linear infinite;
+            margin-bottom: var(--space-4);
+        }
+
+        .loading-logo {
+            font-size: var(--font-4xl);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+        }
+        .loading-logo span {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .loading-text {
+            color: var(--gray-400);
+            font-size: var(--font-sm);
+            margin-top: var(--space-2);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .offline-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: var(--z-fixed);
+            background: var(--danger);
+            color: var(--white);
+            padding: var(--space-3) var(--space-4);
+            text-align: center;
+            font-size: var(--font-sm);
+            font-weight: 500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+        }
+        .offline-banner.visible {
+            display: flex;
+        }
+        .offline-banner .retry-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            padding: 4px 16px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: var(--font-xs);
+            transition: var(--transition);
+        }
+        .offline-banner .retry-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ========================================
+           VOUCHERS PAGE SPECIFIC STYLES
+           ======================================== */
+        .vouchers-hero {
+            background: var(--primary-gradient);
+            padding: var(--space-6) 0;
+            color: var(--white);
+            border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+            margin-bottom: var(--space-6);
+            position: relative;
+            overflow: hidden;
+        }
+        .vouchers-hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 60%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .vouchers-hero .container {
+            position: relative;
+            z-index: 1;
+        }
+        .vouchers-hero h1 {
+            font-size: var(--font-3xl);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+        }
+        .vouchers-hero p {
+            opacity: 0.9;
+            font-size: var(--font-base);
+        }
+
+        .vouchers-tabs {
+            display: flex;
+            gap: var(--space-2);
+            margin-bottom: var(--space-6);
+            overflow-x: auto;
+            padding: var(--space-1) 0;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .vouchers-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        .vouchers-tabs .tab {
+            padding: 8px 20px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-sm);
+            font-weight: 500;
+            color: var(--gray-500);
+            transition: var(--transition);
+            white-space: nowrap;
+            cursor: pointer;
+            background: var(--gray-100);
+            border: 2px solid transparent;
+        }
+        .vouchers-tabs .tab:hover {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+        .vouchers-tabs .tab.active {
+            background: var(--primary);
+            color: var(--white);
+            box-shadow: var(--shadow-primary);
+        }
+        .vouchers-tabs .tab .count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0 8px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-xs);
+            margin-left: var(--space-1);
+        }
+        .vouchers-tabs .tab.active .count {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .voucher-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-100);
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+        .voucher-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        .voucher-card .voucher-header {
+            padding: var(--space-4);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: var(--gray-50);
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .voucher-card .voucher-header .voucher-type {
+            font-size: var(--font-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-500);
+        }
+        .voucher-card .voucher-header .voucher-value {
+            font-size: var(--font-2xl);
+            font-weight: 900;
+            color: var(--primary);
+        }
+        .voucher-card .voucher-header .voucher-value .currency {
+            font-size: var(--font-base);
+        }
+        .voucher-card .voucher-body {
+            padding: var(--space-4);
+        }
+        .voucher-card .voucher-body .voucher-code {
+            font-family: 'Courier New', monospace;
+            font-size: var(--font-lg);
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--gray-800);
+            background: var(--gray-100);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-sm);
+            display: inline-block;
+            margin-bottom: var(--space-2);
+        }
+        .voucher-card .voucher-body .voucher-description {
+            font-size: var(--font-sm);
+            color: var(--gray-600);
+        }
+        .voucher-card .voucher-body .voucher-expiry {
+            font-size: var(--font-xs);
+            color: var(--gray-400);
+            margin-top: var(--space-2);
+        }
+        .voucher-card .voucher-body .voucher-expiry .expired {
+            color: var(--danger);
+        }
+        .voucher-card .voucher-footer {
+            padding: var(--space-3) var(--space-4);
+            border-top: 1px solid var(--gray-100);
+            display: flex;
+            gap: var(--space-2);
+            background: var(--gray-50);
+        }
+        .voucher-card .voucher-footer .btn {
+            flex: 1;
+            padding: 6px 12px;
+            font-size: var(--font-xs);
+            min-height: 32px;
+        }
+        .voucher-card .voucher-status {
+            position: absolute;
+            top: var(--space-3);
+            right: var(--space-3);
+            padding: 2px 12px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-xs);
+            font-weight: 600;
+        }
+        .voucher-card .voucher-status.active {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .voucher-card .voucher-status.used {
+            background: var(--gray-200);
+            color: var(--gray-500);
+        }
+        .voucher-card .voucher-status.expired {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+
+        .voucher-card.gift-card {
+            border: 2px solid var(--primary-light);
+            background: var(--primary-light);
+            background-opacity: 0.03;
+        }
+        .voucher-card.gift-card .voucher-header {
+            background: var(--primary-light);
+            background-opacity: 0.08;
+        }
+        .voucher-card.gift-card .voucher-header .voucher-value {
+            color: var(--primary-dark);
+        }
+
+        /* Redeem Section */
+        .redeem-section {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            border: 1px solid var(--gray-100);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--space-6);
+        }
+        .redeem-section .redeem-title {
+            font-size: var(--font-xl);
+            font-weight: 700;
+            margin-bottom: var(--space-4);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        .redeem-section .redeem-title i {
+            color: var(--primary);
+        }
+        .redeem-section .redeem-input-group {
+            display: flex;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+        }
+        .redeem-section .redeem-input-group .input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--gray-100);
+            border-radius: var(--radius-full);
+            padding: 0 var(--space-4);
+            border: 2px solid transparent;
+            transition: var(--transition);
+            min-width: 200px;
+        }
+        .redeem-section .redeem-input-group .input-wrapper:focus-within {
+            border-color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(108, 60, 225, 0.1);
+        }
+        .redeem-section .redeem-input-group .input-wrapper input {
+            flex: 1;
+            padding: 12px var(--space-3);
+            font-size: var(--font-sm);
+            min-height: 48px;
+            background: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        .redeem-section .redeem-input-group .input-wrapper i {
+            color: var(--gray-400);
+        }
+
+        /* Gift Card Purchase */
+        .gift-card-purchase {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            border: 1px solid var(--gray-100);
+            box-shadow: var(--shadow-sm);
+        }
+        .gift-card-purchase .gift-title {
+            font-size: var(--font-xl);
+            font-weight: 700;
+            margin-bottom: var(--space-4);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        .gift-card-purchase .gift-title i {
+            color: var(--primary);
+        }
+        .gift-card-purchase .gift-amounts {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+        .gift-card-purchase .gift-amounts .amount-btn {
+            padding: var(--space-3);
+            border-radius: var(--radius-md);
+            border: 2px solid var(--gray-200);
+            text-align: center;
+            font-weight: 600;
+            font-size: var(--font-base);
+            transition: var(--transition);
+            cursor: pointer;
+            background: var(--white);
+        }
+        .gift-card-purchase .gift-amounts .amount-btn:hover {
+            border-color: var(--primary-light);
+            background: var(--gray-50);
+        }
+        .gift-card-purchase .gift-amounts .amount-btn.active {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--white);
+        }
+        .gift-card-purchase .gift-form {
+            display: flex;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+        }
+        .gift-card-purchase .gift-form .input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--gray-100);
+            border-radius: var(--radius-full);
+            padding: 0 var(--space-4);
+            border: 2px solid transparent;
+            transition: var(--transition);
+            min-width: 150px;
+        }
+        .gift-card-purchase .gift-form .input-wrapper:focus-within {
+            border-color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(108, 60, 225, 0.1);
+        }
+        .gift-card-purchase .gift-form .input-wrapper input {
+            flex: 1;
+            padding: 12px var(--space-3);
+            font-size: var(--font-sm);
+            min-height: 48px;
+            background: transparent;
+        }
+        .gift-card-purchase .gift-form .input-wrapper i {
+            color: var(--gray-400);
+        }
+
+        /* Empty State */
+        .vouchers-empty {
+            text-align: center;
+            padding: var(--space-12) 0;
+            color: var(--gray-500);
+            grid-column: 1 / -1;
+        }
+        .vouchers-empty i {
+            font-size: 64px;
+            color: var(--gray-300);
+            margin-bottom: var(--space-4);
+            display: block;
+        }
+        .vouchers-empty h3 {
+            font-size: var(--font-xl);
+            color: var(--gray-700);
+            margin-bottom: var(--space-2);
+        }
+        .vouchers-empty p {
+            color: var(--gray-400);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .grid-4 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .gift-card-purchase .gift-amounts {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .vouchers-hero h1 {
+                font-size: var(--font-2xl);
+            }
+            .vouchers-hero p {
+                font-size: var(--font-sm);
+            }
+
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .gift-card-purchase .gift-amounts {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .redeem-section .redeem-input-group {
+                flex-direction: column;
+            }
+            .redeem-section .redeem-input-group .input-wrapper {
+                width: 100%;
+            }
+
+            .gift-card-purchase .gift-form {
+                flex-direction: column;
+            }
+            .gift-card-purchase .gift-form .input-wrapper {
+                width: 100%;
+            }
+
+            .vouchers-tabs .tab {
+                padding: 6px 14px;
+                font-size: var(--font-xs);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            .gift-card-purchase .gift-amounts {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .voucher-card .voucher-footer {
+                flex-direction: column;
+            }
+            .voucher-card .voucher-footer .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================
+    LOADING SCREEN
+    ======================================== -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-logo">SHOP <span>GOOD</span></div>
+        <p class="loading-text">Loading vouchers...</p>
+    </div>
+
+    <!-- ========================================
+    OFFLINE BANNER
+    ======================================== -->
+    <div id="offlineBanner" class="offline-banner">
+        <i class="fas fa-wifi"></i>
+        <span>No internet connection. Some features may be unavailable.</span>
+        <button class="retry-btn" onclick="checkConnection()">
+            <i class="fas fa-sync-alt"></i> Retry
+        </button>
+    </div>
+
+    <!-- ========================================
+    TOAST CONTAINER
+    ======================================== -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- ========================================
+    MODAL CONTAINER
+    ======================================== -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal" role="dialog" aria-modal="true">
+            <button class="modal-close" onclick="closeModal()" aria-label="Close modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="modalContent">
+                <div id="modalIcon" class="modal-icon"></div>
+                <h3 id="modalTitle" class="modal-title"></h3>
+                <p id="modalMessage" class="modal-message"></p>
+                <div id="modalActions" class="modal-actions"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+    HEADER (WITH VOUCHERS LINK ADDED)
+    ======================================== -->
+    <header id="header" style="position:sticky;top:0;z-index:var(--z-sticky);background:var(--white);border-bottom:1px solid var(--gray-100);transition:var(--transition);">
+        <div class="container" style="display:flex;align-items:center;justify-content:space-between;padding-top:var(--space-3);padding-bottom:var(--space-3);gap:var(--space-4);">
+
+            <a href="/" style="display:flex;align-items:center;gap:var(--space-2);flex-shrink:0;">
+                <span style="font-size:var(--font-xl);font-weight:900;letter-spacing:-0.03em;">
+                    SHOP <span style="color:var(--primary);">GOOD</span>
+                </span>
+            </a>
+
+            <div style="flex:1;max-width:600px;display:none;" class="desktop-search">
+                <div style="position:relative;display:flex;align-items:center;background:var(--gray-100);border-radius:var(--radius-full);padding:0 var(--space-4);transition:var(--transition);border:2px solid transparent;">
+                    <i class="fas fa-search" style="color:var(--gray-400);font-size:14px;"></i>
+                    <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search for products..."
+                    style="padding:10px var(--space-3);background:transparent;flex:1;font-size:var(--font-sm);"
+                    />
+                    <button id="searchBtn" style="color:var(--primary);font-weight:600;font-size:var(--font-sm);padding:6px 12px;border-radius:var(--radius-full);transition:var(--transition);">
+                        Search
+                    </button>
+                </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:var(--space-2);">
+
+                <button id="themeToggle" class="btn btn-ghost btn-icon" aria-label="Toggle theme">
+                    <i class="fas fa-moon" style="font-size:18px;"></i>
+                </button>
+
+                <a href="/notifications.html" style="position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:var(--radius-full);transition:var(--transition);color:var(--gray-600);">
+                    <i class="fas fa-bell" style="font-size:18px;"></i>
+                    <span id="notifBadge" style="position:absolute;top:2px;right:2px;background:var(--danger);color:var(--white);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;">0</span>
+                </a>
+
+                <a href="/wishlist.html" style="position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:var(--radius-full);transition:var(--transition);color:var(--gray-600);">
+                    <i class="fas fa-heart" style="font-size:18px;"></i>
+                    <span id="wishlistBadge" style="position:absolute;top:2px;right:2px;background:var(--danger);color:var(--white);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;">0</span>
+                </a>
+
+                <a href="/cart.html" style="position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:var(--radius-full);transition:var(--transition);color:var(--gray-600);">
+                    <i class="fas fa-shopping-bag" style="font-size:18px;"></i>
+                    <span id="cartCount" style="position:absolute;top:2px;right:2px;background:var(--primary);color:var(--white);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;">0</span>
+                </a>
+
+                <div id="authSection">
+                    <a href="/login.html" id="loginBtn" class="btn btn-primary btn-sm" style="display:inline-flex;">
+                        <i class="fas fa-user"></i> Sign In
+                    </a>
+                    <div id="userMenu" style="display:none;position:relative;">
+                        <button id="userAvatar" class="btn btn-ghost btn-icon" style="width:40px;height:40px;border-radius:50%;background:var(--primary-gradient);color:var(--white);font-weight:700;font-size:16px;text-transform:uppercase;overflow:hidden;padding:0;display:flex;align-items:center;justify-content:center;">
+                            <span id="avatarText" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;">U</span>
+                            <img id="avatarImage" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;" />
+                        </button>
+                        <div id="userDropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:var(--white);border:1px solid var(--gray-100);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);min-width:200px;padding:var(--space-2);z-index:var(--z-dropdown);">
+                            <div style="padding:var(--space-2) var(--space-3);border-bottom:1px solid var(--gray-100);margin-bottom:var(--space-2);">
+                                <div id="userDisplayName" style="font-weight:600;font-size:var(--font-sm);color:var(--gray-900);"></div>
+                                <div id="userEmailDisplay" style="font-size:var(--font-xs);color:var(--gray-500);"></div>
+                            </div>
+                            <a href="/profile.html" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm);transition:var(--transition);font-size:var(--font-sm);">
+                                <i class="fas fa-user"></i> Profile
+                            </a>
+                            <a href="/orders.html" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm);transition:var(--transition);font-size:var(--font-sm);">
+                                <i class="fas fa-box"></i> Orders
+                            </a>
+                            <a href="/wallet.html" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm);transition:var(--transition);font-size:var(--font-sm);">
+                                <i class="fas fa-wallet"></i> Wallet
+                            </a>
+                            <a href="/wishlist.html" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm);transition:var(--transition);font-size:var(--font-sm);">
+                                <i class="fas fa-heart"></i> Wishlist
+                            </a>
+                            <!-- VOUCHERS LINK ADDED -->
+                            <a href="/vouchers.html" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm);transition:var(--transition);font-size:var(--font-sm);">
+                                <i class="fas fa-ticket-alt"></i> Vouchers
+                            </a>
+                            <hr style="border:none;border-top:1px solid var(--gray-100);margin:var(--space-2) 0;">
+                            <button onclick="logoutUser()" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm);transition:var(--transition);font-size:var(--font-sm);color:var(--danger);width:100%;text-align:left;">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="mobileMenuToggle" class="btn btn-ghost btn-icon" style="display:none;" aria-label="Menu">
+                    <i class="fas fa-bars" style="font-size:20px;"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobileSearch" style="display:none;padding:0 var(--space-4) var(--space-3);">
+            <div style="position:relative;display:flex;align-items:center;background:var(--gray-100);border-radius:var(--radius-full);padding:0 var(--space-4);border:2px solid transparent;">
+                <i class="fas fa-search" style="color:var(--gray-400);font-size:14px;"></i>
+                <input
+                type="text"
+                id="mobileSearchInput"
+                placeholder="Search products..."
+                style="padding:10px var(--space-3);background:transparent;flex:1;font-size:var(--font-sm);"
+                />
+            </div>
+        </div>
+
+        <nav id="bottomNav" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--gray-100);z-index:var(--z-fixed);padding:var(--space-2) 0;box-shadow:var(--shadow-lg);">
+            <div style="display:flex;justify-content:space-around;align-items:center;max-width:500px;margin:0 auto;">
+                <a href="/" style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--gray-500);transition:var(--transition);padding:4px 12px;">
+                    <i class="fas fa-home" style="font-size:20px;"></i>
+                    <span>Home</span>
+                </a>
+                <a href="/shop.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--gray-500);transition:var(--transition);padding:4px 12px;">
+                    <i class="fas fa-th" style="font-size:20px;"></i>
+                    <span>Shop</span>
+                </a>
+                <a href="/cart.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--gray-500);transition:var(--transition);padding:4px 12px;position:relative;">
+                    <i class="fas fa-shopping-bag" style="font-size:20px;"></i>
+                    <span>Cart</span>
+                    <span id="bottomCartBadge" style="position:absolute;top:0;right:4px;background:var(--primary);color:var(--white);font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;">0</span>
+                </a>
+                <a href="/wishlist.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--gray-500);transition:var(--transition);padding:4px 12px;position:relative;">
+                    <i class="fas fa-heart" style="font-size:20px;"></i>
+                    <span>Wishlist</span>
+                    <span id="bottomWishlistBadge" style="position:absolute;top:0;right:4px;background:var(--danger);color:var(--white);font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;">0</span>
+                </a>
+                <a href="/profile.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--gray-500);transition:var(--transition);padding:4px 12px;">
+                    <i class="fas fa-user" style="font-size:20px;"></i>
+                    <span>Account</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ========================================
+    MAIN CONTENT
+    ======================================== -->
+    <main>
+
+        <!-- Vouchers Hero -->
+        <section class="vouchers-hero">
+            <div class="container">
+                <h1>Vouchers &amp; Gift Cards</h1>
+                <p>Redeem vouchers, buy gift cards, and save on your purchases</p>
+            </div>
+        </section>
+
+        <!-- Redeem Section -->
+        <div class="container">
+            <div class="redeem-section">
+                <div class="redeem-title">
+                    <i class="fas fa-ticket-alt"></i> Redeem Voucher or Gift Card
+                </div>
+                <div class="redeem-input-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-tag"></i>
+                        <input
+                        type="text"
+                        id="voucherCode"
+                        placeholder="Enter voucher or gift card code"
+                        maxlength="20"
+                        autocomplete="off"
+                        />
+                    </div>
+                    <button class="btn btn-primary" onclick="redeemVoucher()">
+                        <i class="fas fa-check"></i> Redeem
+                    </button>
+                </div>
+                <p style="font-size:var(--font-xs);color:var(--gray-400);margin-top:var(--space-2);">
+                    <i class="fas fa-info-circle"></i> Enter a valid voucher or gift card code to apply it to your account.
+                </p>
+            </div>
+        </div>
+
+        <!-- Vouchers Tabs -->
+        <div class="container">
+            <div class="vouchers-tabs" id="vouchersTabs">
+                <button class="tab active" data-tab="all" onclick="switchVoucherTab('all')">
+                    All <span class="count" id="countAll">0</span>
+                </button>
+                <button class="tab" data-tab="active" onclick="switchVoucherTab('active')">
+                    Active <span class="count" id="countActive">0</span>
+                </button>
+                <button class="tab" data-tab="used" onclick="switchVoucherTab('used')">
+                    Used <span class="count" id="countUsed">0</span>
+                </button>
+                <button class="tab" data-tab="expired" onclick="switchVoucherTab('expired')">
+                    Expired <span class="count" id="countExpired">0</span>
+                </button>
+                <button class="tab" data-tab="gift" onclick="switchVoucherTab('gift')">
+                    Gift Cards <span class="count" id="countGift">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Vouchers Grid -->
+        <section style="padding-bottom:var(--space-12);">
+            <div class="container">
+                <div id="vouchersGrid" class="grid-3" style="gap:var(--space-4);">
+                    <!-- Vouchers loaded dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Gift Card Purchase (WITH PAYSTACK VIA API) -->
+        <section style="padding-bottom:var(--space-12);">
+            <div class="container">
+                <div class="gift-card-purchase">
+                    <div class="gift-title">
+                        <i class="fas fa-gift"></i> Buy a Gift Card
+                    </div>
+                    <p style="color:var(--gray-500);font-size:var(--font-sm);margin-bottom:var(--space-4);">
+                        Purchase a gift card to send to friends and family. They can use it to shop on Shop Good.
+                    </p>
+                    <div class="gift-amounts" id="giftAmounts">
+                        <button class="amount-btn" onclick="selectGiftAmount(1000)">₦1,000</button>
+                        <button class="amount-btn" onclick="selectGiftAmount(2000)">₦2,000</button>
+                        <button class="amount-btn" onclick="selectGiftAmount(5000)">₦5,000</button>
+                        <button class="amount-btn" onclick="selectGiftAmount(10000)">₦10,000</button>
+                    </div>
+                    <div class="gift-form">
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input
+                            type="text"
+                            id="giftRecipient"
+                            placeholder="Recipient email"
+                            />
+                        </div>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input
+                            type="text"
+                            id="giftMessage"
+                            placeholder="Personal message (optional)"
+                            />
+                        </div>
+                        <button class="btn btn-primary" id="purchaseGiftBtn" onclick="purchaseGiftCard()">
+                            <i class="fas fa-gift"></i> Buy Gift Card — ₦0
+                        </button>
+                    </div>
+                    <p style="font-size:var(--font-xs);color:var(--gray-400);margin-top:var(--space-2);">
+                        <i class="fas fa-info-circle"></i> Gift cards are sent via email after successful payment.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========================================
+    FOOTER
+    ======================================== -->
+    <footer style="background:var(--gray-900);color:var(--gray-400);padding:var(--space-12) 0 var(--space-6);margin-top:var(--space-8);">
+        <div class="container">
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:var(--space-8);margin-bottom:var(--space-8);">
+                <div>
+                    <span style="font-size:var(--font-2xl);font-weight:900;color:var(--white);letter-spacing:-0.03em;display:block;margin-bottom:var(--space-3);">
+                        SHOP <span style="color:var(--primary);">GOOD</span>
+                    </span>
+                    <p style="font-size:var(--font-sm);max-width:300px;line-height:1.7;">
+                        Premium e-commerce platform bringing you the best products at the best prices. Quality guaranteed.
+                    </p>
+                    <div style="display:flex;gap:var(--space-3);margin-top:var(--space-4);">
+                        <a href="#" style="color:var(--gray-400);transition:var(--transition);font-size:20px;"><i class="fab fa-facebook"></i></a>
+                        <a href="#" style="color:var(--gray-400);transition:var(--transition);font-size:20px;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" style="color:var(--gray-400);transition:var(--transition);font-size:20px;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" style="color:var(--gray-400);transition:var(--transition);font-size:20px;"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="color:var(--white);font-weight:700;margin-bottom:var(--space-3);font-size:var(--font-base);">Quick Links</h4>
+                    <ul style="display:flex;flex-direction:column;gap:var(--space-2);">
+                        <li><a href="/shop.html" style="transition:var(--transition);font-size:var(--font-sm);">Shop</a></li>
+                        <li><a href="/orders.html" style="transition:var(--transition);font-size:var(--font-sm);">Orders</a></li>
+                        <li><a href="/wishlist.html" style="transition:var(--transition);font-size:var(--font-sm);">Wishlist</a></li>
+                        <li><a href="/cart.html" style="transition:var(--transition);font-size:var(--font-sm);">Cart</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--white);font-weight:700;margin-bottom:var(--space-3);font-size:var(--font-base);">Support</h4>
+                    <ul style="display:flex;flex-direction:column;gap:var(--space-2);">
+                        <li><a href="/support.html" style="transition:var(--transition);font-size:var(--font-sm);">Help Center</a></li>
+                        <li><a href="/support.html#faq" style="transition:var(--transition);font-size:var(--font-sm);">FAQ</a></li>
+                        <li><a href="/support-chat.html" style="transition:var(--transition);font-size:var(--font-sm);">Live Chat</a></li>
+                        <li><a href="/support.html#contact" style="transition:var(--transition);font-size:var(--font-sm);">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--white);font-weight:700;margin-bottom:var(--space-3);font-size:var(--font-base);">Contact</h4>
+                    <ul style="display:flex;flex-direction:column;gap:var(--space-2);font-size:var(--font-sm);">
+                        <li style="display:flex;align-items:center;gap:var(--space-2);"><i class="fas fa-envelope" style="width:20px;"></i> <span>support@shopgood.com</span></li>
+                        <li style="display:flex;align-items:center;gap:var(--space-2);"><i class="fas fa-phone" style="width:20px;"></i> <span>+234 800 SHOP GOOD</span></li>
+                        <li style="display:flex;align-items:center;gap:var(--space-2);"><i class="fas fa-map-marker-alt" style="width:20px;"></i> <span>Lagos, Nigeria</span></li>
+                    </ul>
+                </div>
+            </div>
+            <hr style="border:none;border-top:1px solid var(--gray-700);margin-bottom:var(--space-6);">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-3);font-size:var(--font-sm);">
+                <span>&copy; 2026 SHOP GOOD. All rights reserved.</span>
+                <div style="display:flex;gap:var(--space-4);">
+                    <a href="#" style="transition:var(--transition);">Privacy Policy</a>
+                    <a href="#" style="transition:var(--transition);">Terms of Service</a>
+                    <a href="#" style="transition:var(--transition);">Returns Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================
+    JAVASCRIPT (WITH PAYSTACK VIA API)
+    ======================================== -->
+    <script>
+        // ========================================
+        // FIREBASE CONFIGURATION
+        // ========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyA3uJnA73js_YRrSJM_aN-HxVvNu1uwA6g",
+            authDomain: "shop-good-81afa.firebaseapp.com",
+            databaseURL: "https://shop-good-81afa-default-rtdb.firebaseio.com",
+            projectId: "shop-good-81afa",
+            storageBucket: "shop-good-81afa.firebasestorage.app",
+            messagingSenderId: "634761339412",
+            appId: "1:634761339412:web:929f5b602b6f9b18dbbd01",
+            measurementId: "G-0BVNDPNB54"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        // ========================================
+        // API BASE URL
+        // ========================================
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:3000/api'
+            : '/api';
+
+        // ========================================
+        // DOM REFERENCES
+        // ========================================
+        const loadingScreen = document.getElementById('loadingScreen');
+        const offlineBanner = document.getElementById('offlineBanner');
+        const toastContainer = document.getElementById('toastContainer');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const themeToggle = document.getElementById('themeToggle');
+        const searchInput = document.getElementById('searchInput');
+        const mobileSearchInput = document.getElementById('mobileSearchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const notifBadge = document.getElementById('notifBadge');
+        const cartCount = document.getElementById('cartCount');
+        const bottomCartBadge = document.getElementById('bottomCartBadge');
+        const wishlistBadge = document.getElementById('wishlistBadge');
+        const bottomWishlistBadge = document.getElementById('bottomWishlistBadge');
+        const loginBtn = document.getElementById('loginBtn');
+        const userMenu = document.getElementById('userMenu');
+        const userAvatar = document.getElementById('userAvatar');
+        const avatarText = document.getElementById('avatarText');
+        const avatarImage = document.getElementById('avatarImage');
+        const userDropdown = document.getElementById('userDropdown');
+        const userDisplayName = document.getElementById('userDisplayName');
+        const userEmailDisplay = document.getElementById('userEmailDisplay');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileSearch = document.getElementById('mobileSearch');
+        const bottomNav = document.getElementById('bottomNav');
+        const vouchersGrid = document.getElementById('vouchersGrid');
+        const voucherCode = document.getElementById('voucherCode');
+        const purchaseGiftBtn = document.getElementById('purchaseGiftBtn');
+
+        // ========================================
+        // STATE
+        // ========================================
+        let allVouchers = [];
+        let filteredVouchers = [];
+        let currentTab = 'all';
+        let selectedGiftAmount = 0;
+        let voucherListener = null;
+
+        // ========================================
+        // THEME MANAGEMENT
+        // ========================================
+        function getPreferredTheme() {
+            const saved = localStorage.getItem('shopgood-theme');
+            if (saved) return saved;
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+            return 'light';
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('shopgood-theme', theme);
+            const icon = themeToggle.querySelector('i');
+            if (theme === 'dark') {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            setTheme(current === 'dark' ? 'light' : 'dark');
+        });
+
+        setTheme(getPreferredTheme());
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('shopgood-theme')) {
+                setTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+
+        // ========================================
+        // NETWORK CONNECTION
+        // ========================================
+        function checkConnection() {
+            if (navigator.onLine) {
+                offlineBanner.classList.remove('visible');
+                return true;
+            } else {
+                offlineBanner.classList.add('visible');
+                return false;
+            }
+        }
+
+        window.addEventListener('online', () => {
+            offlineBanner.classList.remove('visible');
+            showToast('success', 'Back Online', 'Your connection has been restored.');
+        });
+
+        window.addEventListener('offline', () => {
+            offlineBanner.classList.add('visible');
+        });
+
+        checkConnection();
+
+        // ========================================
+        // TOAST SYSTEM
+        // ========================================
+        function showToast(type, title, message, duration = 4000) {
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <i class="fas ${icons[type] || icons.info} toast-icon"></i>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            toastContainer.appendChild(toast);
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        // ========================================
+        // MODAL SYSTEM
+        // ========================================
+        function showModal(type, title, message, actions = []) {
+            const iconMap = {
+                success: { class: 'success', icon: 'fa-check-circle' },
+                error: { class: 'error', icon: 'fa-exclamation-circle' },
+                warning: { class: 'warning', icon: 'fa-exclamation-triangle' },
+                info: { class: 'info', icon: 'fa-info-circle' }
+            };
+
+            const iconData = iconMap[type] || iconMap.info;
+
+            document.getElementById('modalIcon').className = `modal-icon ${iconData.class}`;
+            document.getElementById('modalIcon').innerHTML = `<i class="fas ${iconData.icon}"></i>`;
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+
+            const actionsContainer = document.getElementById('modalActions');
+            actionsContainer.innerHTML = '';
+
+            if (actions.length === 0) {
+                actions.push({
+                    label: 'OK',
+                    class: 'btn-primary',
+                    action: () => closeModal()
+                });
+            }
+
+            actions.forEach(action => {
+                const btn = document.createElement('button');
+                btn.className = `btn ${action.class}`;
+                btn.textContent = action.label;
+                btn.onclick = () => {
+                    if (action.action) action.action();
+                    if (action.close !== false) closeModal();
+                };
+                actionsContainer.appendChild(btn);
+            });
+
+            modalOverlay.classList.add('active');
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+        }
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ========================================
+        // UPDATE USER AVATAR
+        // ========================================
+        function updateUserAvatar(user) {
+            if (!user) {
+                if (avatarText) { avatarText.style.display = 'flex';
+                    avatarText.textContent = 'U'; }
+                if (avatarImage) avatarImage.style.display = 'none';
+                if (userAvatar) userAvatar.style.background = 'var(--primary-gradient)';
+                return;
+            }
+
+            const photoURL = user.photoURL;
+            const displayName = user.displayName || user.email || 'U';
+            const firstLetter = displayName.charAt(0).toUpperCase();
+
+            if (photoURL) {
+                if (avatarText) avatarText.style.display = 'none';
+                if (avatarImage) {
+                    avatarImage.style.display = 'block';
+                    avatarImage.src = photoURL;
+                    avatarImage.alt = displayName;
+                }
+                if (userAvatar) userAvatar.style.background = 'transparent';
+            } else {
+                if (avatarText) { avatarText.style.display = 'flex';
+                    avatarText.textContent = firstLetter; }
+                if (avatarImage) avatarImage.style.display = 'none';
+                if (userAvatar) userAvatar.style.background = 'var(--primary-gradient)';
+            }
+
+            if (userDisplayName) userDisplayName.textContent = displayName;
+            if (userEmailDisplay) userEmailDisplay.textContent = user.email || '';
+        }
+
+        // ========================================
+        // AUTHENTICATION - FIREBASE
+        // ========================================
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (userMenu) userMenu.style.display = 'block';
+                updateUserAvatar(user);
+                loadUserData(user.uid);
+                loadNotifications(user.uid);
+                loadCartCount(user.uid);
+                loadWishlistBadge(user.uid);
+                loadVouchers(user.uid);
+            } else {
+                if (loginBtn) loginBtn.style.display = 'inline-flex';
+                if (userMenu) userMenu.style.display = 'none';
+                if (userDropdown) userDropdown.style.display = 'none';
+                updateUserAvatar(null);
+                vouchersGrid.innerHTML = `
+                    <div class="vouchers-empty" style="grid-column:1/-1;">
+                        <i class="fas fa-lock"></i>
+                        <h3>Sign In Required</h3>
+                        <p>Please sign in to view and manage your vouchers.</p>
+                        <a href="/login.html" class="btn btn-primary" style="margin-top:var(--space-4);">
+                            <i class="fas fa-user"></i> Sign In
+                        </a>
+                    </div>
+                `;
+                loadingScreen.classList.add('hidden');
+            }
+        });
+
+        function logoutUser() {
+            auth.signOut().then(() => {
+                showToast('success', 'Logged Out', 'You have been successfully logged out.');
+                if (loginBtn) loginBtn.style.display = 'inline-flex';
+                if (userMenu) userMenu.style.display = 'none';
+                if (userDropdown) userDropdown.style.display = 'none';
+                updateUserAvatar(null);
+            }).catch((error) => {
+                showToast('error', 'Logout Failed', error.message);
+            });
+        }
+
+        if (userAvatar) {
+            userAvatar.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userDropdown.style.display = userDropdown.style.display === 'block' ? 'none' : 'block';
+            });
+        }
+
+        document.addEventListener('click', () => {
+            if (userDropdown) userDropdown.style.display = 'none';
+        });
+
+        function loadUserData(uid) {
+            db.ref(`users/${uid}`).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data && userDisplayName && data.displayName) {
+                    userDisplayName.textContent = data.displayName;
+                    if (!auth.currentUser?.photoURL && avatarText && data.displayName) {
+                        avatarText.textContent = data.displayName.charAt(0).toUpperCase();
+                    }
+                }
+            });
+        }
+
+        function loadNotifications(uid) {
+            db.ref(`notifications/${uid}`).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    const unread = Object.values(data).filter(n => !n.read).length;
+                    if (unread > 0) {
+                        notifBadge.style.display = 'flex';
+                        notifBadge.textContent = unread > 99 ? '99+' : unread;
+                    } else {
+                        notifBadge.style.display = 'none';
+                    }
+                } else {
+                    notifBadge.style.display = 'none';
+                }
+            });
+        }
+
+        function loadCartCount(uid) {
+            db.ref(`cart/${uid}/items`).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    const count = Object.keys(data).length;
+                    if (count > 0) {
+                        cartCount.style.display = 'flex';
+                        cartCount.textContent = count;
+                        bottomCartBadge.style.display = 'flex';
+                        bottomCartBadge.textContent = count;
+                    } else {
+                        cartCount.style.display = 'none';
+                        bottomCartBadge.style.display = 'none';
+                    }
+                } else {
+                    cartCount.style.display = 'none';
+                    bottomCartBadge.style.display = 'none';
+                }
+            });
+        }
+
+        function loadWishlistBadge(uid) {
+            db.ref(`wishlists/${uid}/items`).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    const count = Object.keys(data).length;
+                    if (count > 0) {
+                        wishlistBadge.style.display = 'flex';
+                        wishlistBadge.textContent = count;
+                        bottomWishlistBadge.style.display = 'flex';
+                        bottomWishlistBadge.textContent = count;
+                    } else {
+                        wishlistBadge.style.display = 'none';
+                        bottomWishlistBadge.style.display = 'none';
+                    }
+                } else {
+                    wishlistBadge.style.display = 'none';
+                    bottomWishlistBadge.style.display = 'none';
+                }
+            });
+        }
+
+        // ========================================
+        // LOAD VOUCHERS - FIREBASE
+        // ========================================
+        function loadVouchers(uid) {
+            if (voucherListener) {
+                voucherListener.off();
+            }
+
+            voucherListener = db.ref('vouchers').orderByChild('customerUid').equalTo(uid);
+            voucherListener.on('value', (snapshot) => {
+                const data = snapshot.val();
+
+                if (!data) {
+                    allVouchers = [];
+                    filteredVouchers = [];
+                    renderVouchers();
+                    loadingScreen.classList.add('hidden');
+                    return;
+                }
+
+                allVouchers = Object.entries(data).map(([key, value]) => ({ ...value, id: key }));
+                allVouchers.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                applyVoucherFilter();
+                loadingScreen.classList.add('hidden');
+            });
+        }
+
+        // ========================================
+        // APPLY VOUCHER FILTER
+        // ========================================
+        function applyVoucherFilter() {
+            const now = Date.now();
+
+            if (currentTab === 'all') {
+                filteredVouchers = allVouchers;
+            } else if (currentTab === 'active') {
+                filteredVouchers = allVouchers.filter(v =>
+                    v.status === 'active' && (!v.expiryDate || v.expiryDate > now)
+                );
+            } else if (currentTab === 'used') {
+                filteredVouchers = allVouchers.filter(v => v.status === 'used');
+            } else if (currentTab === 'expired') {
+                filteredVouchers = allVouchers.filter(v =>
+                    v.status === 'expired' || (v.expiryDate && v.expiryDate <= now)
+                );
+            } else if (currentTab === 'gift') {
+                filteredVouchers = allVouchers.filter(v => v.type === 'gift_card');
+            }
+
+            renderVouchers();
+            updateTabCounts();
+        }
+
+        // ========================================
+        // SWITCH VOUCHER TAB
+        // ========================================
+        function switchVoucherTab(tab) {
+            currentTab = tab;
+
+            document.querySelectorAll('.tab').forEach(t => {
+                t.classList.toggle('active', t.dataset.tab === tab);
+            });
+
+            applyVoucherFilter();
+        }
+
+        // ========================================
+        // UPDATE TAB COUNTS
+        // ========================================
+        function updateTabCounts() {
+            const now = Date.now();
+
+            const counts = {
+                all: allVouchers.length,
+                active: allVouchers.filter(v => v.status === 'active' && (!v.expiryDate || v.expiryDate > now)).length,
+                used: allVouchers.filter(v => v.status === 'used').length,
+                expired: allVouchers.filter(v => v.status === 'expired' || (v.expiryDate && v.expiryDate <= now)).length,
+                gift: allVouchers.filter(v => v.type === 'gift_card').length
+            };
+
+            document.getElementById('countAll').textContent = counts.all;
+            document.getElementById('countActive').textContent = counts.active;
+            document.getElementById('countUsed').textContent = counts.used;
+            document.getElementById('countExpired').textContent = counts.expired;
+            document.getElementById('countGift').textContent = counts.gift;
+        }
+
+        // ========================================
+        // RENDER VOUCHERS
+        // ========================================
+        function renderVouchers() {
+            if (filteredVouchers.length === 0) {
+                vouchersGrid.innerHTML = `
+                    <div class="vouchers-empty" style="grid-column:1/-1;">
+                        <i class="fas fa-ticket-alt"></i>
+                        <h3>No Vouchers Found</h3>
+                        <p>${allVouchers.length === 0 ? 'You don\'t have any vouchers yet. Redeem a code or buy a gift card!' : `No ${currentTab} vouchers found.`}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            vouchersGrid.innerHTML = '';
+            filteredVouchers.forEach(voucher => {
+                vouchersGrid.appendChild(createVoucherCard(voucher));
+            });
+        }
+
+        // ========================================
+        // CREATE VOUCHER CARD
+        // ========================================
+        function createVoucherCard(voucher) {
+            const card = document.createElement('div');
+            card.className = `voucher-card ${voucher.type === 'gift_card' ? 'gift-card' : ''}`;
+
+            const now = Date.now();
+            const isExpired = voucher.expiryDate && voucher.expiryDate <= now;
+            const status = voucher.status || (isExpired ? 'expired' : 'active');
+
+            const statusMap = {
+                active: { label: 'Active', class: 'active' },
+                used: { label: 'Used', class: 'used' },
+                expired: { label: 'Expired', class: 'expired' }
+            };
+            const statusInfo = statusMap[status] || statusMap.active;
+
+            const typeLabel = voucher.type === 'gift_card' ? 'Gift Card' : 'Voucher';
+
+            const expiryDate = voucher.expiryDate ? new Date(voucher.expiryDate).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            }) : 'No expiry';
+
+            card.innerHTML = `
+                <div class="voucher-header">
+                    <div>
+                        <div class="voucher-type">${typeLabel}</div>
+                        ${voucher.type === 'gift_card' ? `<div style="font-size:var(--font-xs);color:var(--gray-400);">${voucher.recipientEmail || '—'}</div>` : ''}
+                    </div>
+                    ${voucher.discountType === 'percentage' ? `
+                        <div class="voucher-value">${voucher.value}% <span style="font-size:var(--font-sm);font-weight:400;color:var(--gray-500);">OFF</span></div>
+                    ` : `
+                        <div class="voucher-value"><span class="currency">₦</span>${Number(voucher.value).toLocaleString()}</div>
+                    `}
+                    <span class="voucher-status ${statusInfo.class}">${statusInfo.label}</span>
+                </div>
+                <div class="voucher-body">
+                    <div class="voucher-code">${voucher.code}</div>
+                    ${voucher.description ? `<div class="voucher-description">${voucher.description}</div>` : ''}
+                    ${voucher.minimumOrder ? `<div style="font-size:var(--font-xs);color:var(--gray-500);margin-top:var(--space-1);">Min. order: ₦${Number(voucher.minimumOrder).toLocaleString()}</div>` : ''}
+                    <div class="voucher-expiry">
+                        <i class="far fa-clock"></i> Expires: ${expiryDate}
+                        ${isExpired ? '<span class="expired"> (Expired)</span>' : ''}
+                        ${voucher.usedAt ? `<span style="color:var(--gray-400);"> • Used on ${new Date(voucher.usedAt).toLocaleDateString()}</span>` : ''}
+                    </div>
+                </div>
+                <div class="voucher-footer">
+                    ${status === 'active' && !isExpired ? `
+                        <button class="btn btn-primary" onclick="useVoucher('${voucher.id}')">
+                            <i class="fas fa-shopping-bag"></i> Use Now
+                        </button>
+                        <button class="btn btn-secondary" onclick="copyVoucherCode('${voucher.code}')">
+                            <i class="fas fa-copy"></i> Copy Code
+                        </button>
+                    ` : `
+                        <button class="btn btn-secondary" onclick="copyVoucherCode('${voucher.code}')" style="flex:1;">
+                            <i class="fas fa-copy"></i> Copy Code
+                        </button>
+                    `}
+                    ${voucher.type === 'gift_card' && status === 'active' ? `
+                        <button class="btn btn-outline" onclick="shareGiftCard('${voucher.id}')">
+                            <i class="fas fa-share"></i> Share
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+
+            return card;
+        }
+
+        // ========================================
+        // REDEEM VOUCHER - FIREBASE
+        // ========================================
+        function redeemVoucher() {
+            const code = voucherCode.value.trim().toUpperCase();
+
+            if (!code) {
+                showToast('warning', 'Enter Code', 'Please enter a voucher or gift card code.');
+                return;
+            }
+
+            const user = auth.currentUser;
+            if (!user) {
+                showModal('warning', 'Sign In Required',
+                    'Please sign in to redeem a voucher.', [{
+                        label: 'Sign In',
+                        class: 'btn-primary',
+                        action: () => window.location.href = '/login.html'
+                    }]
+                );
+                return;
+            }
+
+            // Check if code already used by this user
+            const existing = allVouchers.find(v => v.code === code);
+            if (existing) {
+                showToast('warning', 'Already Redeemed', 'This voucher has already been redeemed by your account.');
+                voucherCode.value = '';
+                return;
+            }
+
+            // Check if code exists in database
+            db.ref('vouchers').orderByChild('code').equalTo(code).once('value', (snapshot) => {
+                const data = snapshot.val();
+
+                if (!data) {
+                    showToast('error', 'Invalid Code', 'The voucher code you entered is invalid or does not exist.');
+                    return;
+                }
+
+                const entries = Object.entries(data);
+                const [key, voucher] = entries[0];
+
+                // Check if voucher is active
+                if (voucher.status !== 'active') {
+                    showToast('error', 'Voucher Unavailable',
+                        voucher.status === 'used' ? 'This voucher has already been used.' :
+                        voucher.status === 'expired' ? 'This voucher has expired.' :
+                        'This voucher is not available.');
+                    return;
+                }
+
+                // Check expiry
+                if (voucher.expiryDate && voucher.expiryDate <= Date.now()) {
+                    showToast('error', 'Voucher Expired', 'This voucher has expired.');
+                    return;
+                }
+
+                // Check usage limit
+                if (voucher.usageLimit && voucher.usedCount >= voucher.usageLimit) {
+                    showToast('error', 'Usage Limit Reached', 'This voucher has reached its usage limit.');
+                    return;
+                }
+
+                // Check per-user limit
+                if (voucher.perUserLimit) {
+                    const userUsed = allVouchers.filter(v => v.code === code).length;
+                    if (userUsed >= voucher.perUserLimit) {
+                        showToast('error', 'Limit Reached', 'You have already used this voucher the maximum number of times.');
+                        return;
+                    }
+                }
+
+                // Redeem the voucher for this user
+                const newVoucherRef = db.ref('vouchers').push();
+                newVoucherRef.set({
+                    code: code,
+                    customerUid: user.uid,
+                    customerEmail: user.email,
+                    type: voucher.type || 'voucher',
+                    discountType: voucher.discountType || 'fixed',
+                    value: voucher.value || 0,
+                    description: voucher.description || '',
+                    minimumOrder: voucher.minimumOrder || 0,
+                    expiryDate: voucher.expiryDate || null,
+                    status: 'active',
+                    createdAt: Date.now(),
+                    redeemedAt: Date.now(),
+                    originalVoucherId: key
+                });
+
+                // Update usage count on original voucher
+                db.ref(`vouchers/${key}/usedCount`).set((voucher.usedCount || 0) + 1);
+
+                showToast('success', 'Voucher Redeemed!',
+                    `${voucher.discountType === 'percentage' ? `${voucher.value}% OFF` : `₦${Number(voucher.value).toLocaleString()} OFF`} voucher has been added to your account.`);
+                voucherCode.value = '';
+            });
+        }
+
+        // ========================================
+        // USE VOUCHER
+        // ========================================
+        function useVoucher(voucherId) {
+            const voucher = allVouchers.find(v => v.id === voucherId);
+            if (voucher) {
+                window.location.href = `/shop.html?voucher=${encodeURIComponent(voucher.code)}`;
+            }
+        }
+
+        // ========================================
+        // COPY VOUCHER CODE
+        // ========================================
+        function copyVoucherCode(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('success', 'Copied!', 'Voucher code copied to clipboard.');
+            }).catch(() => {
+                showToast('error', 'Failed', 'Could not copy code. Please copy manually.');
+            });
+        }
+
+        // ========================================
+        // SHARE GIFT CARD
+        // ========================================
+        function shareGiftCard(voucherId) {
+            const voucher = allVouchers.find(v => v.id === voucherId);
+            if (!voucher) return;
+
+            const text = `🎁 I've sent you a Shop Good gift card! Code: ${voucher.code}`;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Shop Good Gift Card',
+                    text: text,
+                    url: window.location.origin
+                }).catch(() => {});
+            } else {
+                copyVoucherCode(voucher.code);
+            }
+        }
+
+        // ========================================
+        // SELECT GIFT AMOUNT
+        // ========================================
+        function selectGiftAmount(amount) {
+            selectedGiftAmount = amount;
+
+            document.querySelectorAll('.gift-amounts .amount-btn').forEach(btn => {
+                const btnAmount = parseInt(btn.textContent.replace(/[^0-9]/g, ''));
+                btn.classList.toggle('active', btnAmount === amount);
+            });
+
+            // Update button text
+            if (purchaseGiftBtn) {
+                purchaseGiftBtn.innerHTML = `<i class="fas fa-gift"></i> Buy Gift Card — ₦${Number(amount).toLocaleString()}`;
+            }
+        }
+
+        // ========================================
+        // API REQUEST HELPER - UPDATED WITH AUTH
+        // ========================================
+        async function apiRequest(endpoint, options = {}) {
+            const user = auth.currentUser;
+            let token = null;
+            
+            if (user) {
+                try {
+                    token = await user.getIdToken();
+                } catch (e) {
+                    console.warn('Could not get auth token:', e);
+                }
+            }
+
+            const headers = {
+                'Content-Type': 'application/json',
+                ...options.headers,
+            };
+
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const response = await fetch(`${API_BASE}${endpoint}`, {
+                ...options,
+                headers: headers,
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || data.error || 'API request failed');
+            }
+
+            return data;
+        }
+
+        // ========================================
+        // PURCHASE GIFT CARD - VIA API (Paystack)
+        // ========================================
+        async function purchaseGiftCard() {
+            const user = auth.currentUser;
+            if (!user) {
+                showModal('warning', 'Sign In Required',
+                    'Please sign in to purchase a gift card.', [{
+                        label: 'Sign In',
+                        class: 'btn-primary',
+                        action: () => window.location.href = '/login.html'
+                    }]
+                );
+                return;
+            }
+
+            const amount = selectedGiftAmount;
+            const recipient = document.getElementById('giftRecipient').value.trim();
+            const message = document.getElementById('giftMessage').value.trim();
+
+            if (!amount) {
+                showToast('warning', 'Select Amount', 'Please select a gift card amount.');
+                return;
+            }
+
+            if (!recipient) {
+                showToast('warning', 'Enter Recipient', 'Please enter the recipient\'s email address.');
+                return;
+            }
+
+            if (!recipient.includes('@') || !recipient.includes('.')) {
+                showToast('warning', 'Invalid Email', 'Please enter a valid email address.');
+                return;
+            }
+
+            // Generate unique gift card code
+            const code = 'GC' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 6).toUpperCase();
+
+            // Store gift card data in session for after payment
+            const giftCardData = {
+                code: code,
+                customerUid: user.uid,
+                customerEmail: user.email,
+                recipientEmail: recipient,
+                recipientMessage: message || '',
+                type: 'gift_card',
+                discountType: 'fixed',
+                value: amount,
+                description: `Gift card worth ₦${Number(amount).toLocaleString()}`,
+                status: 'pending',
+                createdAt: Date.now(),
+                expiryDate: Date.now() + (365 * 24 * 60 * 60 * 1000),
+                isGift: true,
+                senderName: user.displayName || 'A Shop Good customer'
+            };
+
+            // Disable button
+            purchaseGiftBtn.disabled = true;
+            purchaseGiftBtn.classList.add('btn-loading');
+
+            try {
+                // Initialize payment with our API
+                const response = await apiRequest('/payments/initialize', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        amount: amount,
+                        email: user.email,
+                        type: 'gift_card',
+                        metadata: {
+                            customerUid: user.uid,
+                            recipient: recipient,
+                            code: code
+                        }
+                    })
+                });
+
+                if (response.success && response.authorization_url) {
+                    // Store gift card data temporarily
+                    sessionStorage.setItem('pendingGiftCard', JSON.stringify(giftCardData));
+                    // Redirect to Paystack checkout
+                    window.location.href = response.authorization_url;
+                } else {
+                    showToast('error', 'Payment Initiation Failed',
+                        response.message || 'Could not initialize payment. Please try again.');
+                    purchaseGiftBtn.disabled = false;
+                    purchaseGiftBtn.classList.remove('btn-loading');
+                }
+            } catch (error) {
+                console.error('Payment initialization error:', error);
+                showToast('error', 'Payment Failed',
+                    error.message || 'Something went wrong. Please try again.');
+                purchaseGiftBtn.disabled = false;
+                purchaseGiftBtn.classList.remove('btn-loading');
+            }
+        }
+
+        // ========================================
+        // CHECK PAYMENT STATUS ON PAGE LOAD
+        // ========================================
+        async function checkPaymentStatus() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const reference = urlParams.get('reference');
+
+            if (reference) {
+                try {
+                    const response = await apiRequest(`/payments/verify/${reference}`);
+
+                    if (response.success && response.status === 'completed') {
+                        // Get pending gift card data
+                        const pendingGiftCard = sessionStorage.getItem('pendingGiftCard');
+                        if (pendingGiftCard) {
+                            const giftCardData = JSON.parse(pendingGiftCard);
+                            giftCardData.status = 'active';
+                            giftCardData.paymentReference = reference;
+                            giftCardData.paidAt = Date.now();
+
+                            // Save gift card to Firebase
+                            const giftRef = db.ref('vouchers').push();
+                            await giftRef.set(giftCardData);
+
+                            // Create notification for user
+                            await createNotification(giftCardData.customerUid, 'promotion',
+                                'Gift Card Purchased!',
+                                `You've purchased a gift card worth ₦${Number(giftCardData.value).toLocaleString()} for ${giftCardData.recipientEmail}.`);
+
+                            showToast('success', 'Gift Card Purchased!',
+                                `Gift card of ₦${Number(giftCardData.value).toLocaleString()} has been created for ${giftCardData.recipientEmail}.`);
+
+                            // Reset form
+                            selectedGiftAmount = 0;
+                            document.querySelectorAll('.gift-amounts .amount-btn').forEach(btn => btn.classList.remove(
+                            'active'));
+                            document.getElementById('giftRecipient').value = '';
+                            document.getElementById('giftMessage').value = '';
+                            if (purchaseGiftBtn) {
+                                purchaseGiftBtn.innerHTML = `<i class="fas fa-gift"></i> Buy Gift Card — ₦0`;
+                            }
+
+                            // Clear session storage
+                            sessionStorage.removeItem('pendingGiftCard');
+
+                            // Refresh vouchers
+                            const user = auth.currentUser;
+                            if (user) {
+                                loadVouchers(user.uid);
+                            }
+                        }
+                    } else if (response.success && response.status === 'failed') {
+                        showToast('error', 'Payment Failed',
+                            'Your payment was not successful. Please try again.');
+                    }
+
+                    // Remove the reference from URL
+                    const newUrl = window.location.pathname;
+                    window.history.replaceState({}, document.title, newUrl);
+
+                } catch (error) {
+                    console.error('Payment verification error:', error);
+                }
+            }
+        }
+
+        // ========================================
+        // CREATE NOTIFICATION
+        // ========================================
+        async function createNotification(uid, type, title, message) {
+            try {
+                const notificationRef = db.ref(`notifications/${uid}`).push();
+                await notificationRef.set({
+                    type: type,
+                    title: title,
+                    message: message,
+                    data: {},
+                    read: false,
+                    createdAt: Date.now()
+                });
+            } catch (error) {
+                console.error('Notification error:', error);
+            }
+        }
+
+        // ========================================
+        // SEARCH
+        // ========================================
+        function performSearch(query) {
+            if (!query || query.trim().length < 2) {
+                return;
+            }
+            window.location.href = `/search.html?q=${encodeURIComponent(query.trim())}`;
+        }
+
+        if (searchBtn) {
+            searchBtn.addEventListener('click', () => {
+                performSearch(searchInput.value);
+            });
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch(searchInput.value);
+                }
+            });
+        }
+
+        if (mobileSearchInput) {
+            mobileSearchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch(mobileSearchInput.value);
+                }
+            });
+        }
+
+        // ========================================
+        // MOBILE MENU
+        // ========================================
+        let mobileMenuOpen = false;
+
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', () => {
+                mobileMenuOpen = !mobileMenuOpen;
+                mobileSearch.style.display = mobileMenuOpen ? 'block' : 'none';
+                mobileMenuToggle.innerHTML = mobileMenuOpen ?
+                    '<i class="fas fa-times" style="font-size:20px;"></i>' :
+                    '<i class="fas fa-bars" style="font-size:20px;"></i>';
+            });
+        }
+
+        // ========================================
+        // RESPONSIVE
+        // ========================================
+        function handleResponsive() {
+            const width = window.innerWidth;
+
+            if (width < 768) {
+                const desktopSearch = document.querySelector('.desktop-search');
+                if (desktopSearch) desktopSearch.style.display = 'none';
+                if (mobileMenuToggle) mobileMenuToggle.style.display = 'flex';
+                if (bottomNav) bottomNav.style.display = 'block';
+                document.body.style.paddingBottom = '80px';
+            } else {
+                const desktopSearch = document.querySelector('.desktop-search');
+                if (desktopSearch) desktopSearch.style.display = 'block';
+                if (mobileMenuToggle) mobileMenuToggle.style.display = 'none';
+                if (mobileSearch) mobileSearch.style.display = 'none';
+                if (bottomNav) bottomNav.style.display = 'none';
+                document.body.style.paddingBottom = '0';
+            }
+        }
+
+        window.addEventListener('resize', handleResponsive);
+        handleResponsive();
+
+        // ========================================
+        // ENTER KEY TO REDEEM
+        // ========================================
+        voucherCode.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                redeemVoucher();
+            }
+        });
+
+        // ========================================
+        // INITIALIZE
+        // ========================================
+        async function initApp() {
+            // Check if we're returning from payment
+            await checkPaymentStatus();
+
+            console.log('🎫 Shop Good Vouchers page initialized successfully!');
+            console.log(`📡 API Base URL: ${API_BASE}`);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+
+        // ========================================
+        // GLOBAL EXPOSURE
+        // ========================================
+        window.showToast = showToast;
+        window.showModal = showModal;
+        window.closeModal = closeModal;
+        window.logoutUser = logoutUser;
+        window.checkConnection = checkConnection;
+        window.performSearch = performSearch;
+        window.redeemVoucher = redeemVoucher;
+        window.useVoucher = useVoucher;
+        window.copyVoucherCode = copyVoucherCode;
+        window.shareGiftCard = shareGiftCard;
+        window.selectGiftAmount = selectGiftAmount;
+        window.purchaseGiftCard = purchaseGiftCard;
+        window.switchVoucherTab = switchVoucherTab;
+        window.checkPaymentStatus = checkPaymentStatus;
+    </script>
+
+</body>
+</html>

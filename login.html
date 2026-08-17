@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <meta name="theme-color" content="#6C3CE1" />
+    <meta name="description" content="Sign in to Shop Good" />
+    <title>Sign In — Shop Good</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <style>
+        /* ========================================
+           CSS VARIABLES / THEME SYSTEM
+           ======================================== */
+        :root {
+            /* Brand Colors */
+            --primary: #6C3CE1;
+            --primary-dark: #5A2FC0;
+            --primary-light: #8B6BE8;
+            --primary-gradient: linear-gradient(135deg, #6C3CE1 0%, #A855F7 100%);
+            --secondary: #1A1A2E;
+            --accent: #F59E0B;
+
+            /* Neutral Colors */
+            --white: #FFFFFF;
+            --black: #0A0A0F;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1E293B;
+            --gray-900: #0F172A;
+
+            /* Semantic Colors */
+            --success: #10B981;
+            --success-light: #D1FAE5;
+            --danger: #EF4444;
+            --danger-light: #FEE2E2;
+            --warning: #F59E0B;
+            --warning-light: #FEF3C7;
+            --info: #3B82F6;
+            --info-light: #DBEAFE;
+
+            /* Shadows */
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+            --shadow-primary: 0 8px 32px rgba(108, 60, 225, 0.35);
+
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-2xl: 32px;
+            --radius-full: 9999px;
+
+            /* Transitions */
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+            /* Typography */
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-xs: 12px;
+            --font-sm: 14px;
+            --font-base: 16px;
+            --font-lg: 18px;
+            --font-xl: 20px;
+            --font-2xl: 24px;
+            --font-3xl: 30px;
+            --font-4xl: 36px;
+            --font-5xl: 48px;
+
+            /* Spacing */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+            --space-16: 64px;
+            --space-20: 80px;
+            --space-24: 96px;
+
+            /* Z-index */
+            --z-dropdown: 1000;
+            --z-sticky: 1020;
+            --z-fixed: 1030;
+            --z-modal-backdrop: 1040;
+            --z-modal: 1050;
+            --z-popover: 1060;
+            --z-tooltip: 1070;
+            --z-toast: 1080;
+        }
+
+        /* ========================================
+           DARK THEME VARIABLES
+           ======================================== */
+        [data-theme="dark"] {
+            --gray-50: #0F172A;
+            --gray-100: #1E293B;
+            --gray-200: #334155;
+            --gray-300: #475569;
+            --gray-400: #64748B;
+            --gray-500: #94A3B8;
+            --gray-600: #CBD5E1;
+            --gray-700: #E2E8F0;
+            --gray-800: #F1F5F9;
+            --gray-900: #F8FAFC;
+            --white: #0A0A0F;
+            --black: #FFFFFF;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ========================================
+           RESET & BASE STYLES
+           ======================================== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+            min-height: 100vh;
+            min-height: 100dvh;
+            transition: background 0.3s ease, color 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            flex-direction: column;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        button {
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
+            background: none;
+            color: inherit;
+        }
+        input {
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
+            background: none;
+            border: none;
+            outline: none;
+        }
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        /* ========================================
+           SCROLLBAR STYLING
+           ======================================== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: var(--radius-full);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: var(--radius-full);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* ========================================
+           UTILITY CLASSES
+           ======================================== */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
+        }
+
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .text-gradient {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ========================================
+           BUTTON STYLES
+           ======================================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            padding: 12px 28px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: var(--font-sm);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            min-height: 48px;
+            min-width: 48px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: var(--white);
+            box-shadow: var(--shadow-primary);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(108, 60, 225, 0.45);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-google {
+            background: var(--white);
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-google:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-300);
+            box-shadow: var(--shadow-md);
+        }
+        .btn-google img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+            pointer-events: none;
+        }
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        .btn-outline.btn-loading::after {
+            border: 2px solid rgba(108, 60, 225, 0.3);
+            border-top-color: var(--primary);
+        }
+        .btn-google.btn-loading::after {
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-top-color: var(--gray-700);
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ========================================
+           INPUT STYLES
+           ======================================== */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+            width: 100%;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            font-size: var(--font-sm);
+            color: var(--gray-700);
+        }
+
+        .input-group .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+        .input-group .input-wrapper:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(108, 60, 225, 0.1);
+        }
+        .input-group .input-wrapper.error {
+            border-color: var(--danger);
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+        }
+        .input-group .input-wrapper.success {
+            border-color: var(--success);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px var(--space-4);
+            background: transparent;
+            font-size: var(--font-sm);
+            color: var(--gray-900);
+            min-height: 52px;
+        }
+
+        .input-group .input-icon {
+            position: absolute;
+            right: var(--space-4);
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: var(--transition);
+            background: none;
+            border: none;
+            padding: 4px;
+            font-size: 16px;
+        }
+        .input-group .input-icon:hover {
+            color: var(--gray-600);
+        }
+
+        .input-group .error-text {
+            font-size: var(--font-xs);
+            color: var(--danger);
+            margin-top: var(--space-1);
+            display: none;
+        }
+        .input-group .input-wrapper.error+.error-text {
+            display: block;
+        }
+
+        /* ========================================
+           MODAL / TOAST STYLES
+           ======================================== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: var(--z-modal-backdrop);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: var(--transition);
+            box-shadow: var(--shadow-2xl);
+            position: relative;
+        }
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto var(--space-4);
+        }
+        .modal-icon.success {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .modal-icon.error {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+        .modal-icon.warning {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+        .modal-icon.info {
+            background: var(--info-light);
+            color: var(--info);
+        }
+
+        .modal-title {
+            font-size: var(--font-xl);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: var(--space-2);
+        }
+        .modal-message {
+            text-align: center;
+            color: var(--gray-500);
+            font-size: var(--font-sm);
+            line-height: 1.6;
+            margin-bottom: var(--space-6);
+        }
+        .modal-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .modal-actions .btn {
+            width: auto;
+            min-width: 100px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            color: var(--gray-500);
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            background: var(--gray-200);
+            color: var(--gray-900);
+        }
+
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            top: var(--space-4);
+            right: var(--space-4);
+            z-index: var(--z-toast);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            max-width: 400px;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .toast {
+            pointer-events: auto;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            box-shadow: var(--shadow-lg);
+            border-left: 4px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            transform: translateX(120%);
+            opacity: 0;
+            transition: var(--transition);
+            border: 1px solid var(--gray-100);
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.success {
+            border-left-color: var(--success);
+        }
+        .toast.error {
+            border-left-color: var(--danger);
+        }
+        .toast.warning {
+            border-left-color: var(--warning);
+        }
+
+        .toast-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+        .toast.error .toast-icon {
+            color: var(--danger);
+        }
+        .toast.warning .toast-icon {
+            color: var(--warning);
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+        .toast-title {
+            font-weight: 600;
+            font-size: var(--font-sm);
+        }
+        .toast-message {
+            font-size: var(--font-xs);
+            color: var(--gray-500);
+        }
+
+        .toast-close {
+            color: var(--gray-400);
+            padding: 4px;
+            transition: var(--transition);
+            background: none;
+            border: none;
+            font-size: 16px;
+        }
+        .toast-close:hover {
+            color: var(--gray-600);
+        }
+
+        /* ========================================
+           LOADING SCREEN
+           ======================================== */
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid var(--gray-200);
+            border-top-color: var(--primary);
+            animation: spin 0.8s linear infinite;
+            margin-bottom: var(--space-4);
+        }
+
+        .loading-logo {
+            font-size: var(--font-4xl);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+        }
+        .loading-logo span {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .loading-text {
+            color: var(--gray-400);
+            font-size: var(--font-sm);
+            margin-top: var(--space-2);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* ========================================
+           LOGIN PAGE SPECIFIC STYLES
+           ======================================== */
+        .login-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-6) var(--space-4);
+            min-height: calc(100vh - 80px);
+        }
+
+        .login-container {
+            max-width: 440px;
+            width: 100%;
+            background: var(--white);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8) var(--space-6);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--gray-100);
+            transition: var(--transition);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+
+        .login-header .logo {
+            font-size: var(--font-3xl);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            display: block;
+            margin-bottom: var(--space-2);
+        }
+        .login-header .logo span {
+            color: var(--primary);
+        }
+
+        .login-header h1 {
+            font-size: var(--font-2xl);
+            font-weight: 700;
+            margin-bottom: var(--space-1);
+        }
+
+        .login-header p {
+            color: var(--gray-500);
+            font-size: var(--font-sm);
+        }
+
+        .login-divider {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin: var(--space-6) 0;
+            color: var(--gray-400);
+            font-size: var(--font-xs);
+            font-weight: 500;
+        }
+        .login-divider::before,
+        .login-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--gray-200);
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: var(--space-6);
+            font-size: var(--font-sm);
+            color: var(--gray-500);
+        }
+        .login-footer a {
+            color: var(--primary);
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        .login-footer a:hover {
+            color: var(--primary-dark);
+        }
+
+        .forgot-link {
+            text-align: right;
+            margin-top: var(--space-2);
+            font-size: var(--font-sm);
+        }
+        .forgot-link a {
+            color: var(--gray-500);
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        .forgot-link a:hover {
+            color: var(--primary);
+        }
+
+        .password-strength {
+            margin-top: var(--space-2);
+            height: 4px;
+            border-radius: var(--radius-full);
+            background: var(--gray-200);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        .password-strength .bar {
+            height: 100%;
+            width: 0%;
+            border-radius: var(--radius-full);
+            transition: var(--transition);
+        }
+        .password-strength .bar.weak {
+            width: 25%;
+            background: var(--danger);
+        }
+        .password-strength .bar.medium {
+            width: 50%;
+            background: var(--warning);
+        }
+        .password-strength .bar.strong {
+            width: 75%;
+            background: var(--info);
+        }
+        .password-strength .bar.very-strong {
+            width: 100%;
+            background: var(--success);
+        }
+
+        .password-strength-text {
+            font-size: var(--font-xs);
+            color: var(--gray-500);
+            margin-top: var(--space-1);
+            min-height: 20px;
+        }
+
+        /* ========================================
+           RESPONSIVE BREAKPOINTS
+           ======================================== */
+        @media (max-width: 768px) {
+            .login-container {
+                padding: var(--space-6) var(--space-4);
+                border-radius: var(--radius-xl);
+            }
+
+            .login-header .logo {
+                font-size: var(--font-2xl);
+            }
+            .login-header h1 {
+                font-size: var(--font-xl);
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: var(--font-xs);
+                min-height: 44px;
+            }
+
+            .input-group input {
+                padding: 12px var(--space-3);
+                font-size: var(--font-xs);
+                min-height: 44px;
+            }
+
+            .modal {
+                padding: var(--space-6);
+                margin: var(--space-4);
+            }
+
+            .toast-container {
+                top: auto;
+                bottom: var(--space-4);
+                right: var(--space-4);
+                left: var(--space-4);
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-wrapper {
+                padding: var(--space-4) var(--space-3);
+            }
+
+            .login-container {
+                padding: var(--space-4) var(--space-3);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================
+    LOADING SCREEN
+    ======================================== -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-logo">SHOP <span>GOOD</span></div>
+        <p class="loading-text">Loading your experience...</p>
+    </div>
+
+    <!-- ========================================
+    TOAST CONTAINER
+    ======================================== -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- ========================================
+    MODAL CONTAINER
+    ======================================== -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal" role="dialog" aria-modal="true">
+            <button class="modal-close" onclick="closeModal()" aria-label="Close modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="modalContent">
+                <div id="modalIcon" class="modal-icon"></div>
+                <h3 id="modalTitle" class="modal-title"></h3>
+                <p id="modalMessage" class="modal-message"></p>
+                <div id="modalActions" class="modal-actions"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+    LOGIN PAGE CONTENT
+    ======================================== -->
+    <div class="login-wrapper">
+        <div class="login-container">
+
+            <!-- Header -->
+            <div class="login-header">
+                <span class="logo">SHOP <span>GOOD</span></span>
+                <h1>Welcome Back</h1>
+                <p>Sign in to continue shopping</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
+                <!-- Email -->
+                <div class="input-group" style="margin-bottom:var(--space-4);">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper" id="emailWrapper">
+                        <input
+                        type="email"
+                        id="email"
+                        placeholder="you@example.com"
+                        required
+                        autocomplete="email"
+                        />
+                        <i class="fas fa-envelope" style="position:absolute;right:var(--space-4);color:var(--gray-400);font-size:14px;"></i>
+                    </div>
+                    <div class="error-text" id="emailError">Please enter a valid email address</div>
+                </div>
+
+                <!-- Password -->
+                <div class="input-group" style="margin-bottom:var(--space-2);">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper" id="passwordWrapper">
+                        <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        required
+                        autocomplete="current-password"
+                        minlength="6"
+                        />
+                        <button
+                        type="button"
+                        class="input-icon"
+                        id="togglePassword"
+                        aria-label="Toggle password visibility"
+                        >
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="error-text" id="passwordError">Password must be at least 6 characters</div>
+            </div>
+
+            <!-- Forgot Password -->
+            <div class="forgot-link">
+                <a href="/forgot-password.html">Forgot password?</a>
+            </div>
+
+            <!-- Submit Button -->
+            <button
+            type="submit"
+            id="loginBtn"
+            class="btn btn-primary"
+            style="margin-top:var(--space-4);"
+            >
+            <span id="loginBtnText">Sign In</span>
+            <i class="fas fa-arrow-right" id="loginBtnIcon"></i>
+        </button>
+
+        <!-- Divider -->
+        <div class="login-divider">OR</div>
+
+        <!-- Google Sign In -->
+        <button
+        type="button"
+        id="googleBtn"
+        class="btn btn-google"
+        onclick="handleGoogleSignIn()"
+        >
+        <img
+        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 48 48'%3E%3Cpath fill='%23EA4335' d='M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z'/%3E%3Cpath fill='%234285F4' d='M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z'/%3E%3Cpath fill='%23FBBC05' d='M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z'/%3E%3Cpath fill='%2334A853' d='M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z'/%3E%3C/svg%3E"
+        alt="Google"
+        />
+        <span>Continue with Google</span>
+    </button>
+</form>
+
+<!-- Footer -->
+<div class="login-footer">
+    Don't have an account? <a href="/register.html">Create one</a>
+</div>
+
+</div>
+</div>
+
+<!-- ========================================
+JAVASCRIPT (ALL INLINED)
+======================================== -->
+<script>
+    // ========================================
+    // FIREBASE CONFIGURATION
+    // ========================================
+    const firebaseConfig = {
+        apiKey: "AIzaSyA3uJnA73js_YRrSJM_aN-HxVvNu1uwA6g",
+        authDomain: "shop-good-81afa.firebaseapp.com",
+        databaseURL: "https://shop-good-81afa-default-rtdb.firebaseio.com",
+        projectId: "shop-good-81afa",
+        storageBucket: "shop-good-81afa.firebasestorage.app",
+        messagingSenderId: "634761339412",
+        appId: "1:634761339412:web:929f5b602b6f9b18dbbd01",
+        measurementId: "G-0BVNDPNB54"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    // ========================================
+    // DOM REFERENCES
+    // ========================================
+    const loadingScreen = document.getElementById('loadingScreen');
+    const toastContainer = document.getElementById('toastContainer');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const loginForm = document.getElementById('loginForm');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const emailWrapper = document.getElementById('emailWrapper');
+    const passwordWrapper = document.getElementById('passwordWrapper');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginBtnText = document.getElementById('loginBtnText');
+    const loginBtnIcon = document.getElementById('loginBtnIcon');
+    const togglePassword = document.getElementById('togglePassword');
+    const googleBtn = document.getElementById('googleBtn');
+
+    // ========================================
+    // THEME MANAGEMENT
+    // ========================================
+    function getPreferredTheme() {
+        const saved = localStorage.getItem('shopgood-theme');
+        if (saved) return saved;
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+        return 'light';
+    }
+
+    function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('shopgood-theme', theme);
+    }
+
+    setTheme(getPreferredTheme());
+
+    // ========================================
+    // TOAST SYSTEM
+    // ========================================
+    function showToast(type, title, message, duration = 4000) {
+        const icons = {
+            success: 'fa-check-circle',
+            error: 'fa-exclamation-circle',
+            warning: 'fa-exclamation-triangle',
+            info: 'fa-info-circle'
+        };
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `
+            <i class="fas ${icons[type] || icons.info} toast-icon"></i>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+            <button class="toast-close" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+
+        toastContainer.appendChild(toast);
+        requestAnimationFrame(() => {
+            toast.classList.add('show');
+        });
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, duration);
+    }
+
+    // ========================================
+    // MODAL SYSTEM
+    // ========================================
+    function showModal(type, title, message, actions = []) {
+        const iconMap = {
+            success: { class: 'success', icon: 'fa-check-circle' },
+            error: { class: 'error', icon: 'fa-exclamation-circle' },
+            warning: { class: 'warning', icon: 'fa-exclamation-triangle' },
+            info: { class: 'info', icon: 'fa-info-circle' }
+        };
+
+        const iconData = iconMap[type] || iconMap.info;
+
+        document.getElementById('modalIcon').className = `modal-icon ${iconData.class}`;
+        document.getElementById('modalIcon').innerHTML = `<i class="fas ${iconData.icon}"></i>`;
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalMessage').textContent = message;
+
+        const actionsContainer = document.getElementById('modalActions');
+        actionsContainer.innerHTML = '';
+
+        if (actions.length === 0) {
+            actions.push({
+                label: 'OK',
+                class: 'btn-primary',
+                action: () => closeModal()
+            });
+        }
+
+        actions.forEach(action => {
+            const btn = document.createElement('button');
+            btn.className = `btn ${action.class}`;
+            btn.textContent = action.label;
+            btn.onclick = () => {
+                if (action.action) action.action();
+                if (action.close !== false) closeModal();
+            };
+            actionsContainer.appendChild(btn);
+        });
+
+        modalOverlay.classList.add('active');
+    }
+
+    function closeModal() {
+        modalOverlay.classList.remove('active');
+    }
+
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+    });
+
+    // ========================================
+    // TOGGLE PASSWORD VISIBILITY
+    // ========================================
+    togglePassword.addEventListener('click', () => {
+        const type = password.type === 'password' ? 'text' : 'password';
+        password.type = type;
+        togglePassword.innerHTML = `<i class="fas fa-${type === 'password' ? 'eye' : 'eye-slash'}"></i>`;
+    });
+
+    // ========================================
+    // FORM VALIDATION
+    // ========================================
+    function validateEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function validatePassword(password) {
+        return password.length >= 6;
+    }
+
+    function validateField(input, wrapper, errorEl, validator) {
+        const value = input.value.trim();
+        const isValid = validator(value);
+
+        wrapper.classList.remove('error', 'success');
+        if (value && !isValid) {
+            wrapper.classList.add('error');
+        } else if (value && isValid) {
+            wrapper.classList.add('success');
+        }
+
+        return value && isValid;
+    }
+
+    email.addEventListener('blur', () => {
+        validateField(email, emailWrapper, emailError, validateEmail);
+    });
+
+    email.addEventListener('input', () => {
+        if (emailWrapper.classList.contains('error')) {
+            validateField(email, emailWrapper, emailError, validateEmail);
+        }
+    });
+
+    password.addEventListener('blur', () => {
+        validateField(password, passwordWrapper, passwordError, validatePassword);
+    });
+
+    password.addEventListener('input', () => {
+        if (passwordWrapper.classList.contains('error')) {
+            validateField(password, passwordWrapper, passwordError, validatePassword);
+        }
+    });
+
+    // ========================================
+    // HANDLE LOGIN
+    // ========================================
+    async function handleLogin(e) {
+        e.preventDefault();
+
+        // Validate all fields
+        const isEmailValid = validateField(email, emailWrapper, emailError, validateEmail);
+        const isPasswordValid = validateField(password, passwordWrapper, passwordError, validatePassword);
+
+        if (!isEmailValid || !isPasswordValid) {
+            if (!isEmailValid) email.focus();
+            else if (!isPasswordValid) password.focus();
+            return;
+        }
+
+        // Show loading state
+        loginBtn.disabled = true;
+        loginBtn.classList.add('btn-loading');
+        loginBtnText.textContent = 'Signing In...';
+        loginBtnIcon.style.display = 'none';
+
+        try {
+            const userCredential = await auth.signInWithEmailAndPassword(
+                email.value.trim(),
+                password.value
+            );
+
+            const user = userCredential.user;
+
+            // Check if email is verified
+            if (!user.emailVerified) {
+                await auth.signOut();
+                showModal('warning', 'Email Not Verified',
+                    'Please verify your email address before signing in. Check your inbox for the verification link.', [{
+                        label: 'Resend Verification',
+                        class: 'btn-primary',
+                        action: () => {
+                            user.sendEmailVerification();
+                            showToast('success', 'Verification Sent',
+                                'A new verification email has been sent to your inbox.');
+                        }
+                    }, {
+                        label: 'OK',
+                        class: 'btn-secondary',
+                        action: () => {}
+                    }]
+                );
+                return;
+            }
+
+            // Check if user exists in database
+            const userSnapshot = await db.ref(`users/${user.uid}`).once('value');
+
+            if (!userSnapshot.exists()) {
+                // Create user profile if it doesn't exist
+                await db.ref(`users/${user.uid}`).set({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName || '',
+                    photoURL: user.photoURL || '',
+                    role: 'customer',
+                    createdAt: Date.now(),
+                    lastLogin: Date.now(),
+                    isActive: true
+                });
+            } else {
+                // Update last login
+                await db.ref(`users/${user.uid}/lastLogin`).set(Date.now());
+            }
+
+            showToast('success', 'Welcome Back!', `Hello ${user.displayName || 'there'}!`);
+
+            // Redirect to home page after short delay
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1200);
+
+        } catch (error) {
+            console.error('Login error:', error);
+
+            let message = 'Something went wrong. Please try again.';
+            if (error.code === 'auth/user-not-found') {
+                message = 'No account found with this email address.';
+            } else if (error.code === 'auth/wrong-password') {
+                message = 'Incorrect password. Please try again.';
+            } else if (error.code === 'auth/too-many-requests') {
+                message = 'Too many failed attempts. Please try again later.';
+            } else if (error.code === 'auth/invalid-email') {
+                message = 'Please enter a valid email address.';
+            } else if (error.code === 'auth/user-disabled') {
+                message = 'This account has been disabled. Please contact support.';
+            }
+
+            showModal('error', 'Sign In Failed', message, [{
+                label: 'Try Again',
+                class: 'btn-primary',
+                action: () => {}
+            }]);
+        } finally {
+            // Reset button state
+            loginBtn.disabled = false;
+            loginBtn.classList.remove('btn-loading');
+            loginBtnText.textContent = 'Sign In';
+            loginBtnIcon.style.display = 'inline-block';
+        }
+    }
+
+    // ========================================
+    // HANDLE GOOGLE SIGN IN
+    // ========================================
+    async function handleGoogleSignIn() {
+        googleBtn.disabled = true;
+        googleBtn.classList.add('btn-loading');
+
+        try {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.setCustomParameters({
+                prompt: 'select_account'
+            });
+
+            const result = await auth.signInWithPopup(provider);
+            const user = result.user;
+
+            // Check if user exists in database
+            const userSnapshot = await db.ref(`users/${user.uid}`).once('value');
+
+            if (!userSnapshot.exists()) {
+                // Create user profile
+                await db.ref(`users/${user.uid}`).set({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName || '',
+                    photoURL: user.photoURL || '',
+                    role: 'customer',
+                    createdAt: Date.now(),
+                    lastLogin: Date.now(),
+                    isActive: true
+                });
+            } else {
+                // Update last login
+                await db.ref(`users/${user.uid}/lastLogin`).set(Date.now());
+            }
+
+            showToast('success', 'Welcome!', `Hello ${user.displayName || 'there'}!`);
+
+            // Redirect to home page
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1200);
+
+        } catch (error) {
+            console.error('Google sign-in error:', error);
+
+            if (error.code === 'auth/popup-closed-by-user') {
+                // User closed the popup, silently handle
+                return;
+            }
+
+            let message = 'Something went wrong. Please try again.';
+            if (error.code === 'auth/account-exists-with-different-credential') {
+                message = 'An account already exists with this email using a different sign-in method.';
+            }
+
+            showModal('error', 'Google Sign In Failed', message, [{
+                label: 'Try Again',
+                class: 'btn-primary',
+                action: () => {}
+            }]);
+        } finally {
+            googleBtn.disabled = false;
+            googleBtn.classList.remove('btn-loading');
+        }
+    }
+
+    // ========================================
+    // CHECK AUTH STATE ON LOAD
+    // ========================================
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // Already logged in, redirect to home
+            window.location.href = '/';
+        } else {
+            // Hide loading screen
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+            }, 600);
+        }
+    });
+
+    // ========================================
+    // KEYBOARD SHORTCUTS
+    // ========================================
+    document.addEventListener('keydown', (e) => {
+        // Ctrl+Enter to submit
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            loginForm.dispatchEvent(new Event('submit'));
+        }
+    });
+
+    // ========================================
+    // GLOBAL EXPOSURE
+    // ========================================
+    window.showToast = showToast;
+    window.showModal = showModal;
+    window.closeModal = closeModal;
+    window.handleLogin = handleLogin;
+    window.handleGoogleSignIn = handleGoogleSignIn;
+    window.validateEmail = validateEmail;
+    window.validatePassword = validatePassword;
+
+    console.log('🔐 Shop Good Login page initialized successfully!');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <meta name="theme-color" content="#6C3CE1" />
+    <meta name="description" content="Shop Good - Checkout" />
+    <title>Checkout — Shop Good</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Paystack Inline JS -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <style>
+        /* ========================================
+           CSS VARIABLES / THEME SYSTEM
+           ======================================== */
+        :root {
+            --primary: #6C3CE1;
+            --primary-dark: #5A2FC0;
+            --primary-light: #8B6BE8;
+            --primary-gradient: linear-gradient(135deg, #6C3CE1 0%, #A855F7 100%);
+            --secondary: #1A1A2E;
+            --accent: #F59E0B;
+            --white: #FFFFFF;
+            --black: #0A0A0F;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1E293B;
+            --gray-900: #0F172A;
+            --success: #10B981;
+            --success-light: #D1FAE5;
+            --danger: #EF4444;
+            --danger-light: #FEE2E2;
+            --warning: #F59E0B;
+            --warning-light: #FEF3C7;
+            --info: #3B82F6;
+            --info-light: #DBEAFE;
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+            --shadow-primary: 0 8px 32px rgba(108, 60, 225, 0.35);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-2xl: 32px;
+            --radius-full: 9999px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-xs: 12px;
+            --font-sm: 14px;
+            --font-base: 16px;
+            --font-lg: 18px;
+            --font-xl: 20px;
+            --font-2xl: 24px;
+            --font-3xl: 30px;
+            --font-4xl: 36px;
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+            --space-16: 64px;
+            --z-dropdown: 1000;
+            --z-sticky: 1020;
+            --z-fixed: 1030;
+            --z-modal-backdrop: 1040;
+            --z-modal: 1050;
+            --z-toast: 1080;
+        }
+
+        [data-theme="dark"] {
+            --gray-50: #0F172A;
+            --gray-100: #1E293B;
+            --gray-200: #334155;
+            --gray-300: #475569;
+            --gray-400: #64748B;
+            --gray-500: #94A3B8;
+            --gray-600: #CBD5E1;
+            --gray-700: #E2E8F0;
+            --gray-800: #F1F5F9;
+            --gray-900: #F8FAFC;
+            --white: #0A0A0F;
+            --black: #FFFFFF;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+            min-height: 100vh;
+            min-height: 100dvh;
+            transition: background 0.3s ease, color 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        button { cursor: pointer; font-family: inherit; border: none; background: none; color: inherit; }
+        input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; background: none; border: none; outline: none; }
+        img { display: block; max-width: 100%; }
+        ul { list-style: none; }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--gray-100); border-radius: var(--radius-full); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: var(--radius-full); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 var(--space-4); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            padding: 12px 28px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: var(--font-sm);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            min-height: 48px;
+            min-width: 48px;
+        }
+
+        .btn-primary { background: var(--primary-gradient); color: var(--white); box-shadow: var(--shadow-primary); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(108, 60, 225, 0.45); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .btn-secondary { background: var(--gray-200); color: var(--gray-800); }
+        .btn-secondary:hover { background: var(--gray-300); }
+
+        .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary); color: var(--white); }
+
+        .btn-success { background: var(--success); color: var(--white); }
+        .btn-success:hover { background: #059669; }
+
+        .btn-danger { background: var(--danger); color: var(--white); }
+        .btn-danger:hover { background: #DC2626; }
+
+        .btn-ghost { color: var(--gray-600); }
+        .btn-ghost:hover { color: var(--gray-900); background: var(--gray-100); }
+
+        .btn-sm { padding: 8px 16px; font-size: var(--font-xs); min-height: 36px; }
+        .btn-icon { width: 48px; height: 48px; padding: 0; border-radius: var(--radius-full); display: inline-flex; align-items: center; justify-content: center; }
+        .btn-block { width: 100%; }
+
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+            pointer-events: none;
+        }
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-xs);
+            font-weight: 600;
+        }
+        .badge-success { background: var(--success-light); color: var(--success); }
+        .badge-danger { background: var(--danger-light); color: var(--danger); }
+        .badge-warning { background: var(--warning-light); color: var(--warning); }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: var(--z-modal-backdrop);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
+        .modal {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: var(--transition);
+            box-shadow: var(--shadow-2xl);
+            position: relative;
+        }
+        .modal-overlay.active .modal { transform: scale(1); }
+
+        .modal-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto var(--space-4);
+        }
+        .modal-icon.success { background: var(--success-light); color: var(--success); }
+        .modal-icon.error { background: var(--danger-light); color: var(--danger); }
+        .modal-icon.warning { background: var(--warning-light); color: var(--warning); }
+        .modal-icon.info { background: var(--info-light); color: var(--info); }
+
+        .modal-title { font-size: var(--font-xl); font-weight: 700; text-align: center; margin-bottom: var(--space-2); }
+        .modal-message { text-align: center; color: var(--gray-500); font-size: var(--font-sm); line-height: 1.6; margin-bottom: var(--space-6); }
+        .modal-actions { display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap; }
+        .modal-actions .btn { width: auto; min-width: 100px; }
+
+        .modal-close {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            color: var(--gray-500);
+            transition: var(--transition);
+        }
+        .modal-close:hover { background: var(--gray-200); color: var(--gray-900); }
+
+        .toast-container {
+            position: fixed;
+            top: var(--space-4);
+            right: var(--space-4);
+            z-index: var(--z-toast);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            max-width: 400px;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .toast {
+            pointer-events: auto;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            box-shadow: var(--shadow-lg);
+            border-left: 4px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            transform: translateX(120%);
+            opacity: 0;
+            transition: var(--transition);
+            border: 1px solid var(--gray-100);
+        }
+        .toast.show { transform: translateX(0); opacity: 1; }
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); }
+
+        .toast-icon { font-size: 20px; flex-shrink: 0; }
+        .toast.success .toast-icon { color: var(--success); }
+        .toast.error .toast-icon { color: var(--danger); }
+        .toast.warning .toast-icon { color: var(--warning); }
+
+        .toast-content { flex: 1; }
+        .toast-title { font-weight: 600; font-size: var(--font-sm); }
+        .toast-message { font-size: var(--font-xs); color: var(--gray-500); }
+
+        .toast-close { color: var(--gray-400); padding: 4px; transition: var(--transition); background: none; border: none; font-size: 16px; }
+        .toast-close:hover { color: var(--gray-600); }
+
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .loading-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        .loading-spinner {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid var(--gray-200);
+            border-top-color: var(--primary);
+            animation: spin 0.8s linear infinite;
+            margin-bottom: var(--space-4);
+        }
+
+        .loading-logo { font-size: var(--font-4xl); font-weight: 900; letter-spacing: -0.03em; }
+        .loading-logo span { background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+        .loading-text { color: var(--gray-400); font-size: var(--font-sm); margin-top: var(--space-2); animation: pulse 1.5s ease-in-out infinite; }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .offline-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: var(--z-fixed);
+            background: var(--danger);
+            color: var(--white);
+            padding: var(--space-3) var(--space-4);
+            text-align: center;
+            font-size: var(--font-sm);
+            font-weight: 500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+        }
+        .offline-banner.visible { display: flex; }
+        .offline-banner .retry-btn { background: rgba(255, 255, 255, 0.2); color: var(--white); padding: 4px 16px; border-radius: var(--radius-full); font-weight: 600; font-size: var(--font-xs); transition: var(--transition); }
+        .offline-banner .retry-btn:hover { background: rgba(255, 255, 255, 0.3); }
+
+        /* ========================================
+           CHECKOUT SPECIFIC STYLES
+           ======================================== */
+        .checkout-hero {
+            background: var(--primary-gradient);
+            padding: var(--space-6) 0;
+            color: var(--white);
+            border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+            margin-bottom: var(--space-6);
+            position: relative;
+            overflow: hidden;
+        }
+        .checkout-hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 60%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .checkout-hero .container { position: relative; z-index: 1; }
+        .checkout-hero h1 { font-size: var(--font-3xl); font-weight: 900; letter-spacing: -0.03em; }
+        .checkout-hero p { opacity: 0.9; font-size: var(--font-base); }
+
+        .checkout-steps {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+            padding: var(--space-3) var(--space-4);
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-100);
+            box-shadow: var(--shadow-sm);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .checkout-steps .step {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: var(--font-sm);
+            font-weight: 500;
+            color: var(--gray-400);
+            white-space: nowrap;
+            padding: 4px 0;
+        }
+        .checkout-steps .step .step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-full);
+            background: var(--gray-200);
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: var(--font-xs);
+        }
+        .checkout-steps .step.active .step-num { background: var(--primary); color: var(--white); }
+        .checkout-steps .step.active { color: var(--gray-900); }
+        .checkout-steps .step.completed .step-num { background: var(--success); color: var(--white); }
+        .checkout-steps .step.completed { color: var(--success); }
+        .checkout-steps .step-divider { flex: 0 0 24px; height: 2px; background: var(--gray-200); }
+        .checkout-steps .step-divider.completed { background: var(--success); }
+
+        .checkout-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: var(--space-8);
+            align-items: start;
+        }
+
+        .checkout-section {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            border: 1px solid var(--gray-100);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--space-4);
+        }
+        .checkout-section .section-title {
+            font-size: var(--font-lg);
+            font-weight: 700;
+            margin-bottom: var(--space-4);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        .checkout-section .section-title .badge { font-size: var(--font-xs); }
+
+        .form-group { margin-bottom: var(--space-4); }
+        .form-group label { display: block; font-weight: 600; font-size: var(--font-sm); color: var(--gray-700); margin-bottom: var(--space-1); }
+        .form-group .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+        .form-group .input-wrapper:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(108, 60, 225, 0.1); }
+        .form-group .input-wrapper.error { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1); }
+        .form-group .input-wrapper input,
+        .form-group .input-wrapper select,
+        .form-group .input-wrapper textarea {
+            width: 100%;
+            padding: 12px var(--space-4);
+            background: transparent;
+            font-size: var(--font-sm);
+            color: var(--gray-900);
+            min-height: 48px;
+        }
+        .form-group .input-wrapper textarea { min-height: 80px; resize: vertical; }
+        .form-group .error-text { font-size: var(--font-xs); color: var(--danger); margin-top: var(--space-1); display: none; }
+        .form-group .input-wrapper.error+.error-text { display: block; }
+
+        .address-list { display: flex; flex-direction: column; gap: var(--space-3); }
+        .address-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .address-item:hover { border-color: var(--primary-light); }
+        .address-item.selected { border-color: var(--primary); background: var(--primary-light); background-opacity: 0.05; }
+        .address-item .radio {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--gray-300);
+            flex-shrink: 0;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .address-item.selected .radio { border-color: var(--primary); }
+        .address-item.selected .radio::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); }
+        .address-item .address-info { flex: 1; }
+        .address-item .address-info .name { font-weight: 600; font-size: var(--font-sm); }
+        .address-item .address-info .label { font-size: var(--font-xs); color: var(--gray-500); background: var(--gray-100); padding: 2px 10px; border-radius: var(--radius-full); margin-left: var(--space-2); }
+        .address-item .address-info .details { font-size: var(--font-sm); color: var(--gray-600); margin-top: var(--space-1); }
+
+        .add-address-btn {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: var(--font-sm);
+            padding: var(--space-2) 0;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            transition: var(--transition);
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .add-address-btn:hover { color: var(--primary-dark); gap: var(--space-3); }
+
+        .payment-methods { display: flex; flex-direction: column; gap: var(--space-3); }
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .payment-method:hover { border-color: var(--primary-light); }
+        .payment-method.selected { border-color: var(--primary); background: var(--primary-light); background-opacity: 0.05; }
+        .payment-method .radio {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--gray-300);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .payment-method.selected .radio { border-color: var(--primary); }
+        .payment-method.selected .radio::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); }
+        .payment-method .method-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .payment-method .method-info { flex: 1; }
+        .payment-method .method-info .name { font-weight: 600; font-size: var(--font-sm); }
+        .payment-method .method-info .desc { font-size: var(--font-xs); color: var(--gray-500); }
+
+        .order-summary {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            border: 1px solid var(--gray-100);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 80px;
+        }
+        .order-summary h2 {
+            font-size: var(--font-lg);
+            font-weight: 700;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .order-summary .summary-item {
+            display: flex;
+            gap: var(--space-3);
+            padding: var(--space-2) 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .order-summary .summary-item:last-child { border-bottom: none; }
+        .order-summary .summary-item .item-img {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            flex-shrink: 0;
+            background: var(--gray-100);
+        }
+        .order-summary .summary-item .item-img img { width: 100%; height: 100%; object-fit: cover; }
+        .order-summary .summary-item .item-details { flex: 1; }
+        .order-summary .summary-item .item-details .name {
+            font-size: var(--font-sm);
+            font-weight: 500;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .order-summary .summary-item .item-details .meta { font-size: var(--font-xs); color: var(--gray-500); }
+        .order-summary .summary-item .item-total { font-weight: 600; font-size: var(--font-sm); align-self: center; }
+
+        .order-summary .summary-totals {
+            margin-top: var(--space-4);
+            padding-top: var(--space-3);
+            border-top: 1px solid var(--gray-100);
+        }
+        .order-summary .summary-totals .row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-1) 0;
+            font-size: var(--font-sm);
+            color: var(--gray-600);
+        }
+        .order-summary .summary-totals .row.total {
+            font-size: var(--font-lg);
+            font-weight: 700;
+            color: var(--gray-900);
+            border-top: 2px solid var(--gray-100);
+            padding-top: var(--space-3);
+            margin-top: var(--space-2);
+        }
+        .order-summary .summary-totals .row .amount { font-weight: 600; }
+        .order-summary .summary-totals .row.total .amount { color: var(--primary); }
+
+        .place-order-btn {
+            width: 100%;
+            margin-top: var(--space-4);
+            padding: 14px;
+            font-size: var(--font-base);
+        }
+
+        .paystack-iframe {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            border: none;
+            display: none;
+        }
+        .paystack-iframe.active {
+            display: block;
+        }
+
+        @media (max-width: 1024px) {
+            .checkout-layout { grid-template-columns: 1fr; }
+            .order-summary { position: static; }
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .checkout-hero h1 { font-size: var(--font-2xl); }
+            .checkout-hero p { font-size: var(--font-sm); }
+            .checkout-steps { gap: var(--space-2); padding: var(--space-2) var(--space-3); }
+            .checkout-steps .step { font-size: var(--font-xs); }
+            .checkout-steps .step .step-num { width: 22px; height: 22px; font-size: 10px; }
+            .checkout-steps .step-divider { flex: 0 0 12px; }
+            .checkout-section { padding: var(--space-4); }
+            .address-item { padding: var(--space-2); }
+        }
+
+        @media (max-width: 480px) {
+            .checkout-section { padding: var(--space-3); }
+            .form-group .input-wrapper input,
+            .form-group .input-wrapper select,
+            .form-group .input-wrapper textarea {
+                padding: 10px var(--space-3);
+                font-size: var(--font-xs);
+                min-height: 40px;
+            }
+            .payment-method { padding: var(--space-2) var(--space-3); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOADING SCREEN -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-logo">SHOP <span>GOOD</span></div>
+        <p class="loading-text">Preparing checkout...</p>
+    </div>
+
+    <!-- OFFLINE BANNER -->
+    <div id="offlineBanner" class="offline-banner">
+        <i class="fas fa-wifi"></i>
+        <span>No internet connection. Some features may be unavailable.</span>
+        <button class="retry-btn" onclick="checkConnection()">
+            <i class="fas fa-sync-alt"></i> Retry
+        </button>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- MODAL CONTAINER -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal" role="dialog" aria-modal="true">
+            <button class="modal-close" onclick="closeModal()" aria-label="Close modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="modalContent">
+                <div id="modalIcon" class="modal-icon"></div>
+                <h3 id="modalTitle" class="modal-title"></h3>
+                <p id="modalMessage" class="modal-message"></p>
+                <div id="modalActions" class="modal-actions"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header id="header" style="position:sticky;top:0;z-index:var(--z-sticky);background:var(--white);border-bottom:1px solid var(--gray-100);transition:var(--transition);">
+        <div class="container" style="display:flex;align-items:center;justify-content:space-between;padding-top:var(--space-3);padding-bottom:var(--space-3);gap:var(--space-4);">
+
+            <a href="/" style="display:flex;align-items:center;gap:var(--space-2);flex-shrink:0;">
+                <span style="font-size:var(--font-xl);font-weight:900;letter-spacing:-0.03em;">
+                    SHOP <span style="color:var(--primary);">GOOD</span>
+                </span>
+            </a>
+
+            <div style="flex:1;max-width:600px;display:none;" class="desktop-search">
+                <div style="position:relative;display:flex;align-items:center;background:var(--gray-100);border-radius:var(--radius-full);padding:0 var(--space-4);transition:var(--transition);border:2px solid transparent;">
+                    <i class="fas fa-search" style="color:var(--gray-400);font-size:14px;"></i>
+                    <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search for products..."
+                    style="padding:10px var(--space-3);background:transparent;flex:1;font-size:var(--font-sm);"
+                    />
+                    <button id="searchBtn" style="color:var(--primary);font-weight:600;font-size:var(--font-sm);padding:6px 12px;border-radius:var(--radius-full);transition:var(--transition);">
+                        Search
+                    </button>
+                </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:var(--space-2);">
+
+                <button id="themeToggle" class="btn btn-ghost btn-icon" aria-label="Toggle theme">
+                    <i class="fas fa-moon" style="font-size:18px;"></i>
+                </button>
+
+                <a href="/notifications.html" style="position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:var(--radius-full);transition:var(--transition);color:var(--gray-600);">
+                    <i class="fas fa-bell" style="font-size:18px;"></i>
+                    <span id="notifBadge" style="position:absolute;top:2px;right:2px;background:var(--danger);color:var(--white);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;">0</span>
+                </a>
+
+                <a href="/wishlist.html" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:var(--radius-full);transition:var(--transition);color:var(--gray-600);">
+                    <i class="fas fa-heart" style="font-size:18px;"></i>
+                </a>
+
+                <a href="/cart.html" style="position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:var(--radius-full);transition:var(--transition);color:var(--gray-600);">
+                    <i class="fas fa-shopping-bag" style="font-size:18px;"></i>
+                    <span id="cartCount" style="position:absolute;top:2px;right:2px;background:var(--primary);color:var(--white);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;">0</span>
+                </a>
+
+                <div id="authSection">
+                    <a href="/login.html" id="loginBtn" class="btn btn-primary btn-sm" style="display:inline-flex;">
+                        <i class="fas fa-user"></i> Sign In
+                    </a>
+                    <div id="userMenu" style="display:none;position:relative;">
+                        <button id="userAvatar" class="btn btn-ghost btn-icon" style="width:40px;height:40px;border-radius:50%;background:var(--primary-gradient);color:var(--white);font-weight:700;font-size:16px;text-transform:uppercase;overflow:hidden;padding:0;display:flex;align-items:center;justify-content:center;">
+                            <span id="avatarText" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;">U</span>
+                            <img id="avatarImage" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;" />
+                        </button>
+                        <div id="userDropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:var(--white);border:1px solid var(--gray-100);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);min-width:200px;padding:var(--space-2);z-index:var(--z-dropdown);">
+                            <div style="padding:var(--space-2) var(--space-3);border-bottom:1px solid var(--gray-100);margin-bottom:var(--space-2);">
+                                <div id="userDisplayName" style="font-weight:600;font-size:var(--font-sm);color:var(--gray-900);"></div>
+                                <div id="userEmailDisplay" style="font-size:var(--font-xs);color:var(--gray-500);"></div>
+                            </div>
+                            <a href="/profile.html" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm);transition:var(--transition);font-size:var(--font-sm);">
+                                <i class="fas fa-user"></i> Profile
+                            </a>
+                            <a href="/orders.html" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm);transition:var(--transition);font-size:var(--font-sm);">
+                                <i class="fas fa-box"></i> Orders
+                            </a>
+                            <a href="/wallet.html" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm);transition:var(--transition);font-size:var(--font-sm);">
+                                <i class="fas fa-wallet"></i> Wallet
+                            </a>
+                            <a href="/wishlist.html" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm);transition:var(--transition);font-size:var(--font-sm);">
+                                <i class="fas fa-heart"></i> Wishlist
+                            </a>
+                            <hr style="border:none;border-top:1px solid var(--gray-100);margin:var(--space-2) 0;">
+                            <button onclick="logoutUser()" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:var(--radius-sm);transition:var(--transition);font-size:var(--font-sm);color:var(--danger);width:100%;text-align:left;">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="mobileMenuToggle" class="btn btn-ghost btn-icon" style="display:none;" aria-label="Menu">
+                    <i class="fas fa-bars" style="font-size:20px;"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobileSearch" style="display:none;padding:0 var(--space-4) var(--space-3);">
+            <div style="position:relative;display:flex;align-items:center;background:var(--gray-100);border-radius:var(--radius-full);padding:0 var(--space-4);border:2px solid transparent;">
+                <i class="fas fa-search" style="color:var(--gray-400);font-size:14px;"></i>
+                <input
+                type="text"
+                id="mobileSearchInput"
+                placeholder="Search products..."
+                style="padding:10px var(--space-3);background:transparent;flex:1;font-size:var(--font-sm);"
+                />
+            </div>
+        </div>
+
+        <nav id="bottomNav" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--gray-100);z-index:var(--z-fixed);padding:var(--space-2) 0;box-shadow:var(--shadow-lg);">
+            <div style="display:flex;justify-content:space-around;align-items:center;max-width:500px;margin:0 auto;">
+                <a href="/" style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--gray-500);transition:var(--transition);padding:4px 12px;">
+                    <i class="fas fa-home" style="font-size:20px;"></i>
+                    <span>Home</span>
+                </a>
+                <a href="/shop.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--gray-500);transition:var(--transition);padding:4px 12px;">
+                    <i class="fas fa-th" style="font-size:20px;"></i>
+                    <span>Shop</span>
+                </a>
+                <a href="/cart.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--gray-500);transition:var(--transition);padding:4px 12px;position:relative;">
+                    <i class="fas fa-shopping-bag" style="font-size:20px;"></i>
+                    <span>Cart</span>
+                    <span id="bottomCartBadge" style="position:absolute;top:0;right:4px;background:var(--primary);color:var(--white);font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;">0</span>
+                </a>
+                <a href="/wishlist.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--gray-500);transition:var(--transition);padding:4px 12px;">
+                    <i class="fas fa-heart" style="font-size:20px;"></i>
+                    <span>Wishlist</span>
+                </a>
+                <a href="/profile.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--gray-500);transition:var(--transition);padding:4px 12px;">
+                    <i class="fas fa-user" style="font-size:20px;"></i>
+                    <span>Account</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+        <!-- Checkout Hero -->
+        <section class="checkout-hero">
+            <div class="container">
+                <h1>Checkout</h1>
+                <p>Complete your order</p>
+            </div>
+        </section>
+
+        <!-- Checkout Steps -->
+        <div class="container">
+            <div class="checkout-steps">
+                <div class="step active" id="step1">
+                    <span class="step-num">1</span>
+                    <span>Delivery</span>
+                </div>
+                <div class="step-divider" id="divider1"></div>
+                <div class="step" id="step2">
+                    <span class="step-num">2</span>
+                    <span>Payment</span>
+                </div>
+                <div class="step-divider" id="divider2"></div>
+                <div class="step" id="step3">
+                    <span class="step-num">3</span>
+                    <span>Confirm</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkout Content -->
+        <section style="padding-bottom:var(--space-12);">
+            <div class="container">
+                <div id="checkoutContent" class="checkout-layout">
+                    <!-- Checkout forms loaded dynamically -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer style="background:var(--gray-900);color:var(--gray-400);padding:var(--space-12) 0 var(--space-6);margin-top:var(--space-8);">
+        <div class="container">
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:var(--space-8);margin-bottom:var(--space-8);">
+                <div>
+                    <span style="font-size:var(--font-2xl);font-weight:900;color:var(--white);letter-spacing:-0.03em;display:block;margin-bottom:var(--space-3);">
+                        SHOP <span style="color:var(--primary);">GOOD</span>
+                    </span>
+                    <p style="font-size:var(--font-sm);max-width:300px;line-height:1.7;">
+                        Premium e-commerce platform bringing you the best products at the best prices. Quality guaranteed.
+                    </p>
+                    <div style="display:flex;gap:var(--space-3);margin-top:var(--space-4);">
+                        <a href="#" style="color:var(--gray-400);transition:var(--transition);font-size:20px;"><i class="fab fa-facebook"></i></a>
+                        <a href="#" style="color:var(--gray-400);transition:var(--transition);font-size:20px;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" style="color:var(--gray-400);transition:var(--transition);font-size:20px;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" style="color:var(--gray-400);transition:var(--transition);font-size:20px;"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="color:var(--white);font-weight:700;margin-bottom:var(--space-3);font-size:var(--font-base);">Quick Links</h4>
+                    <ul style="display:flex;flex-direction:column;gap:var(--space-2);">
+                        <li><a href="/shop.html" style="transition:var(--transition);font-size:var(--font-sm);">Shop</a></li>
+                        <li><a href="/orders.html" style="transition:var(--transition);font-size:var(--font-sm);">Orders</a></li>
+                        <li><a href="/wishlist.html" style="transition:var(--transition);font-size:var(--font-sm);">Wishlist</a></li>
+                        <li><a href="/cart.html" style="transition:var(--transition);font-size:var(--font-sm);">Cart</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--white);font-weight:700;margin-bottom:var(--space-3);font-size:var(--font-base);">Support</h4>
+                    <ul style="display:flex;flex-direction:column;gap:var(--space-2);">
+                        <li><a href="/support.html" style="transition:var(--transition);font-size:var(--font-sm);">Help Center</a></li>
+                        <li><a href="/support.html#faq" style="transition:var(--transition);font-size:var(--font-sm);">FAQ</a></li>
+                        <li><a href="/support-chat.html" style="transition:var(--transition);font-size:var(--font-sm);">Live Chat</a></li>
+                        <li><a href="/support.html#contact" style="transition:var(--transition);font-size:var(--font-sm);">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--white);font-weight:700;margin-bottom:var(--space-3);font-size:var(--font-base);">Contact</h4>
+                    <ul style="display:flex;flex-direction:column;gap:var(--space-2);font-size:var(--font-sm);">
+                        <li style="display:flex;align-items:center;gap:var(--space-2);"><i class="fas fa-envelope" style="width:20px;"></i> <span>support@shopgood.com</span></li>
+                        <li style="display:flex;align-items:center;gap:var(--space-2);"><i class="fas fa-phone" style="width:20px;"></i> <span>+234 800 SHOP GOOD</span></li>
+                        <li style="display:flex;align-items:center;gap:var(--space-2);"><i class="fas fa-map-marker-alt" style="width:20px;"></i> <span>Lagos, Nigeria</span></li>
+                    </ul>
+                </div>
+            </div>
+            <hr style="border:none;border-top:1px solid var(--gray-700);margin-bottom:var(--space-6);">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-3);font-size:var(--font-sm);">
+                <span>&copy; 2026 SHOP GOOD. All rights reserved.</span>
+                <div style="display:flex;gap:var(--space-4);">
+                    <a href="#" style="transition:var(--transition);">Privacy Policy</a>
+                    <a href="#" style="transition:var(--transition);">Terms of Service</a>
+                    <a href="#" style="transition:var(--transition);">Returns Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // ========================================
+        // FIREBASE CONFIGURATION
+        // ========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyA3uJnA73js_YRrSJM_aN-HxVvNu1uwA6g",
+            authDomain: "shop-good-81afa.firebaseapp.com",
+            databaseURL: "https://shop-good-81afa-default-rtdb.firebaseio.com",
+            projectId: "shop-good-81afa",
+            storageBucket: "shop-good-81afa.firebasestorage.app",
+            messagingSenderId: "634761339412",
+            appId: "1:634761339412:web:929f5b602b6f9b18dbbd01",
+            measurementId: "G-0BVNDPNB54"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        // ========================================
+        // API BASE URL - Auto-detects local vs production
+        // ========================================
+        const getApiBase = () => {
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                return 'http://localhost:3000/api';
+            }
+            return '/api';
+        };
+
+        const API_BASE = getApiBase();
+
+        // ========================================
+        // DOM REFERENCES
+        // ========================================
+        const loadingScreen = document.getElementById('loadingScreen');
+        const offlineBanner = document.getElementById('offlineBanner');
+        const toastContainer = document.getElementById('toastContainer');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const themeToggle = document.getElementById('themeToggle');
+        const searchInput = document.getElementById('searchInput');
+        const mobileSearchInput = document.getElementById('mobileSearchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const notifBadge = document.getElementById('notifBadge');
+        const cartCount = document.getElementById('cartCount');
+        const bottomCartBadge = document.getElementById('bottomCartBadge');
+        const loginBtn = document.getElementById('loginBtn');
+        const userMenu = document.getElementById('userMenu');
+        const userAvatar = document.getElementById('userAvatar');
+        const avatarText = document.getElementById('avatarText');
+        const avatarImage = document.getElementById('avatarImage');
+        const userDropdown = document.getElementById('userDropdown');
+        const userDisplayName = document.getElementById('userDisplayName');
+        const userEmailDisplay = document.getElementById('userEmailDisplay');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileSearch = document.getElementById('mobileSearch');
+        const bottomNav = document.getElementById('bottomNav');
+        const checkoutContent = document.getElementById('checkoutContent');
+
+        // ========================================
+        // STATE
+        // ========================================
+        let currentStep = 1;
+        let cartItems = [];
+        let addresses = [];
+        let selectedAddressId = null;
+        let selectedPaymentMethod = null;
+        let walletBalance = 0;
+        let isProcessing = false;
+
+        const deliveryFee = 3000;
+        const minCOD = 6000;
+
+        // ========================================
+        // THEME MANAGEMENT
+        // ========================================
+        function getPreferredTheme() {
+            const saved = localStorage.getItem('shopgood-theme');
+            if (saved) return saved;
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+            return 'light';
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('shopgood-theme', theme);
+            const icon = themeToggle.querySelector('i');
+            if (theme === 'dark') {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            setTheme(current === 'dark' ? 'light' : 'dark');
+        });
+
+        setTheme(getPreferredTheme());
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('shopgood-theme')) {
+                setTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+
+        // ========================================
+        // NETWORK CONNECTION
+        // ========================================
+        function checkConnection() {
+            if (navigator.onLine) {
+                offlineBanner.classList.remove('visible');
+                return true;
+            } else {
+                offlineBanner.classList.add('visible');
+                return false;
+            }
+        }
+
+        window.addEventListener('online', () => {
+            offlineBanner.classList.remove('visible');
+            showToast('success', 'Back Online', 'Your connection has been restored.');
+        });
+
+        window.addEventListener('offline', () => {
+            offlineBanner.classList.add('visible');
+        });
+
+        checkConnection();
+
+        // ========================================
+        // TOAST SYSTEM
+        // ========================================
+        function showToast(type, title, message, duration = 4000) {
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <i class="fas ${icons[type] || icons.info} toast-icon"></i>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            toastContainer.appendChild(toast);
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        // ========================================
+        // MODAL SYSTEM
+        // ========================================
+        function showModal(type, title, message, actions = []) {
+            const iconMap = {
+                success: { class: 'success', icon: 'fa-check-circle' },
+                error: { class: 'error', icon: 'fa-exclamation-circle' },
+                warning: { class: 'warning', icon: 'fa-exclamation-triangle' },
+                info: { class: 'info', icon: 'fa-info-circle' }
+            };
+
+            const iconData = iconMap[type] || iconMap.info;
+
+            document.getElementById('modalIcon').className = `modal-icon ${iconData.class}`;
+            document.getElementById('modalIcon').innerHTML = `<i class="fas ${iconData.icon}"></i>`;
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+
+            const actionsContainer = document.getElementById('modalActions');
+            actionsContainer.innerHTML = '';
+
+            if (actions.length === 0) {
+                actions.push({
+                    label: 'OK',
+                    class: 'btn-primary',
+                    action: () => closeModal()
+                });
+            }
+
+            actions.forEach(action => {
+                const btn = document.createElement('button');
+                btn.className = `btn ${action.class}`;
+                btn.textContent = action.label;
+                btn.onclick = () => {
+                    if (action.action) action.action();
+                    if (action.close !== false) closeModal();
+                };
+                actionsContainer.appendChild(btn);
+            });
+
+            modalOverlay.classList.add('active');
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+        }
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ========================================
+        // UPDATE USER AVATAR
+        // ========================================
+        function updateUserAvatar(user) {
+            if (!user) {
+                if (avatarText) { avatarText.style.display = 'flex';
+                    avatarText.textContent = 'U'; }
+                if (avatarImage) avatarImage.style.display = 'none';
+                if (userAvatar) userAvatar.style.background = 'var(--primary-gradient)';
+                return;
+            }
+
+            const photoURL = user.photoURL;
+            const displayName = user.displayName || user.email || 'U';
+            const firstLetter = displayName.charAt(0).toUpperCase();
+
+            if (photoURL) {
+                if (avatarText) avatarText.style.display = 'none';
+                if (avatarImage) {
+                    avatarImage.style.display = 'block';
+                    avatarImage.src = photoURL;
+                    avatarImage.alt = displayName;
+                }
+                if (userAvatar) userAvatar.style.background = 'transparent';
+            } else {
+                if (avatarText) { avatarText.style.display = 'flex';
+                    avatarText.textContent = firstLetter; }
+                if (avatarImage) avatarImage.style.display = 'none';
+                if (userAvatar) userAvatar.style.background = 'var(--primary-gradient)';
+            }
+
+            if (userDisplayName) userDisplayName.textContent = displayName;
+            if (userEmailDisplay) userEmailDisplay.textContent = user.email || '';
+        }
+
+        // ========================================
+        // AUTHENTICATION
+        // ========================================
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (userMenu) userMenu.style.display = 'block';
+                updateUserAvatar(user);
+                loadUserData(user.uid);
+                loadNotifications(user.uid);
+                loadCartCount(user.uid);
+                loadCheckoutData(user.uid);
+            } else {
+                if (loginBtn) loginBtn.style.display = 'inline-flex';
+                if (userMenu) userMenu.style.display = 'none';
+                if (userDropdown) userDropdown.style.display = 'none';
+                updateUserAvatar(null);
+                showModal('warning', 'Sign In Required',
+                    'Please sign in to proceed with checkout.', [{
+                        label: 'Sign In',
+                        class: 'btn-primary',
+                        action: () => window.location.href = '/login.html'
+                    }]
+                );
+                loadingScreen.classList.add('hidden');
+            }
+        });
+
+        function logoutUser() {
+            auth.signOut().then(() => {
+                showToast('success', 'Logged Out', 'You have been successfully logged out.');
+                if (loginBtn) loginBtn.style.display = 'inline-flex';
+                if (userMenu) userMenu.style.display = 'none';
+                if (userDropdown) userDropdown.style.display = 'none';
+                updateUserAvatar(null);
+            }).catch((error) => {
+                showToast('error', 'Logout Failed', error.message);
+            });
+        }
+
+        if (userAvatar) {
+            userAvatar.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userDropdown.style.display = userDropdown.style.display === 'block' ? 'none' : 'block';
+            });
+        }
+
+        document.addEventListener('click', () => {
+            if (userDropdown) userDropdown.style.display = 'none';
+        });
+
+        function loadUserData(uid) {
+            db.ref(`users/${uid}`).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data && userDisplayName && data.displayName) {
+                    userDisplayName.textContent = data.displayName;
+                    if (!auth.currentUser?.photoURL && avatarText && data.displayName) {
+                        avatarText.textContent = data.displayName.charAt(0).toUpperCase();
+                    }
+                }
+            });
+        }
+
+        function loadNotifications(uid) {
+            db.ref(`notifications/${uid}`).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    const unread = Object.values(data).filter(n => !n.read).length;
+                    if (unread > 0) {
+                        notifBadge.style.display = 'flex';
+                        notifBadge.textContent = unread > 99 ? '99+' : unread;
+                    } else {
+                        notifBadge.style.display = 'none';
+                    }
+                } else {
+                    notifBadge.style.display = 'none';
+                }
+            });
+        }
+
+        function loadCartCount(uid) {
+            db.ref(`cart/${uid}/items`).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    const count = Object.keys(data).length;
+                    if (count > 0) {
+                        cartCount.style.display = 'flex';
+                        cartCount.textContent = count;
+                        bottomCartBadge.style.display = 'flex';
+                        bottomCartBadge.textContent = count;
+                    } else {
+                        cartCount.style.display = 'none';
+                        bottomCartBadge.style.display = 'none';
+                    }
+                } else {
+                    cartCount.style.display = 'none';
+                    bottomCartBadge.style.display = 'none';
+                }
+            });
+        }
+
+        // ========================================
+        // LOAD CHECKOUT DATA
+        // ========================================
+        function loadCheckoutData(uid) {
+            // Get cart items
+            db.ref(`cart/${uid}/items`).once('value', async (snapshot) => {
+                const data = snapshot.val();
+
+                if (!data) {
+                    showModal('warning', 'Cart Empty',
+                        'Your cart is empty. Please add items before checkout.', [{
+                            label: 'Go to Shop',
+                            class: 'btn-primary',
+                            action: () => window.location.href = '/shop.html'
+                        }]
+                    );
+                    loadingScreen.classList.add('hidden');
+                    return;
+                }
+
+                // Get product details for each cart item
+                const itemKeys = Object.keys(data);
+                const items = [];
+
+                for (const key of itemKeys) {
+                    const item = data[key];
+                    try {
+                        const productSnapshot = await db.ref(`products/${item.productId}`).once('value');
+                        const product = productSnapshot.val();
+
+                        if (product && product.status === 'active') {
+                            items.push({
+                                ...item,
+                                key: key,
+                                name: product.name,
+                                thumbnail: product.thumbnail || product.images?.[0] || '',
+                                price: product.price?.display || product.price?.base || 0,
+                                stock: product.stock?.available || 0
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error loading product:', error);
+                    }
+                }
+
+                if (items.length === 0) {
+                    showModal('warning', 'No Available Items',
+                        'Your cart items are currently unavailable. Please try again.', [{
+                            label: 'Go to Cart',
+                            class: 'btn-primary',
+                            action: () => window.location.href = '/cart.html'
+                        }]
+                    );
+                    loadingScreen.classList.add('hidden');
+                    return;
+                }
+
+                cartItems = items;
+
+                // Get addresses
+                db.ref(`addresses/${uid}`).once('value', (addrSnapshot) => {
+                    const addrData = addrSnapshot.val();
+                    addresses = addrData ? Object.values(addrData).map(a => ({ ...a, id: Object.keys(addrData)[
+                            Object.values(addrData).indexOf(a)
+                        ] })) : [];
+                    // Set default address
+                    const defaultAddr = addresses.find(a => a.isDefault);
+                    if (defaultAddr) {
+                        selectedAddressId = defaultAddr.id;
+                    } else if (addresses.length > 0) {
+                        selectedAddressId = addresses[0].id;
+                    }
+
+                    // Get wallet balance
+                    db.ref(`wallets/${uid}/balance`).once('value', (walletSnapshot) => {
+                        walletBalance = walletSnapshot.val() || 0;
+                        loadingScreen.classList.add('hidden');
+                        renderCheckout();
+                    });
+                });
+            });
+        }
+
+        // ========================================
+        // RENDER CHECKOUT
+        // ========================================
+        function renderCheckout() {
+            const subtotal = cartItems.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+            const total = subtotal + deliveryFee;
+            const codAvailable = subtotal >= minCOD;
+
+            let html = '';
+
+            // Left Column - Forms
+            html += '<div class="checkout-forms">';
+
+            // Step 1: Delivery
+            html += `
+                <div class="checkout-section" id="deliverySection">
+                    <div class="section-title">
+                        <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i>
+                        Delivery Address
+                        <span class="badge badge-success" style="font-size:var(--font-xs);">${currentStep >= 1 ? '✓' : '1'}</span>
+                    </div>
+                    <div class="address-list">
+            `;
+
+            if (addresses.length === 0) {
+                html += `
+                    <p style="color:var(--gray-500);font-size:var(--font-sm);text-align:center;padding:var(--space-4);">
+                        <i class="fas fa-map-pin" style="font-size:24px;display:block;margin-bottom:var(--space-2);color:var(--gray-300);"></i>
+                        No saved addresses. Please add one.
+                    </p>
+                    <button class="add-address-btn" onclick="showAddAddressForm()">
+                        <i class="fas fa-plus-circle"></i> Add New Address
+                    </button>
+                `;
+            } else {
+                addresses.forEach(addr => {
+                    const selected = addr.id === selectedAddressId;
+                    html += `
+                        <div class="address-item ${selected ? 'selected' : ''}" onclick="selectAddress('${addr.id}')">
+                            <div class="radio"></div>
+                            <div class="address-info">
+                                <div class="name">
+                                    ${addr.fullName}
+                                    <span class="label">${addr.label || 'Home'}</span>
+                                    ${addr.isDefault ? '<span class="label" style="background:var(--primary);color:var(--white);">Default</span>' : ''}
+                                </div>
+                                <div class="details">
+                                    ${addr.address}, ${addr.area}, ${addr.city}, ${addr.state}
+                                    ${addr.phone ? `<br><i class="fas fa-phone" style="font-size:12px;"></i> ${addr.phone}` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `
+                    <button class="add-address-btn" onclick="showAddAddressForm()">
+                        <i class="fas fa-plus-circle"></i> Add New Address
+                    </button>
+                `;
+            }
+
+            html += `
+                    </div>
+                    <div style="margin-top:var(--space-4);">
+                        <button class="btn btn-primary btn-block" onclick="goToStep(2)" ${!selectedAddressId ? 'disabled' : ''}>
+                            Proceed to Payment <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Step 2: Payment
+            const isStep2Active = currentStep >= 2;
+            html += `
+                <div class="checkout-section" id="paymentSection" style="${!isStep2Active ? 'display:none;' : ''}">
+                    <div class="section-title">
+                        <i class="fas fa-credit-card" style="color:var(--primary);"></i>
+                        Payment Method
+                        <span class="badge badge-success" style="font-size:var(--font-xs);">${currentStep >= 2 ? '✓' : '2'}</span>
+                    </div>
+                    <div class="payment-methods">
+            `;
+
+            // Paystack
+            html += `
+                <div class="payment-method ${selectedPaymentMethod === 'paystack' ? 'selected' : ''}" onclick="selectPaymentMethod('paystack')">
+                    <div class="radio"></div>
+                    <div class="method-icon" style="background:#E8F0FE;color:#1A73E8;">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="method-info">
+                        <div class="name">Paystack</div>
+                        <div class="desc">Pay with card, bank transfer, or USSD</div>
+                    </div>
+                </div>
+            `;
+
+            // Wallet
+            html += `
+                <div class="payment-method ${selectedPaymentMethod === 'wallet' ? 'selected' : ''}" onclick="selectPaymentMethod('wallet')">
+                    <div class="radio"></div>
+                    <div class="method-icon" style="background:var(--primary-light);color:var(--white);">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="method-info">
+                        <div class="name">Shop Good Wallet</div>
+                        <div class="desc">Balance: ₦${Number(walletBalance).toLocaleString()}</div>
+                    </div>
+                    ${walletBalance < total ? `<span class="badge badge-danger" style="font-size:10px;">Insufficient</span>` : `<span class="badge badge-success" style="font-size:10px;">Available</span>`}
+                </div>
+            `;
+
+            // Pay on Delivery
+            if (codAvailable) {
+                html += `
+                    <div class="payment-method ${selectedPaymentMethod === 'cod' ? 'selected' : ''}" onclick="selectPaymentMethod('cod')">
+                        <div class="radio"></div>
+                        <div class="method-icon" style="background:#FEF3C7;color:#F59E0B;">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="method-info">
+                            <div class="name">Pay on Delivery</div>
+                            <div class="desc">Pay when you receive your order</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div style="padding:var(--space-2);background:var(--gray-50);border-radius:var(--radius-md);border:1px solid var(--gray-200);text-align:center;font-size:var(--font-sm);color:var(--gray-500);">
+                        <i class="fas fa-info-circle"></i> Pay on Delivery available for orders above ₦${Number(minCOD).toLocaleString()}
+                    </div>
+                `;
+            }
+
+            html += `
+                    </div>
+                    <div style="margin-top:var(--space-4);display:flex;gap:var(--space-3);">
+                        <button class="btn btn-secondary" onclick="goToStep(1)" style="flex:1;">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button class="btn btn-primary" onclick="goToStep(3)" style="flex:2;" ${!selectedPaymentMethod ? 'disabled' : ''}>
+                            Review Order <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Step 3: Confirm
+            const isStep3Active = currentStep >= 3;
+            html += `
+                <div class="checkout-section" id="confirmSection" style="${!isStep3Active ? 'display:none;' : ''}">
+                    <div class="section-title">
+                        <i class="fas fa-check-circle" style="color:var(--success);"></i>
+                        Confirm Order
+                        <span class="badge badge-success" style="font-size:var(--font-xs);">3</span>
+                    </div>
+                    <div style="padding:var(--space-3);background:var(--gray-50);border-radius:var(--radius-md);border:1px solid var(--gray-100);">
+                        <div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-3);">
+                            <i class="fas fa-map-pin" style="color:var(--primary);font-size:18px;"></i>
+                            <div>
+                                <div style="font-weight:600;font-size:var(--font-sm);">Delivery Address</div>
+                                ${selectedAddressId ? (() => {
+                                    const addr = addresses.find(a => a.id === selectedAddressId);
+                                    return addr ? `
+                                        <div style="font-size:var(--font-sm);color:var(--gray-600);">
+                                            ${addr.fullName}, ${addr.address}, ${addr.area}, ${addr.city}, ${addr.state}
+                                        </div>
+                                    ` : '';
+                                })() : ''}
+                            </div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:var(--space-3);">
+                            <i class="fas fa-credit-card" style="color:var(--primary);font-size:18px;"></i>
+                            <div>
+                                <div style="font-weight:600;font-size:var(--font-sm);">Payment Method</div>
+                                <div style="font-size:var(--font-sm);color:var(--gray-600);">
+                                    ${selectedPaymentMethod === 'paystack' ? 'Paystack' :
+                                      selectedPaymentMethod === 'wallet' ? 'Shop Good Wallet' :
+                                      selectedPaymentMethod === 'cod' ? 'Pay on Delivery' : 'Not selected'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:var(--space-4);display:flex;gap:var(--space-3);">
+                        <button class="btn btn-secondary" onclick="goToStep(2)" style="flex:1;">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button class="btn btn-success" onclick="placeOrder()" style="flex:2;" id="placeOrderBtn">
+                            <i class="fas fa-lock"></i> Place Order (₦${Number(total).toLocaleString()})
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            html += '</div>';
+
+            // Right Column - Order Summary
+            html += `
+                <div class="order-summary">
+                    <h2>Order Summary</h2>
+            `;
+
+            cartItems.forEach(item => {
+                const itemTotal = item.quantity * item.price;
+                html += `
+                    <div class="summary-item">
+                        <div class="item-img">
+                            <img src="${item.thumbnail || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"%3E%3Crect width="200" height="200" fill="%23E2E8F0"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%2394A3B8" font-family="sans-serif" font-size="14"%3ENo Image%3C/text%3E%3C/svg%3E'}" alt="${item.name}" />
+                        </div>
+                        <div class="item-details">
+                            <div class="name">${item.name}</div>
+                            <div class="meta">Qty: ${item.quantity} ${item.variationName ? '• ' + item.variationName : ''}</div>
+                        </div>
+                        <div class="item-total">₦${Number(itemTotal).toLocaleString()}</div>
+                    </div>
+                `;
+            });
+
+            html += `
+                <div class="summary-totals">
+                    <div class="row">
+                        <span>Subtotal</span>
+                        <span class="amount">₦${Number(subtotal).toLocaleString()}</span>
+                    </div>
+                    <div class="row">
+                        <span>Delivery Fee</span>
+                        <span class="amount">₦${Number(deliveryFee).toLocaleString()}</span>
+                    </div>
+                    <div class="row total">
+                        <span>Total</span>
+                        <span class="amount">₦${Number(total).toLocaleString()}</span>
+                    </div>
+                </div>
+                ${selectedPaymentMethod === 'wallet' && walletBalance < total ? `
+                    <div style="margin-top:var(--space-3);padding:var(--space-2);background:var(--danger-light);border-radius:var(--radius-md);text-align:center;font-size:var(--font-sm);color:var(--danger);">
+                        <i class="fas fa-exclamation-circle"></i> Insufficient wallet balance. Please choose another payment method.
+                    </div>
+                ` : ''}
+                ${selectedPaymentMethod === 'cod' ? `
+                    <div style="margin-top:var(--space-3);padding:var(--space-2);background:var(--warning-light);border-radius:var(--radius-md);text-align:center;font-size:var(--font-sm);color:var(--warning);">
+                        <i class="fas fa-info-circle"></i> You'll pay ₦${Number(total).toLocaleString()} when you receive your order.
+                    </div>
+                ` : ''}
+            `;
+
+            html += '</div>';
+
+            checkoutContent.innerHTML = html;
+            updateSteps();
+        }
+
+        // ========================================
+        // UPDATE STEPS
+        // ========================================
+        function updateSteps() {
+            const steps = [
+                document.getElementById('step1'),
+                document.getElementById('step2'),
+                document.getElementById('step3')
+            ];
+            const dividers = [
+                document.getElementById('divider1'),
+                document.getElementById('divider2')
+            ];
+
+            steps.forEach((step, index) => {
+                const stepNum = index + 1;
+                step.classList.remove('active', 'completed');
+                if (stepNum === currentStep) {
+                    step.classList.add('active');
+                } else if (stepNum < currentStep) {
+                    step.classList.add('completed');
+                }
+            });
+
+            dividers.forEach((divider, index) => {
+                divider.classList.toggle('completed', index + 1 < currentStep);
+            });
+
+            const deliverySection = document.getElementById('deliverySection');
+            const paymentSection = document.getElementById('paymentSection');
+            const confirmSection = document.getElementById('confirmSection');
+
+            if (deliverySection) {
+                deliverySection.style.display = currentStep === 1 ? 'block' : 'none';
+            }
+            if (paymentSection) {
+                paymentSection.style.display = currentStep === 2 ? 'block' : 'none';
+            }
+            if (confirmSection) {
+                confirmSection.style.display = currentStep === 3 ? 'block' : 'none';
+            }
+        }
+
+        // ========================================
+        // GO TO STEP
+        // ========================================
+        function goToStep(step) {
+            if (step === 2 && !selectedAddressId) {
+                showToast('warning', 'Address Required', 'Please select a delivery address.');
+                return;
+            }
+
+            if (step === 3 && !selectedPaymentMethod) {
+                showToast('warning', 'Payment Method Required', 'Please select a payment method.');
+                return;
+            }
+
+            currentStep = step;
+            renderCheckout();
+        }
+
+        // ========================================
+        // SELECT ADDRESS
+        // ========================================
+        function selectAddress(addressId) {
+            selectedAddressId = addressId;
+            renderCheckout();
+        }
+
+        // ========================================
+        // SELECT PAYMENT METHOD
+        // ========================================
+        function selectPaymentMethod(method) {
+            selectedPaymentMethod = method;
+            renderCheckout();
+        }
+
+        // ========================================
+        // SHOW ADD ADDRESS FORM
+        // ========================================
+        function showAddAddressForm() {
+            showModal('info', 'Add New Address',
+                'Please enter your delivery details below.', [{
+                    label: 'Cancel',
+                    class: 'btn-secondary',
+                    action: () => {},
+                    close: true
+                }, {
+                    label: 'Save Address',
+                    class: 'btn-primary',
+                    action: () => {
+                        window.location.href = '/profile.html?tab=addresses';
+                    },
+                    close: true
+                }]
+            );
+        }
+
+        // ========================================
+        // GENERATE ORDER NUMBER
+        // ========================================
+        function generateOrderNumber() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = 'SG';
+            for (let i = 0; i < 7; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        // ========================================
+        // PLACE ORDER - FIXED WITH API
+        // ========================================
+        async function placeOrder() {
+            if (isProcessing) return;
+
+            const user = auth.currentUser;
+            if (!user) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            if (!selectedAddressId) {
+                showToast('warning', 'Address Required', 'Please select a delivery address.');
+                return;
+            }
+
+            if (!selectedPaymentMethod) {
+                showToast('warning', 'Payment Method Required', 'Please select a payment method.');
+                return;
+            }
+
+            const selectedAddress = addresses.find(a => a.id === selectedAddressId);
+            if (!selectedAddress) {
+                showToast('error', 'Error', 'Selected address not found.');
+                return;
+            }
+
+            // Check stock for all items
+            for (const item of cartItems) {
+                try {
+                    const productSnapshot = await db.ref(`products/${item.productId}`).once('value');
+                    const product = productSnapshot.val();
+                    if (!product || product.stock?.available < item.quantity) {
+                        showToast('error', 'Stock Issue',
+                            `${item.name} is no longer available in the requested quantity.`);
+                        return;
+                    }
+                } catch (error) {
+                    showToast('error', 'Error', 'Failed to verify stock. Please try again.');
+                    return;
+                }
+            }
+
+            isProcessing = true;
+            const placeOrderBtn = document.getElementById('placeOrderBtn');
+            if (placeOrderBtn) {
+                placeOrderBtn.disabled = true;
+                placeOrderBtn.classList.add('btn-loading');
+                placeOrderBtn.textContent = 'Processing...';
+            }
+
+            try {
+                const subtotal = cartItems.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+                const total = subtotal + deliveryFee;
+                const orderNumber = generateOrderNumber();
+                const orderId = db.ref('orders').push().key;
+
+                // Create order object
+                const orderData = {
+                    id: orderId,
+                    orderNumber: orderNumber,
+                    customerUid: user.uid,
+                    customerEmail: user.email,
+                    customerName: user.displayName || 'Customer',
+                    deliveryAddress: {
+                        fullName: selectedAddress.fullName,
+                        phone: selectedAddress.phone,
+                        state: selectedAddress.state,
+                        city: selectedAddress.city,
+                        area: selectedAddress.area,
+                        address: selectedAddress.address,
+                        landmark: selectedAddress.landmark || '',
+                        instructions: selectedAddress.instructions || ''
+                    },
+                    items: {},
+                    subtotal: subtotal,
+                    deliveryFee: deliveryFee,
+                    discount: 0,
+                    total: total,
+                    paymentMethod: selectedPaymentMethod,
+                    paymentStatus: selectedPaymentMethod === 'cod' ? 'pending' : 'pending',
+                    orderStatus: 'pending',
+                    statusHistory: {
+                        [Date.now()]: {
+                            status: 'pending',
+                            note: 'Order placed',
+                            updatedBy: 'system'
+                        }
+                    },
+                    timeline: {
+                        placed: Date.now()
+                    },
+                    estimatedDelivery: {
+                        start: Date.now() + (2 * 24 * 60 * 60 * 1000),
+                        end: Date.now() + (5 * 24 * 60 * 60 * 1000)
+                    },
+                    reviewed: false,
+                    createdAt: Date.now(),
+                    updatedAt: Date.now()
+                };
+
+                // Add items to order
+                cartItems.forEach((item, index) => {
+                    orderData.items[`item_${index}`] = {
+                        productId: item.productId,
+                        name: item.name,
+                        thumbnail: item.thumbnail,
+                        quantity: item.quantity,
+                        price: item.price,
+                        total: item.quantity * item.price,
+                        variationName: item.variationName || ''
+                    };
+                });
+
+                // Save order to Firebase
+                await db.ref(`orders/${orderId}`).set(orderData);
+
+                // Clear cart
+                await db.ref(`cart/${user.uid}/items`).remove();
+
+                // Handle payment based on method
+                if (selectedPaymentMethod === 'paystack') {
+                    await handlePaystackPayment(orderId, orderNumber, total, user);
+                } else if (selectedPaymentMethod === 'wallet') {
+                    await handleWalletPayment(orderId, orderNumber, total, user);
+                } else if (selectedPaymentMethod === 'cod') {
+                    await handleCODOrder(orderId, orderNumber, user);
+                }
+
+            } catch (error) {
+                console.error('Order placement error:', error);
+                showToast('error', 'Order Failed', 'Failed to place your order. Please try again.');
+                isProcessing = false;
+                if (placeOrderBtn) {
+                    placeOrderBtn.disabled = false;
+                    placeOrderBtn.classList.remove('btn-loading');
+                    placeOrderBtn.innerHTML = '<i class="fas fa-lock"></i> Place Order';
+                }
+            }
+        }
+
+        // ========================================
+        // HANDLE PAYSTACK PAYMENT - FIXED WITH API
+        // ========================================
+        function handlePaystackPayment(orderId, orderNumber, amount, user) {
+            // Get Paystack public key from environment via API
+            // We'll use the API to get the public key or use a fallback
+            const paystackPublicKey = 'pk_live_db3b9ef57c141fc9c457990b8dd6e5411e9bfba8';
+
+            const handler = PaystackPop.setup({
+                key: paystackPublicKey,
+                email: user.email,
+                amount: Math.round(amount * 100),
+                currency: 'NGN',
+                ref: orderNumber,
+                callback: async function(response) {
+                    try {
+                        // Get auth token
+                        const token = await user.getIdToken();
+
+                        // Verify payment via API
+                        const verifyResponse = await fetch(`${API_BASE}/payments/verify?reference=${response.reference}`, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        const result = await verifyResponse.json();
+
+                        if (result.success && result.status === 'completed') {
+                            await confirmOrderAfterPayment(orderId, 'paystack', response.reference);
+                        } else {
+                            showToast('error', 'Payment Verification Failed',
+                                'We could not verify your payment. Please contact support.');
+                            isProcessing = false;
+                            // Redirect to orders
+                            window.location.href = '/orders.html';
+                        }
+                    } catch (error) {
+                        console.error('Payment verification error:', error);
+                        showToast('error', 'Payment Failed',
+                            'Something went wrong. Please contact support.');
+                        isProcessing = false;
+                        window.location.href = '/orders.html';
+                    }
+                },
+                onClose: function() {
+                    if (confirm('Payment was not completed. Do you want to cancel your order?')) {
+                        // Cancel order
+                        db.ref(`orders/${orderId}/orderStatus`).set('cancelled');
+                        db.ref(`orders/${orderId}/statusHistory`).push({
+                            status: 'cancelled',
+                            note: 'Payment cancelled by user',
+                            updatedBy: 'system',
+                            timestamp: Date.now()
+                        });
+                        showToast('warning', 'Payment Cancelled', 'Your order has been cancelled.');
+                        window.location.href = '/orders.html';
+                    } else {
+                        // Re-open Paystack
+                        handler.openIframe();
+                    }
+                }
+            });
+
+            handler.openIframe();
+        }
+
+        // ========================================
+        // HANDLE WALLET PAYMENT
+        // ========================================
+        async function handleWalletPayment(orderId, orderNumber, amount, user) {
+            try {
+                if (walletBalance < amount) {
+                    showToast('error', 'Insufficient Balance',
+                        'Your wallet balance is insufficient. Please fund your wallet or use another payment method.');
+                    await db.ref(`orders/${orderId}/orderStatus`).set('cancelled');
+                    isProcessing = false;
+                    window.location.href = '/orders.html';
+                    return;
+                }
+
+                // Deduct from wallet
+                const newBalance = walletBalance - amount;
+                await db.ref(`wallets/${user.uid}/balance`).set(newBalance);
+
+                // Add transaction record
+                const transactionRef = db.ref('walletTransactions').push();
+                await transactionRef.set({
+                    customerUid: user.uid,
+                    type: 'payment',
+                    amount: amount,
+                    balanceBefore: walletBalance,
+                    balanceAfter: newBalance,
+                    reference: orderNumber,
+                    status: 'completed',
+                    method: 'wallet',
+                    metadata: {
+                        orderId: orderId
+                    },
+                    description: `Payment for order ${orderNumber}`,
+                    createdAt: Date.now()
+                });
+
+                await confirmOrderAfterPayment(orderId, 'wallet', orderNumber);
+
+            } catch (error) {
+                console.error('Wallet payment error:', error);
+                showToast('error', 'Payment Failed', 'Failed to process wallet payment. Please try again.');
+                isProcessing = false;
+                window.location.href = `/order-details.html?id=${orderId}`;
+            }
+        }
+
+        // ========================================
+        // HANDLE COD ORDER
+        // ========================================
+        async function handleCODOrder(orderId, orderNumber, user) {
+            try {
+                await db.ref(`orders/${orderId}/paymentStatus`).set('pending');
+                await db.ref(`orders/${orderId}/orderStatus`).set('pending');
+
+                showToast('success', 'Order Placed!',
+                    `Your order ${orderNumber} has been placed successfully. You'll pay on delivery.`);
+
+                await createNotification(user.uid, 'order_placed',
+                    `New COD order ${orderNumber} placed`,
+                    `Order total: ₦${cartItems.reduce((sum, item) => sum + (item.quantity * item.price), 0) + deliveryFee}`);
+
+                setTimeout(() => {
+                    window.location.href = `/order-details.html?id=${orderId}`;
+                }, 2000);
+
+            } catch (error) {
+                console.error('COD order error:', error);
+                showToast('error', 'Order Failed', 'Failed to place your order. Please try again.');
+                isProcessing = false;
+            }
+        }
+
+        // ========================================
+        // CONFIRM ORDER AFTER PAYMENT
+        // ========================================
+        async function confirmOrderAfterPayment(orderId, method, reference) {
+            try {
+                const user = auth.currentUser;
+                const amount = cartItems.reduce((sum, item) => sum + (item.quantity * item.price), 0) + deliveryFee;
+
+                await db.ref(`orders/${orderId}/paymentStatus`).set('paid');
+                await db.ref(`orders/${orderId}/paymentDetails`).set({
+                    reference: reference,
+                    gateway: method,
+                    amount: amount,
+                    paidAt: Date.now()
+                });
+                await db.ref(`orders/${orderId}/orderStatus`).set('paid');
+                await db.ref(`orders/${orderId}/statusHistory`).push({
+                    status: 'paid',
+                    note: `Payment confirmed via ${method}`,
+                    updatedBy: 'system',
+                    timestamp: Date.now()
+                });
+                await db.ref(`orders/${orderId}/timeline/paymentConfirmed`).set(Date.now());
+
+                // Reserve stock
+                for (const item of cartItems) {
+                    const productRef = db.ref(`products/${item.productId}`);
+                    const productSnapshot = await productRef.once('value');
+                    const product = productSnapshot.val();
+                    if (product && product.stock) {
+                        const newStock = (product.stock.available || 0) - item.quantity;
+                        await productRef.update({
+                            'stock/available': Math.max(0, newStock),
+                            'stock/reserved': (product.stock.reserved || 0) + item.quantity
+                        });
+                    }
+                }
+
+                await createNotification(user.uid, 'order_confirmed',
+                    `Order ${orderId} confirmed`,
+                    `Your order has been confirmed. We'll notify you when it's ready for delivery.`);
+
+                showToast('success', 'Payment Successful!',
+                    `Your order ${orderId} has been confirmed.`);
+
+                setTimeout(() => {
+                    window.location.href = `/order-details.html?id=${orderId}`;
+                }, 2000);
+
+            } catch (error) {
+                console.error('Order confirmation error:', error);
+                showToast('error', 'Error', 'Failed to confirm order. Please contact support.');
+                isProcessing = false;
+            }
+        }
+
+        // ========================================
+        // CREATE NOTIFICATION
+        // ========================================
+        async function createNotification(uid, type, title, message) {
+            try {
+                const notificationRef = db.ref(`notifications/${uid}`).push();
+                await notificationRef.set({
+                    type: type,
+                    title: title,
+                    message: message,
+                    data: {},
+                    read: false,
+                    createdAt: Date.now()
+                });
+            } catch (error) {
+                console.error('Notification error:', error);
+            }
+        }
+
+        // ========================================
+        // SEARCH
+        // ========================================
+        function performSearch(query) {
+            if (!query || query.trim().length < 2) {
+                return;
+            }
+            window.location.href = `/search.html?q=${encodeURIComponent(query.trim())}`;
+        }
+
+        if (searchBtn) {
+            searchBtn.addEventListener('click', () => {
+                performSearch(searchInput.value);
+            });
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch(searchInput.value);
+                }
+            });
+        }
+
+        if (mobileSearchInput) {
+            mobileSearchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch(mobileSearchInput.value);
+                }
+            });
+        }
+
+        // ========================================
+        // MOBILE MENU
+        // ========================================
+        let mobileMenuOpen = false;
+
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', () => {
+                mobileMenuOpen = !mobileMenuOpen;
+                mobileSearch.style.display = mobileMenuOpen ? 'block' : 'none';
+                mobileMenuToggle.innerHTML = mobileMenuOpen ?
+                    '<i class="fas fa-times" style="font-size:20px;"></i>' :
+                    '<i class="fas fa-bars" style="font-size:20px;"></i>';
+            });
+        }
+
+        // ========================================
+        // RESPONSIVE
+        // ========================================
+        function handleResponsive() {
+            const width = window.innerWidth;
+
+            if (width < 768) {
+                const desktopSearch = document.querySelector('.desktop-search');
+                if (desktopSearch) desktopSearch.style.display = 'none';
+                if (mobileMenuToggle) mobileMenuToggle.style.display = 'flex';
+                if (bottomNav) bottomNav.style.display = 'block';
+                document.body.style.paddingBottom = '80px';
+            } else {
+                const desktopSearch = document.querySelector('.desktop-search');
+                if (desktopSearch) desktopSearch.style.display = 'block';
+                if (mobileMenuToggle) mobileMenuToggle.style.display = 'none';
+                if (mobileSearch) mobileSearch.style.display = 'none';
+                if (bottomNav) bottomNav.style.display = 'none';
+                document.body.style.paddingBottom = '0';
+            }
+        }
+
+        window.addEventListener('resize', handleResponsive);
+        handleResponsive();
+
+        // ========================================
+        // CHECK PAYMENT STATUS ON PAGE LOAD
+        // ========================================
+        async function checkPaymentStatus() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const reference = urlParams.get('reference');
+
+            if (reference) {
+                try {
+                    const user = auth.currentUser;
+                    if (!user) return;
+
+                    const token = await user.getIdToken();
+
+                    const response = await fetch(`${API_BASE}/payments/verify?reference=${reference}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success && result.status === 'completed') {
+                        showToast('success', 'Payment Successful!',
+                            `Payment of ₦${Number(result.amount).toLocaleString()} was successful.`);
+
+                        // Remove the reference from URL
+                        const newUrl = window.location.pathname;
+                        window.history.replaceState({}, document.title, newUrl);
+                    } else if (result.success && result.status === 'failed') {
+                        showToast('error', 'Payment Failed',
+                            'Your payment was not successful. Please try again.');
+                        const newUrl = window.location.pathname;
+                        window.history.replaceState({}, document.title, newUrl);
+                    }
+                } catch (error) {
+                    console.error('Payment status check error:', error);
+                }
+            }
+        }
+
+        // ========================================
+        // INITIALIZE
+        // ========================================
+        function initApp() {
+            if (auth.currentUser) {
+                loadUserData(auth.currentUser.uid);
+                loadNotifications(auth.currentUser.uid);
+                loadCartCount(auth.currentUser.uid);
+            }
+
+            // Check payment status on load
+            checkPaymentStatus();
+
+            console.log('📋 Shop Good Checkout page initialized successfully!');
+            console.log(`📡 API Base URL: ${API_BASE}`);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+
+        // ========================================
+        // GLOBAL EXPOSURE
+        // ========================================
+        window.showToast = showToast;
+        window.showModal = showModal;
+        window.closeModal = closeModal;
+        window.logoutUser = logoutUser;
+        window.checkConnection = checkConnection;
+        window.performSearch = performSearch;
+        window.goToStep = goToStep;
+        window.selectAddress = selectAddress;
+        window.selectPaymentMethod = selectPaymentMethod;
+        window.showAddAddressForm = showAddAddressForm;
+        window.placeOrder = placeOrder;
+        window.checkPaymentStatus = checkPaymentStatus;
+    </script>
+
+</body>
+</html>

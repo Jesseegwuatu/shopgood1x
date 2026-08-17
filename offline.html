@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <meta name="theme-color" content="#6C3CE1" />
+    <meta name="description" content="Shop Good - Offline mode" />
+    <title>Offline — Shop Good</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        /* ========================================
+           CSS VARIABLES / THEME SYSTEM
+           ======================================== */
+        :root {
+            --primary: #6C3CE1;
+            --primary-dark: #5A2FC0;
+            --primary-light: #8B6BE8;
+            --primary-gradient: linear-gradient(135deg, #6C3CE1 0%, #A855F7 100%);
+            --secondary: #1A1A2E;
+            --accent: #F59E0B;
+            --white: #FFFFFF;
+            --black: #0A0A0F;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1E293B;
+            --gray-900: #0F172A;
+            --success: #10B981;
+            --success-light: #D1FAE5;
+            --danger: #EF4444;
+            --danger-light: #FEE2E2;
+            --warning: #F59E0B;
+            --warning-light: #FEF3C7;
+            --info: #3B82F6;
+            --info-light: #DBEAFE;
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+            --shadow-primary: 0 8px 32px rgba(108, 60, 225, 0.35);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-2xl: 32px;
+            --radius-full: 9999px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-xs: 12px;
+            --font-sm: 14px;
+            --font-base: 16px;
+            --font-lg: 18px;
+            --font-xl: 20px;
+            --font-2xl: 24px;
+            --font-3xl: 30px;
+            --font-4xl: 36px;
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+            --space-16: 64px;
+            --z-dropdown: 1000;
+            --z-sticky: 1020;
+            --z-fixed: 1030;
+            --z-modal-backdrop: 1040;
+            --z-modal: 1050;
+            --z-toast: 1080;
+        }
+
+        [data-theme="dark"] {
+            --gray-50: #0F172A;
+            --gray-100: #1E293B;
+            --gray-200: #334155;
+            --gray-300: #475569;
+            --gray-400: #64748B;
+            --gray-500: #94A3B8;
+            --gray-600: #CBD5E1;
+            --gray-700: #E2E8F0;
+            --gray-800: #F1F5F9;
+            --gray-900: #F8FAFC;
+            --white: #0A0A0F;
+            --black: #FFFFFF;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+            min-height: 100vh;
+            min-height: 100dvh;
+            transition: background 0.3s ease, color 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        button {
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
+            background: none;
+            color: inherit;
+        }
+        img {
+            display: block;
+            max-width: 100%;
+        }
+        ul {
+            list-style: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: var(--radius-full);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: var(--radius-full);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            padding: 12px 28px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: var(--font-sm);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            min-height: 48px;
+            min-width: 48px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: var(--white);
+            box-shadow: var(--shadow-primary);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(108, 60, 225, 0.45);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-800);
+        }
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-ghost {
+            color: var(--gray-600);
+        }
+        .btn-ghost:hover {
+            color: var(--gray-900);
+            background: var(--gray-100);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: var(--font-xs);
+            min-height: 36px;
+        }
+
+        .btn-icon {
+            width: 48px;
+            height: 48px;
+            padding: 0;
+            border-radius: var(--radius-full);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+            pointer-events: none;
+        }
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-xs);
+            font-weight: 600;
+        }
+        .badge-success {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .badge-danger {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+        .badge-warning {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+        .badge-info {
+            background: var(--info-light);
+            color: var(--info);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: var(--z-modal-backdrop);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: var(--transition);
+            box-shadow: var(--shadow-2xl);
+            position: relative;
+        }
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto var(--space-4);
+        }
+        .modal-icon.success {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .modal-icon.error {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+        .modal-icon.warning {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+        .modal-icon.info {
+            background: var(--info-light);
+            color: var(--info);
+        }
+
+        .modal-title {
+            font-size: var(--font-xl);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: var(--space-2);
+        }
+        .modal-message {
+            text-align: center;
+            color: var(--gray-500);
+            font-size: var(--font-sm);
+            line-height: 1.6;
+            margin-bottom: var(--space-6);
+        }
+        .modal-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .modal-actions .btn {
+            width: auto;
+            min-width: 100px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            color: var(--gray-500);
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            background: var(--gray-200);
+            color: var(--gray-900);
+        }
+
+        .toast-container {
+            position: fixed;
+            top: var(--space-4);
+            right: var(--space-4);
+            z-index: var(--z-toast);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            max-width: 400px;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .toast {
+            pointer-events: auto;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            box-shadow: var(--shadow-lg);
+            border-left: 4px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            transform: translateX(120%);
+            opacity: 0;
+            transition: var(--transition);
+            border: 1px solid var(--gray-100);
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.success {
+            border-left-color: var(--success);
+        }
+        .toast.error {
+            border-left-color: var(--danger);
+        }
+        .toast.warning {
+            border-left-color: var(--warning);
+        }
+
+        .toast-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+        .toast.error .toast-icon {
+            color: var(--danger);
+        }
+        .toast.warning .toast-icon {
+            color: var(--warning);
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+        .toast-title {
+            font-weight: 600;
+            font-size: var(--font-sm);
+        }
+        .toast-message {
+            font-size: var(--font-xs);
+            color: var(--gray-500);
+        }
+
+        .toast-close {
+            color: var(--gray-400);
+            padding: 4px;
+            transition: var(--transition);
+            background: none;
+            border: none;
+            font-size: 16px;
+        }
+        .toast-close:hover {
+            color: var(--gray-600);
+        }
+
+        /* ========================================
+           OFFLINE PAGE SPECIFIC STYLES
+           ======================================== */
+        .offline-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-6) var(--space-4);
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        .offline-container {
+            max-width: 560px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .offline-illustration {
+            width: 240px;
+            height: 240px;
+            margin: 0 auto var(--space-8);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .offline-illustration .icon-wrapper {
+            font-size: 80px;
+            color: var(--gray-400);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .offline-illustration .wifi-icon {
+            position: absolute;
+            top: 20%;
+            right: 15%;
+            font-size: 32px;
+            color: var(--gray-300);
+            animation: pulse-wifi 2s ease-in-out infinite;
+        }
+
+        .offline-illustration .satellite {
+            position: absolute;
+            bottom: 15%;
+            left: 10%;
+            font-size: 28px;
+            color: var(--gray-300);
+            animation: spin-slow 10s linear infinite;
+        }
+
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-16px);
+            }
+        }
+
+        @keyframes pulse-wifi {
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.9);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes spin-slow {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .offline-container h1 {
+            font-size: var(--font-3xl);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            margin-bottom: var(--space-3);
+            color: var(--gray-900);
+        }
+
+        .offline-container h1 .highlight {
+            color: var(--primary);
+        }
+
+        .offline-container .subtitle {
+            font-size: var(--font-lg);
+            color: var(--gray-600);
+            margin-bottom: var(--space-2);
+        }
+
+        .offline-container .description {
+            font-size: var(--font-sm);
+            color: var(--gray-500);
+            line-height: 1.8;
+            margin-bottom: var(--space-6);
+            max-width: 420px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .offline-container .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-full);
+            font-size: var(--font-sm);
+            font-weight: 500;
+            margin-bottom: var(--space-6);
+            background: var(--gray-100);
+            color: var(--gray-600);
+            transition: var(--transition);
+        }
+
+        .offline-container .status-indicator .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--danger);
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        .offline-container .status-indicator.online .dot {
+            background: var(--success);
+            animation: none;
+        }
+
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.2;
+            }
+        }
+
+        .offline-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: var(--space-8);
+        }
+
+        .offline-actions .btn {
+            min-width: 160px;
+        }
+
+        .offline-cached-content {
+            border-top: 1px solid var(--gray-100);
+            padding-top: var(--space-6);
+            margin-top: var(--space-4);
+        }
+
+        .offline-cached-content .cached-title {
+            font-size: var(--font-sm);
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: var(--space-4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+        }
+
+        .offline-cached-content .cached-title i {
+            color: var(--primary);
+        }
+
+        .offline-cached-content .cached-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-3);
+        }
+
+        .offline-cached-content .cached-item {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: var(--space-3);
+            border: 1px solid var(--gray-100);
+            transition: var(--transition);
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .offline-cached-content .cached-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .offline-cached-content .cached-item .cached-icon {
+            font-size: 28px;
+            color: var(--primary);
+            margin-bottom: var(--space-1);
+            display: block;
+        }
+
+        .offline-cached-content .cached-item .cached-label {
+            font-size: var(--font-xs);
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .offline-cached-content .cached-item .cached-desc {
+            font-size: var(--font-xs);
+            color: var(--gray-400);
+        }
+
+        .offline-footer-links {
+            display: flex;
+            gap: var(--space-4);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: var(--space-6);
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--gray-100);
+        }
+
+        .offline-footer-links a {
+            font-size: var(--font-sm);
+            color: var(--gray-500);
+            transition: var(--transition);
+        }
+
+        .offline-footer-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .offline-illustration {
+                width: 180px;
+                height: 180px;
+            }
+
+            .offline-illustration .icon-wrapper {
+                font-size: 56px;
+            }
+
+            .offline-illustration .wifi-icon {
+                font-size: 24px;
+            }
+
+            .offline-illustration .satellite {
+                font-size: 20px;
+            }
+
+            .offline-container h1 {
+                font-size: var(--font-2xl);
+            }
+
+            .offline-container .subtitle {
+                font-size: var(--font-base);
+            }
+
+            .offline-actions .btn {
+                min-width: 140px;
+                flex: 1;
+            }
+
+            .offline-cached-content .cached-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .offline-illustration {
+                width: 140px;
+                height: 140px;
+            }
+
+            .offline-illustration .icon-wrapper {
+                font-size: 40px;
+            }
+
+            .offline-illustration .wifi-icon {
+                font-size: 18px;
+                top: 15%;
+                right: 10%;
+            }
+
+            .offline-illustration .satellite {
+                font-size: 16px;
+                bottom: 10%;
+                left: 5%;
+            }
+
+            .offline-container h1 {
+                font-size: var(--font-xl);
+            }
+
+            .offline-container .subtitle {
+                font-size: var(--font-sm);
+            }
+
+            .offline-container .description {
+                font-size: var(--font-xs);
+            }
+
+            .offline-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .offline-actions .btn {
+                width: 100%;
+                min-width: unset;
+            }
+
+            .offline-cached-content .cached-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================
+    TOAST CONTAINER
+    ======================================== -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- ========================================
+    MODAL CONTAINER
+    ======================================== -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal" role="dialog" aria-modal="true">
+            <button class="modal-close" onclick="closeModal()" aria-label="Close modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="modalContent">
+                <div id="modalIcon" class="modal-icon"></div>
+                <h3 id="modalTitle" class="modal-title"></h3>
+                <p id="modalMessage" class="modal-message"></p>
+                <div id="modalActions" class="modal-actions"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+    OFFLINE PAGE CONTENT
+    ======================================== -->
+    <div class="offline-wrapper">
+        <div class="offline-container">
+
+            <!-- Illustration -->
+            <div class="offline-illustration">
+                <div class="icon-wrapper">
+                    <i class="fas fa-wifi-slash"></i>
+                </div>
+                <div class="wifi-icon">
+                    <i class="fas fa-wifi"></i>
+                </div>
+                <div class="satellite">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <h1>You're <span class="highlight">Offline</span></h1>
+
+            <p class="subtitle">No internet connection detected</p>
+
+            <p class="description">
+                It looks like you've lost your internet connection. Don't worry — you can still access some of your recently viewed products and saved content.
+            </p>
+
+            <!-- Status Indicator -->
+            <div class="status-indicator" id="statusIndicator">
+                <span class="dot"></span>
+                <span id="statusText">Disconnected</span>
+            </div>
+
+            <!-- Actions -->
+            <div class="offline-actions">
+                <button class="btn btn-primary" onclick="retryConnection()">
+                    <i class="fas fa-sync-alt"></i> Retry Connection
+                </button>
+                <a href="/" class="btn btn-secondary">
+                    <i class="fas fa-home"></i> Go to Home
+                </a>
+            </div>
+
+            <!-- Cached Content -->
+            <div class="offline-cached-content">
+                <p class="cached-title">
+                    <i class="fas fa-box-open"></i> Available Offline
+                </p>
+                <div class="cached-grid">
+                    <div class="cached-item" onclick="navigateTo('/')">
+                        <span class="cached-icon"><i class="fas fa-home"></i></span>
+                        <div class="cached-label">Home</div>
+                        <div class="cached-desc">Browse cached</div>
+                    </div>
+                    <div class="cached-item" onclick="navigateTo('/shop.html')">
+                        <span class="cached-icon"><i class="fas fa-th"></i></span>
+                        <div class="cached-label">Shop</div>
+                        <div class="cached-desc">Products</div>
+                    </div>
+                    <div class="cached-item" onclick="navigateTo('/cart.html')">
+                        <span class="cached-icon"><i class="fas fa-shopping-bag"></i></span>
+                        <div class="cached-label">Cart</div>
+                        <div class="cached-desc">Your items</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Links -->
+            <div class="offline-footer-links">
+                <a href="/support.html">Help</a>
+                <a href="/support-chat.html">Chat</a>
+                <a href="/">Home</a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ========================================
+    JAVASCRIPT
+    ======================================== -->
+    <script>
+        // ========================================
+        // DOM REFERENCES
+        // ========================================
+        const toastContainer = document.getElementById('toastContainer');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const statusText = document.getElementById('statusText');
+
+        // ========================================
+        // THEME MANAGEMENT
+        // ========================================
+        function getPreferredTheme() {
+            const saved = localStorage.getItem('shopgood-theme');
+            if (saved) return saved;
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+            return 'light';
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('shopgood-theme', theme);
+        }
+
+        setTheme(getPreferredTheme());
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('shopgood-theme')) {
+                setTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+
+        // ========================================
+        // TOAST SYSTEM
+        // ========================================
+        function showToast(type, title, message, duration = 4000) {
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <i class="fas ${icons[type] || icons.info} toast-icon"></i>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            toastContainer.appendChild(toast);
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        // ========================================
+        // MODAL SYSTEM
+        // ========================================
+        function showModal(type, title, message, actions = []) {
+            const iconMap = {
+                success: { class: 'success', icon: 'fa-check-circle' },
+                error: { class: 'error', icon: 'fa-exclamation-circle' },
+                warning: { class: 'warning', icon: 'fa-exclamation-triangle' },
+                info: { class: 'info', icon: 'fa-info-circle' }
+            };
+
+            const iconData = iconMap[type] || iconMap.info;
+
+            document.getElementById('modalIcon').className = `modal-icon ${iconData.class}`;
+            document.getElementById('modalIcon').innerHTML = `<i class="fas ${iconData.icon}"></i>`;
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+
+            const actionsContainer = document.getElementById('modalActions');
+            actionsContainer.innerHTML = '';
+
+            if (actions.length === 0) {
+                actions.push({
+                    label: 'OK',
+                    class: 'btn-primary',
+                    action: () => closeModal()
+                });
+            }
+
+            actions.forEach(action => {
+                const btn = document.createElement('button');
+                btn.className = `btn ${action.class}`;
+                btn.textContent = action.label;
+                btn.onclick = () => {
+                    if (action.action) action.action();
+                    if (action.close !== false) closeModal();
+                };
+                actionsContainer.appendChild(btn);
+            });
+
+            modalOverlay.classList.add('active');
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+        }
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ========================================
+        // CONNECTION MANAGEMENT
+        // ========================================
+        function updateConnectionStatus() {
+            const isOnline = navigator.onLine;
+
+            if (isOnline) {
+                statusIndicator.classList.add('online');
+                statusText.textContent = 'Connected';
+                document.querySelector('.offline-illustration .icon-wrapper i').className = 'fas fa-wifi';
+                document.querySelector('.offline-illustration .icon-wrapper').style.color = 'var(--success)';
+            } else {
+                statusIndicator.classList.remove('online');
+                statusText.textContent = 'Disconnected';
+                document.querySelector('.offline-illustration .icon-wrapper i').className = 'fas fa-wifi-slash';
+                document.querySelector('.offline-illustration .icon-wrapper').style.color = 'var(--gray-400)';
+            }
+        }
+
+        function retryConnection() {
+            const btn = event?.target?.closest?.('.btn') || document.querySelector('.offline-actions .btn-primary');
+
+            if (btn) {
+                btn.disabled = true;
+                btn.classList.add('btn-loading');
+                btn.innerHTML = 'Checking...';
+            }
+
+            // Force a network check
+            const isOnline = navigator.onLine;
+
+            setTimeout(() => {
+                if (isOnline) {
+                    showToast('success', 'Connected!', 'Your internet connection has been restored.');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1200);
+                } else {
+                    showToast('warning', 'Still Offline', 'Unable to connect. Please check your internet connection.');
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.classList.remove('btn-loading');
+                        btn.innerHTML = '<i class="fas fa-sync-alt"></i> Retry Connection';
+                    }
+                }
+            }, 800);
+        }
+
+        // Listen for online/offline events
+        window.addEventListener('online', () => {
+            updateConnectionStatus();
+            showToast('success', 'Back Online', 'Your internet connection has been restored!');
+            setTimeout(() => {
+                // If user was on offline page, redirect to home
+                if (window.location.pathname.includes('offline.html')) {
+                    window.location.href = '/';
+                }
+            }, 1500);
+        });
+
+        window.addEventListener('offline', () => {
+            updateConnectionStatus();
+            showToast('warning', 'You\'re Offline', 'Please check your internet connection.');
+        });
+
+        // ========================================
+        // NAVIGATION HELPER
+        // ========================================
+        function navigateTo(url) {
+            // Check if online before navigating
+            if (navigator.onLine) {
+                window.location.href = url;
+            } else {
+                showToast('warning', 'Offline', 'You need to be online to access this page.');
+            }
+        }
+
+        // ========================================
+        // INITIALIZE
+        // ========================================
+        function initApp() {
+            updateConnectionStatus();
+
+            // Check if we're online on load
+            if (navigator.onLine) {
+                // If online, redirect to home after a moment
+                setTimeout(() => {
+                    if (window.location.pathname.includes('offline.html')) {
+                        showToast('success', 'Back Online', 'Your internet connection is active.');
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 1000);
+                    }
+                }, 500);
+            }
+
+            console.log('📡 Shop Good Offline page initialized successfully!');
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+
+        // ========================================
+        // GLOBAL EXPOSURE
+        // ========================================
+        window.showToast = showToast;
+        window.showModal = showModal;
+        window.closeModal = closeModal;
+        window.retryConnection = retryConnection;
+        window.navigateTo = navigateTo;
+        window.updateConnectionStatus = updateConnectionStatus;
+    </script>
+
+</body>
+</html>

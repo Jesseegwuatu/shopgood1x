@@ -1,0 +1,80 @@
+shop-good/
+│
+├── index.html                          # Home page
+├── login.html                          # Login
+├── register.html                       # Registration
+├── forgot-password.html                # Password reset
+├── shop.html                           # Product listing
+├── product.html                        # Product details
+├── category.html                       # Category view
+├── search.html                         # Search results
+├── cart.html                           # Shopping cart
+├── checkout.html                       # Checkout
+├── orders.html                         # Order history
+├── order-details.html                  # Order details
+├── wishlist.html                       # Wishlist
+├── wallet.html                         # Wallet management
+├── wallet-fund.html                    # Fund wallet
+├── profile.html                        # User profile
+├── settings.html                       # User settings
+├── notifications.html                  # Notification center
+├── support.html                        # Help & support
+├── support-chat.html                   # AI live chat
+├── product-compare.html                # Compare products
+├── order-export.html                   # Export orders
+├── vouchers.html                       # Vouchers/gift cards
+├── analytics.html                      # Customer analytics
+├── offline.html                        # Offline mode
+│
+├── admin/
+│   └── index.html                      # Admin panel (all in one file)
+│
+├── api/
+│   ├── auth/
+│   │   ├── verify-role.js              # Verify admin role
+│   │   └── check-email.js              # Check email exists
+│   ├── payments/
+│   │   ├── initialize.js               # Init payment
+│   │   ├── verify.js                   # Verify payment
+│   │   └── providers/
+│   │       ├── paystack.js
+│   │       └── wallet.js
+│   ├── orders/
+│   │   ├── create.js                   # Create order
+│   │   ├── confirm.js                  # Confirm order
+│   │   ├── cancel.js                   # Cancel order
+│   │   └── [id].js                     # Get order
+│   ├── wallet/
+│   │   ├── balance.js                  # Get balance
+│   │   ├── fund.js                     # Fund wallet
+│   │   ├── transfer.js                 # Pay with wallet
+│   │   └── transactions.js             # Get transactions
+│   ├── webhooks/
+│   │   └── paystack.js                 # Paystack webhook
+│   ├── products/
+│   │   ├── list.js                     # List products
+│   │   ├── [id].js                     # Get product
+│   │   ├── admin.js                    # Admin CRUD
+│   │   └── search.js                   # Search products
+│   ├── addresses/
+│   │   ├── [uid].js                    # Get addresses
+│   │   ├── create.js                   # Create address
+│   │   ├── update.js                   # Update address
+│   │   └── delete.js                   # Delete address
+│   ├── notifications/
+│   │   ├── send.js                     # Send notification
+│   │   └── read.js                     # Mark as read
+│   ├── admin/
+│   │   ├── dashboard.js                # Dashboard data
+│   │   ├── analytics.js                # Analytics data
+│   │   └── manage-admins.js            # Add/remove admins
+│   └── support/
+│       ├── ticket.js                   # Create ticket
+│       └── chat.js                     # AI chat handler
+│
+├── .env.example
+├── .env.local                          # Your actual env vars (gitignored)
+├── .gitignore
+├── vercel.json                         # Vercel deployment config
+├── package.json                        # For Vercel serverless functions
+└── README.md
