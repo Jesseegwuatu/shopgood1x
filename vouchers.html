@@ -15,6 +15,9 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+    <!-- Paystack Inline JS -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -2144,7 +2147,7 @@
         }
 
         // ========================================
-        // PURCHASE GIFT CARD - VIA API (Paystack)
+        // PURCHASE GIFT CARD - UPDATED WITH FIXED PAYSTACK CALLBACK
         // ========================================
         async function purchaseGiftCard() {
             const user = auth.currentUser;
@@ -2178,33 +2181,38 @@
                 return;
             }
 
-            // Generate unique gift card code
-            const code = 'GC' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 6).toUpperCase();
-
-            // Store gift card data in session for after payment
-            const giftCardData = {
-                code: code,
-                customerUid: user.uid,
-                customerEmail: user.email,
-                recipientEmail: recipient,
-                recipientMessage: message || '',
-                type: 'gift_card',
-                discountType: 'fixed',
-                value: amount,
-                description: `Gift card worth ₦${Number(amount).toLocaleString()}`,
-                status: 'pending',
-                createdAt: Date.now(),
-                expiryDate: Date.now() + (365 * 24 * 60 * 60 * 1000),
-                isGift: true,
-                senderName: user.displayName || 'A Shop Good customer'
-            };
-
             // Disable button
             purchaseGiftBtn.disabled = true;
             purchaseGiftBtn.classList.add('btn-loading');
 
             try {
+                console.log('🔵 Starting gift card purchase...');
+                console.log('💰 Amount:', amount);
+                console.log('📧 Recipient:', recipient);
+
+                // Generate unique gift card code
+                const code = 'GC' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 6).toUpperCase();
+
+                // Store gift card data in session for after payment
+                const giftCardData = {
+                    code: code,
+                    customerUid: user.uid,
+                    customerEmail: user.email,
+                    recipientEmail: recipient,
+                    recipientMessage: message || '',
+                    type: 'gift_card',
+                    discountType: 'fixed',
+                    value: amount,
+                    description: `Gift card worth ₦${Number(amount).toLocaleString()}`,
+                    status: 'pending',
+                    createdAt: Date.now(),
+                    expiryDate: Date.now() + (365 * 24 * 60 * 60 * 1000),
+                    isGift: true,
+                    senderName: user.displayName || 'A Shop Good customer'
+                };
+
                 // Initialize payment with our API
+                console.log('📡 Calling /api/payments/initialize...');
                 const response = await apiRequest('/payments/initialize', {
                     method: 'POST',
                     body: JSON.stringify({
@@ -2219,19 +2227,23 @@
                     })
                 });
 
+                console.log('📡 Response:', response);
+
                 if (response.success && response.authorization_url) {
                     // Store gift card data temporarily
                     sessionStorage.setItem('pendingGiftCard', JSON.stringify(giftCardData));
+                    console.log('🔵 Redirecting to Paystack...');
                     // Redirect to Paystack checkout
                     window.location.href = response.authorization_url;
                 } else {
+                    console.error('❌ Payment initialization failed:', response);
                     showToast('error', 'Payment Initiation Failed',
                         response.message || 'Could not initialize payment. Please try again.');
                     purchaseGiftBtn.disabled = false;
                     purchaseGiftBtn.classList.remove('btn-loading');
                 }
             } catch (error) {
-                console.error('Payment initialization error:', error);
+                console.error('❌ Payment initialization error:', error);
                 showToast('error', 'Payment Failed',
                     error.message || 'Something went wrong. Please try again.');
                 purchaseGiftBtn.disabled = false;
@@ -2240,15 +2252,18 @@
         }
 
         // ========================================
-        // CHECK PAYMENT STATUS ON PAGE LOAD
+        // CHECK PAYMENT STATUS ON PAGE LOAD - UPDATED
         // ========================================
         async function checkPaymentStatus() {
             const urlParams = new URLSearchParams(window.location.search);
             const reference = urlParams.get('reference');
 
             if (reference) {
+                console.log('🔵 Checking payment status for reference:', reference);
                 try {
                     const response = await apiRequest(`/payments/verify/${reference}`);
+
+                    console.log('🔵 Verification response:', response);
 
                     if (response.success && response.status === 'completed') {
                         // Get pending gift card data
@@ -2273,8 +2288,7 @@
 
                             // Reset form
                             selectedGiftAmount = 0;
-                            document.querySelectorAll('.gift-amounts .amount-btn').forEach(btn => btn.classList.remove(
-                            'active'));
+                            document.querySelectorAll('.gift-amounts .amount-btn').forEach(btn => btn.classList.remove('active'));
                             document.getElementById('giftRecipient').value = '';
                             document.getElementById('giftMessage').value = '';
                             if (purchaseGiftBtn) {
@@ -2300,7 +2314,7 @@
                     window.history.replaceState({}, document.title, newUrl);
 
                 } catch (error) {
-                    console.error('Payment verification error:', error);
+                    console.error('❌ Payment verification error:', error);
                 }
             }
         }
