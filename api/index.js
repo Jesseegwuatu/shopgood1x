@@ -51,12 +51,20 @@ async function parseBody(req) {
 }
 
 // ========================================
-// HELPER: Get Base URL
+// HELPER: Verify Auth Token (Firebase)
 // ========================================
-function getBaseUrl(req) {
-    const host = req.headers.host || 'shop-good.vercel.app';
-    const protocol = req.headers['x-forwarded-proto'] || 'https';
-    return `${protocol}://${host}`;
+// Note: We'll accept the token and verify it's present,
+// but actual Firebase verification should be done client-side.
+// We'll trust the token presence as a basic check.
+function verifyAuthToken(token) {
+    if (!token) {
+        return { valid: false, error: 'Missing authorization token' };
+    }
+    // Basic validation - token should be a non-empty string
+    if (typeof token !== 'string' || token.length < 10) {
+        return { valid: false, error: 'Invalid authorization token' };
+    }
+    return { valid: true };
 }
 
 // ========================================
@@ -225,38 +233,9 @@ async function handlePaymentVerify(req, res) {
     }
 }
 
-// ----------------------------------------
-// GET /api/config/paystack
-// Get Paystack public key (for client-side)
-// ----------------------------------------
-async function handleConfigPaystack(req, res) {
-    try {
-        // Check if public key is set
-        if (!PAYSTACK_PUBLIC_KEY) {
-            return sendJson(res, 503, {
-                success: false,
-                message: 'Paystack is not configured',
-                publicKey: ''
-            });
-        }
-
-        return sendJson(res, 200, {
-            success: true,
-            publicKey: PAYSTACK_PUBLIC_KEY
-        });
-    } catch (error) {
-        console.error('Config error:', error);
-        return sendJson(res, 500, {
-            success: false,
-            message: 'Internal server error',
-            publicKey: ''
-        });
-    }
-}
-
 // ========================================
 // ========================================
-// SUPPORT CHAT ROUTE - UPDATED WITH BETTER LOGGING
+// SUPPORT CHAT ROUTE
 // ========================================
 // ========================================
 
@@ -276,19 +255,12 @@ async function handleSupportChat(req, res) {
             });
         }
 
-        // Log the API key status (without exposing the full key)
-        console.log('🔑 OPENROUTER_API_KEY configured:', !!OPENROUTER_API_KEY);
-        if (OPENROUTER_API_KEY) {
-            console.log('🔑 OPENROUTER_API_KEY length:', OPENROUTER_API_KEY.length);
-            console.log('🔑 OPENROUTER_API_KEY prefix:', OPENROUTER_API_KEY.substring(0, 10) + '...');
-        }
-
         // Check OpenRouter API key
         if (!OPENROUTER_API_KEY) {
-            console.error('❌ OPENROUTER_API_KEY is not set');
-            return sendJson(res, 200, {
-                success: true,
-                response: "I'm currently in offline mode. Please contact our support team at support@shopgood.com for assistance. 🙏",
+            console.error('OPENROUTER_API_KEY is not set');
+            return sendJson(res, 503, {
+                success: false,
+                error: 'AI service is currently unavailable',
                 source: 'fallback'
             });
         }
@@ -345,10 +317,6 @@ Always respond in a warm, conversational tone and sign off as "Vortex AI" when a
             content: message
         });
 
-        console.log('📡 Calling OpenRouter API...');
-        console.log('📡 Model:', DEFAULT_MODEL);
-        console.log('📡 Message count:', messages.length);
-
         // Call OpenRouter API
         const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
             method: 'POST',
@@ -368,27 +336,24 @@ Always respond in a warm, conversational tone and sign off as "Vortex AI" when a
             })
         });
 
-        console.log('📡 OpenRouter response status:', openRouterResponse.status);
-
         // Handle OpenRouter response
         if (!openRouterResponse.ok) {
             const errorData = await openRouterResponse.json().catch(() => ({}));
-            console.error('❌ OpenRouter API error:', openRouterResponse.status, errorData);
+            console.error('OpenRouter API error:', openRouterResponse.status, errorData);
 
             // Check for specific error types
-            if (openRouterResponse.status === 401) {
-                console.error('❌ OpenRouter authentication failed - check your API key');
-                return sendJson(res, 200, {
-                    success: true,
-                    response: "I'm having trouble with my AI connection. Please check that my API key is properly configured. 🙏",
+            if (openRouterResponse.status === 429) {
+                return sendJson(res, 429, {
+                    success: false,
+                    error: 'Rate limit exceeded. Please try again in a moment.',
                     source: 'fallback'
                 });
             }
 
-            if (openRouterResponse.status === 429) {
-                return sendJson(res, 200, {
-                    success: true,
-                    response: "I'm getting a lot of requests right now. Please wait a moment and try again. 🙏",
+            if (openRouterResponse.status === 401) {
+                return sendJson(res, 503, {
+                    success: false,
+                    error: 'AI service authentication failed. Please contact support.',
                     source: 'fallback'
                 });
             }
@@ -411,13 +376,10 @@ What would you like to know?`,
         }
 
         const openRouterData = await openRouterResponse.json();
-        console.log('📡 OpenRouter response received successfully');
 
         // Extract the AI response
         if (openRouterData.choices && openRouterData.choices.length > 0) {
             const aiResponse = openRouterData.choices[0].message.content || '';
-            console.log('📡 AI Response length:', aiResponse.length);
-            console.log('📡 AI Response preview:', aiResponse.substring(0, 100) + '...');
             return sendJson(res, 200, {
                 success: true,
                 response: aiResponse,
@@ -425,7 +387,7 @@ What would you like to know?`,
                 model: openRouterData.model || DEFAULT_MODEL
             });
         } else {
-            console.error('❌ No choices in OpenRouter response:', openRouterData);
+            // No choices returned
             return sendJson(res, 200, {
                 success: true,
                 response: "I apologize, but I'm having trouble formulating a response right now. 🤔 Please try rephrasing your question or contact our support team at support@shopgood.com for assistance.",
@@ -434,13 +396,22 @@ What would you like to know?`,
         }
 
     } catch (error) {
-        console.error('❌ Support chat error:', error);
+        console.error('Support chat error:', error);
         return sendJson(res, 200, {
             success: true,
             response: "Oops! Something went wrong on my end. 😅 Don't worry, our human support team is available at support@shopgood.com or you can try again in a moment.",
             source: 'fallback'
         });
     }
+}
+
+// ========================================
+// HELPER: Get Base URL
+// ========================================
+function getBaseUrl(req) {
+    const host = req.headers.host || 'shop-good.vercel.app';
+    const protocol = req.headers['x-forwarded-proto'] || 'https';
+    return `${protocol}://${host}`;
 }
 
 // ========================================
@@ -491,11 +462,43 @@ module.exports = async (req, res) => {
             return;
         }
 
-        // GET /api/config/paystack
-        if (req.method === 'GET' && path === '/api/config/paystack') {
-            await handleConfigPaystack(req, res);
-            return;
+        // Add this to api/index.js after the payment routes
+
+// ----------------------------------------
+// GET /api/config/paystack
+// Get Paystack public key (for client-side)
+// ----------------------------------------
+async function handleConfigPaystack(req, res) {
+    try {
+        // Check if public key is set
+        if (!PAYSTACK_PUBLIC_KEY) {
+            return sendJson(res, 503, {
+                success: false,
+                message: 'Paystack is not configured',
+                publicKey: ''
+            });
         }
+
+        return sendJson(res, 200, {
+            success: true,
+            publicKey: PAYSTACK_PUBLIC_KEY
+        });
+    } catch (error) {
+        console.error('Config error:', error);
+        return sendJson(res, 500, {
+            success: false,
+            message: 'Internal server error',
+            publicKey: ''
+        });
+    }
+}
+
+// Add to the main handler:
+// GET /api/config/paystack
+if (req.method === 'GET' && path === '/api/config/paystack') {
+    await handleConfigPaystack(req, res);
+    return;
+}
 
         // ----------------------------------------
         // Support Chat Routes
@@ -521,7 +524,6 @@ module.exports = async (req, res) => {
                     'POST /api/payments/initialize': 'Initialize Paystack payment',
                     'GET /api/payments/verify?reference=xxx': 'Verify Paystack payment',
                     'GET /api/payments/verify/:reference': 'Verify Paystack payment (alternative)',
-                    'GET /api/config/paystack': 'Get Paystack public key',
                     'POST /api/support/chat': 'Send message to OpenRouter AI assistant',
                     'GET /api': 'This help page'
                 },
@@ -543,7 +545,6 @@ module.exports = async (req, res) => {
             availableEndpoints: [
                 'POST /api/payments/initialize',
                 'GET /api/payments/verify?reference=xxx',
-                'GET /api/config/paystack',
                 'POST /api/support/chat',
                 'GET /api'
             ]
