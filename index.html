@@ -141,7 +141,6 @@
             overflow-x: hidden;
             width: 100%;
             max-width: 100vw;
-            padding-top: 0;
         }
 
         a { text-decoration: none; color: inherit; }
@@ -164,22 +163,18 @@
         }
 
         /* ========================================
-           HEADER - STICKY AT TOP (FIXED)
+           HEADER
            ======================================== */
         #header {
             position: sticky;
             top: 0;
-            z-index: 1030;
+            z-index: var(--z-sticky);
             background: var(--white);
             border-bottom: 1px solid var(--gray-100);
             transition: var(--transition);
             width: 100%;
             max-width: 100vw;
             overflow-x: hidden;
-            left: 0;
-            right: 0;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            will-change: transform;
         }
 
         #header .container {
@@ -195,7 +190,6 @@
             padding-left: var(--space-4);
             padding-right: var(--space-4);
             width: 100%;
-            box-sizing: border-box;
         }
 
         #header .container > a {
@@ -1628,7 +1622,7 @@
     </div>
 
     <!-- ========================================
-    HEADER - STICKY AT TOP (FIXED)
+    HEADER
     ======================================== -->
     <header id="header">
         <div class="container">
