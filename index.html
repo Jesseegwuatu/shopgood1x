@@ -412,6 +412,7 @@
 
         /* ========================================
            MOBILE SIDE MENU - SLIDE IN FROM RIGHT
+           WITH HIGH Z-INDEX
            ======================================== */
         #mobileSideMenu {
             position: fixed;
@@ -421,7 +422,7 @@
             max-width: 85%;
             height: 100%;
             background: var(--white);
-            z-index: 1002;
+            z-index: 9999;
             transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: var(--shadow-2xl);
             overflow-y: auto;
@@ -522,18 +523,6 @@
             font-size: 18px;
         }
 
-        #mobileSideMenu .menu-item .badge-count {
-            margin-left: auto;
-            background: var(--primary);
-            color: var(--white);
-            font-size: 10px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: var(--radius-full);
-            min-width: 20px;
-            text-align: center;
-        }
-
         #mobileSideMenu .menu-divider {
             border-top: 1px solid var(--gray-100);
             margin: var(--space-2) var(--space-4);
@@ -549,14 +538,14 @@
             color: var(--danger);
         }
 
-        /* Menu Overlay */
+        /* Menu Overlay - HIGH Z-INDEX */
         #menuOverlay {
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            z-index: 1001;
+            z-index: 9998;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.35s ease, visibility 0.35s ease;
@@ -1391,7 +1380,7 @@
         }
 
         /* ========================================
-           PRODUCT CARD - UPDATED
+           PRODUCT CARD - FIXED PRICE DISPLAY
            ======================================== */
         .product-card {
             display: flex;
@@ -1493,6 +1482,7 @@
             color: var(--warning);
         }
 
+        /* SINGLE PRICE DISPLAY - ONLY ONE STRIKETHROUGH */
         .product-card .product-content .product-price {
             display: flex;
             flex-direction: column;
@@ -1500,23 +1490,18 @@
             margin-top: auto;
             padding-top: var(--space-2);
         }
-        .product-card .product-content .product-price .price-row {
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
-            flex-wrap: wrap;
-        }
-        .product-card .product-content .product-price .current {
-            font-size: var(--font-lg);
-            font-weight: 800;
-            color: var(--primary);
-        }
         .product-card .product-content .product-price .original {
             font-size: var(--font-sm);
             color: var(--gray-400);
             text-decoration: line-through;
             order: -1;
         }
+        .product-card .product-content .product-price .current {
+            font-size: var(--font-lg);
+            font-weight: 800;
+            color: var(--primary);
+        }
+
         .product-card .product-content .product-stock {
             font-size: var(--font-xs);
             font-weight: 500;
@@ -1542,16 +1527,16 @@
             flex-direction: column;
             gap: 0;
         }
-        .product-card .product-actions .product-price-mini .current {
-            font-size: var(--font-base);
-            font-weight: 700;
-            color: var(--primary);
-        }
         .product-card .product-actions .product-price-mini .original {
             font-size: var(--font-xs);
             color: var(--gray-400);
             text-decoration: line-through;
             order: -1;
+        }
+        .product-card .product-actions .product-price-mini .current {
+            font-size: var(--font-base);
+            font-weight: 700;
+            color: var(--primary);
         }
 
         .product-grid-empty {
@@ -2502,7 +2487,7 @@
         }
 
         // ========================================
-        // CREATE PRODUCT CARD - WITH ADD TO CART
+        // CREATE PRODUCT CARD - FIXED PRICE DISPLAY
         // ========================================
         function createProductCard(product, isFlash = false) {
             const card = document.createElement('a');
@@ -2586,14 +2571,15 @@
                 content.appendChild(rating);
             }
 
-            // Price - Original on top, Current below
+            // Price - ONLY ONE STRIKETHROUGH (original above current)
             const priceContainer = document.createElement('div');
             priceContainer.className = 'product-price';
 
             const displayPrice = product.price?.display || product.price?.base || 0;
             const originalPrice = product.price?.base || 0;
 
-            if (product.price?.discountPercent > 0) {
+            // Only show original price if there's a discount
+            if (product.price?.discountPercent > 0 && originalPrice > displayPrice) {
                 const originalEl = document.createElement('span');
                 originalEl.className = 'original';
                 originalEl.textContent = `₦${Number(originalPrice).toLocaleString()}`;
@@ -2622,7 +2608,8 @@
 
             const priceMini = document.createElement('div');
             priceMini.className = 'product-price-mini';
-            if (product.price?.discountPercent > 0) {
+            // Only show original in mini if there's a discount
+            if (product.price?.discountPercent > 0 && originalPrice > displayPrice) {
                 const orig = document.createElement('span');
                 orig.className = 'original';
                 orig.textContent = `₦${Number(originalPrice).toLocaleString()}`;
