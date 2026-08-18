@@ -924,6 +924,44 @@
         const API_BASE = getApiBase();
 
         // ========================================
+        // API REQUEST HELPER - SAME AS OTHER FILES
+        // ========================================
+        async function apiRequest(endpoint, options = {}) {
+            const user = auth.currentUser;
+            let token = null;
+            
+            if (user) {
+                try {
+                    token = await user.getIdToken();
+                } catch (e) {
+                    console.warn('Could not get auth token:', e);
+                }
+            }
+
+            const headers = {
+                'Content-Type': 'application/json',
+                ...options.headers,
+            };
+
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const response = await fetch(`${API_BASE}${endpoint}`, {
+                ...options,
+                headers: headers,
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || data.error || 'API request failed');
+            }
+
+            return data;
+        }
+
+        // ========================================
         // DOM REFERENCES
         // ========================================
         const loadingScreen = document.getElementById('loadingScreen');
@@ -1301,7 +1339,7 @@
         }
 
         // ========================================
-        // SEND MESSAGE - UPDATED WITH IMPROVED ERROR HANDLING
+        // SEND MESSAGE - UPDATED TO USE apiRequest
         // ========================================
         async function sendMessage() {
             const message = chatInput.value.trim();
@@ -1330,27 +1368,12 @@
                 const userName = user?.displayName || 'Guest';
                 const userEmail = user?.email || '';
 
-                // Get the auth token for the request
-                let token = '';
-                if (user) {
-                    try {
-                        token = await user.getIdToken();
-                    } catch (e) {
-                        console.warn('Could not get auth token, proceeding without it:', e);
-                    }
-                }
+                console.log('🔵 Sending chat message...');
+                console.log('📡 API Base URL:', API_BASE);
 
-                const headers = {
-                    'Content-Type': 'application/json'
-                };
-
-                if (token) {
-                    headers['Authorization'] = `Bearer ${token}`;
-                }
-
-                const response = await fetch(`${API_BASE}/support/chat`, {
+                // Use the apiRequest helper
+                const response = await apiRequest('/support/chat', {
                     method: 'POST',
-                    headers: headers,
                     body: JSON.stringify({
                         message: message,
                         userName: userName,
@@ -1361,22 +1384,15 @@
 
                 removeTypingIndicator(typingId);
 
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.error || `Server error: ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                if (data.success) {
-                    const responseText = data.response || 'I apologize, but I\'m having trouble responding right now. Please try again in a moment. 🙏';
+                if (response.success) {
+                    const responseText = response.response || 'I apologize, but I\'m having trouble responding right now. Please try again in a moment. 🙏';
                     addMessage('bot', responseText);
 
                     // Show source badge if available
-                    if (data.source) {
+                    if (response.source) {
                         const sourceBadge = document.createElement('div');
-                        sourceBadge.className = `api-source-badge ${data.source === 'openrouter' ? 'openrouter' : 'fallback'}`;
-                        sourceBadge.textContent = data.source === 'openrouter' ? '🤖 AI Powered' : '📝 Offline Mode';
+                        sourceBadge.className = `api-source-badge ${response.source === 'openrouter' ? 'openrouter' : 'fallback'}`;
+                        sourceBadge.textContent = response.source === 'openrouter' ? '🤖 AI Powered' : '📝 Offline Mode';
                         const lastMessage = chatMessages.lastElementChild;
                         if (lastMessage) {
                             const bubble = lastMessage.querySelector('.msg-bubble');
@@ -1399,11 +1415,11 @@
                         messageHistory = messageHistory.slice(-MAX_HISTORY * 2);
                     }
                 } else {
-                    throw new Error(data.error || 'Failed to get response');
+                    throw new Error(response.error || 'Failed to get response');
                 }
 
             } catch (error) {
-                console.error('Chat error:', error);
+                console.error('❌ Chat error:', error);
                 removeTypingIndicator(typingId);
                 
                 let errorMessage = 'I apologize, but I\'m having trouble connecting right now. Please try again in a moment, or contact our support team at support@shopgood.com for immediate assistance. 🙏';
@@ -1413,6 +1429,8 @@
                     errorMessage = 'I\'m getting a lot of requests right now. Please wait a moment and try again. 🙏';
                 } else if (error.message.includes('503') || error.message.includes('unavailable')) {
                     errorMessage = 'The AI service is currently unavailable. Please try again in a few minutes, or contact support@shopgood.com for help. 🙏';
+                } else if (error.message.includes('404')) {
+                    errorMessage = 'The chat service is not available right now. Please contact support@shopgood.com for assistance. 🙏';
                 }
                 
                 addMessage('bot', errorMessage);
