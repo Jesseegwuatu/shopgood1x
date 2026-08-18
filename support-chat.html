@@ -947,12 +947,20 @@
                 headers['Authorization'] = `Bearer ${token}`;
             }
 
-            const response = await fetch(`${API_BASE}${endpoint}`, {
+            const url = `${API_BASE}${endpoint}`;
+            console.log('🔵 API Request URL:', url);
+            console.log('🔵 API Request Headers:', headers);
+            console.log('🔵 API Request Body:', options.body);
+
+            const response = await fetch(url, {
                 ...options,
                 headers: headers,
             });
 
+            console.log('🔵 API Response Status:', response.status);
+
             const data = await response.json();
+            console.log('🔵 API Response Data:', data);
 
             if (!response.ok) {
                 throw new Error(data.message || data.error || 'API request failed');
@@ -1339,7 +1347,7 @@
         }
 
         // ========================================
-        // SEND MESSAGE - UPDATED TO USE apiRequest
+        // SEND MESSAGE - UPDATED WITH FULL DEBUGGING
         // ========================================
         async function sendMessage() {
             const message = chatInput.value.trim();
@@ -1347,6 +1355,8 @@
             if (!message || isProcessing) {
                 return;
             }
+
+            console.log('🔵 Sending message:', message);
 
             const welcome = chatMessages.querySelector('.chat-welcome');
             if (welcome) {
@@ -1368,8 +1378,7 @@
                 const userName = user?.displayName || 'Guest';
                 const userEmail = user?.email || '';
 
-                console.log('🔵 Sending chat message...');
-                console.log('📡 API Base URL:', API_BASE);
+                console.log('👤 User:', userName, userEmail);
 
                 // Use the apiRequest helper
                 const response = await apiRequest('/support/chat', {
@@ -1382,10 +1391,13 @@
                     })
                 });
 
+                console.log('✅ API Response received:', response);
+
                 removeTypingIndicator(typingId);
 
                 if (response.success) {
                     const responseText = response.response || 'I apologize, but I\'m having trouble responding right now. Please try again in a moment. 🙏';
+                    console.log('💬 Bot response:', responseText);
                     addMessage('bot', responseText);
 
                     // Show source badge if available
@@ -1415,6 +1427,7 @@
                         messageHistory = messageHistory.slice(-MAX_HISTORY * 2);
                     }
                 } else {
+                    console.error('❌ API returned success=false:', response);
                     throw new Error(response.error || 'Failed to get response');
                 }
 
@@ -1431,6 +1444,8 @@
                     errorMessage = 'The AI service is currently unavailable. Please try again in a few minutes, or contact support@shopgood.com for help. 🙏';
                 } else if (error.message.includes('404')) {
                     errorMessage = 'The chat service is not available right now. Please contact support@shopgood.com for assistance. 🙏';
+                } else if (error.message.includes('401') || error.message.includes('403')) {
+                    errorMessage = 'I\'m having trouble authenticating. Please try refreshing the page and logging in again. 🙏';
                 }
                 
                 addMessage('bot', errorMessage);
