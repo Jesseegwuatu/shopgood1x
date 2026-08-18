@@ -163,7 +163,7 @@
         }
 
         /* ========================================
-           HEADER - FIXED FOR MOBILE
+           HEADER
            ======================================== */
         #header {
             position: sticky;
@@ -192,7 +192,6 @@
             width: 100%;
         }
 
-        /* Brand/Logo */
         #header .container > a {
             display: flex;
             align-items: center;
@@ -207,7 +206,6 @@
             white-space: nowrap;
         }
 
-        /* Desktop Search - Always visible on desktop */
         .desktop-search {
             flex: 1;
             max-width: 600px;
@@ -258,7 +256,6 @@
             white-space: nowrap;
         }
 
-        /* Mobile Search - Always visible on mobile */
         #mobileSearch {
             display: none;
             padding: 0 var(--space-4) var(--space-3);
@@ -297,7 +294,6 @@
             width: 100%;
         }
 
-        /* Header Actions */
         .header-actions {
             display: flex;
             align-items: center;
@@ -324,7 +320,6 @@
             background: var(--gray-100);
         }
 
-        /* Notification and Cart Badges */
         .header-actions .badge-container {
             position: relative;
             display: flex;
@@ -359,7 +354,6 @@
             justify-content: center;
         }
 
-        /* User Avatar - Now links to profile directly */
         #userAvatarLink {
             width: 40px;
             height: 40px;
@@ -380,7 +374,6 @@
             text-decoration: none;
         }
 
-        /* Login Button */
         #loginBtn {
             display: inline-flex;
             align-items: center;
@@ -392,7 +385,6 @@
             white-space: nowrap;
         }
 
-        /* Mobile Menu Toggle - Always visible on mobile */
         #mobileMenuToggle {
             display: none;
             width: 40px;
@@ -409,6 +401,8 @@
             border: none;
             background: none;
             cursor: pointer;
+            z-index: 1001;
+            position: relative;
         }
 
         #mobileMenuToggle:hover {
@@ -416,32 +410,94 @@
             background: var(--gray-100);
         }
 
-        /* Mobile Dropdown Menu */
-        #mobileDropdown {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
+        /* ========================================
+           MOBILE SIDE MENU - SLIDE IN FROM RIGHT
+           ======================================== */
+        #mobileSideMenu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 320px;
+            max-width: 85%;
+            height: 100%;
             background: var(--white);
-            border-bottom: 1px solid var(--gray-100);
-            box-shadow: var(--shadow-lg);
-            z-index: var(--z-dropdown);
-            padding: var(--space-2) 0;
-            max-height: 80vh;
+            z-index: 1002;
+            transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-2xl);
             overflow-y: auto;
+            padding: var(--space-6) var(--space-4);
+            display: flex;
+            flex-direction: column;
         }
 
-        #mobileDropdown.active {
-            display: block;
+        #mobileSideMenu.active {
+            right: 0;
         }
 
-        #mobileDropdown a,
-        #mobileDropdown button {
+        #mobileSideMenu .menu-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: var(--space-4);
+            border-bottom: 1px solid var(--gray-100);
+            margin-bottom: var(--space-4);
+        }
+
+        #mobileSideMenu .menu-header .menu-logo {
+            font-size: var(--font-xl);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+        }
+
+        #mobileSideMenu .menu-header .menu-logo span {
+            color: var(--primary);
+        }
+
+        #mobileSideMenu .menu-close {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--gray-500);
+            transition: var(--transition);
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        #mobileSideMenu .menu-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        #mobileSideMenu .menu-user-info {
+            padding: var(--space-3) var(--space-4);
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-4);
+            display: none;
+        }
+
+        #mobileSideMenu .menu-user-info .name {
+            font-weight: 600;
+            font-size: var(--font-sm);
+            color: var(--gray-900);
+        }
+
+        #mobileSideMenu .menu-user-info .email {
+            font-size: var(--font-xs);
+            color: var(--gray-500);
+        }
+
+        #mobileSideMenu .menu-item {
             display: flex;
             align-items: center;
             gap: var(--space-3);
             padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
             font-size: var(--font-sm);
             color: var(--gray-700);
             transition: var(--transition);
@@ -451,41 +507,64 @@
             background: none;
             cursor: pointer;
             font-family: inherit;
+            text-decoration: none;
         }
 
-        #mobileDropdown a:hover,
-        #mobileDropdown button:hover {
+        #mobileSideMenu .menu-item:hover {
             background: var(--gray-50);
             color: var(--primary);
         }
 
-        #mobileDropdown a i,
-        #mobileDropdown button i {
-            width: 20px;
+        #mobileSideMenu .menu-item i {
+            width: 24px;
             text-align: center;
             color: var(--gray-400);
+            font-size: 18px;
         }
 
-        #mobileDropdown .dropdown-divider {
+        #mobileSideMenu .menu-item .badge-count {
+            margin-left: auto;
+            background: var(--primary);
+            color: var(--white);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            min-width: 20px;
+            text-align: center;
+        }
+
+        #mobileSideMenu .menu-divider {
             border-top: 1px solid var(--gray-100);
             margin: var(--space-2) var(--space-4);
         }
 
-        #mobileDropdown .dropdown-user-info {
-            padding: var(--space-3) var(--space-4);
-            border-bottom: 1px solid var(--gray-100);
-            margin-bottom: var(--space-2);
+        #mobileSideMenu .menu-logout {
+            color: var(--danger);
+            margin-top: auto;
         }
 
-        #mobileDropdown .dropdown-user-info .name {
-            font-weight: 600;
-            font-size: var(--font-sm);
-            color: var(--gray-900);
+        #mobileSideMenu .menu-logout:hover {
+            background: var(--danger-light);
+            color: var(--danger);
         }
 
-        #mobileDropdown .dropdown-user-info .email {
-            font-size: var(--font-xs);
-            color: var(--gray-500);
+        /* Menu Overlay */
+        #menuOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        #menuOverlay.active {
+            opacity: 1;
+            visibility: visible;
         }
 
         /* Bottom Navigation */
@@ -547,7 +626,7 @@
         }
 
         /* ========================================
-           FOOTER - FIXED FOR MOBILE
+           FOOTER
            ======================================== */
         footer {
             background: var(--gray-900);
@@ -662,7 +741,7 @@
         }
 
         /* ========================================
-           RESPONSIVE BREAKPOINTS
+           RESPONSIVE
            ======================================== */
         @media (max-width: 1024px) {
             .container { padding: 0 var(--space-3); }
@@ -675,7 +754,6 @@
         @media (max-width: 768px) {
             .container { padding: 0 var(--space-3); }
 
-            /* Header Mobile */
             #header .container {
                 padding-left: var(--space-3);
                 padding-right: var(--space-3);
@@ -688,7 +766,6 @@
                 font-size: var(--font-base);
             }
 
-            /* Hide desktop search, show mobile search */
             .desktop-search { display: none !important; }
             #mobileSearch { display: block !important; }
             #mobileMenuToggle { display: inline-flex !important; }
@@ -721,7 +798,6 @@
                 padding-bottom: 70px;
             }
 
-            /* Footer Mobile */
             footer {
                 padding: var(--space-6) 0 var(--space-3);
             }
@@ -744,12 +820,16 @@
             footer .footer-bottom .footer-links {
                 justify-content: center;
             }
+
+            #mobileSideMenu {
+                width: 280px;
+                padding: var(--space-4) var(--space-3);
+            }
         }
 
         @media (max-width: 480px) {
             .container { padding: 0 var(--space-2); }
 
-            /* Header Mobile Small */
             #header .container {
                 padding-left: var(--space-2);
                 padding-right: var(--space-2);
@@ -797,7 +877,6 @@
                 font-size: 16px;
             }
 
-            /* Footer Mobile Small */
             footer .footer-grid {
                 grid-template-columns: 1fr;
                 gap: var(--space-4);
@@ -815,10 +894,15 @@
             footer .footer-bottom .footer-links {
                 gap: var(--space-3);
             }
+
+            #mobileSideMenu {
+                width: 260px;
+                padding: var(--space-3) var(--space-2);
+            }
         }
 
         /* ========================================
-           REST OF THE STYLES (UNCHANGED)
+           REST OF THE STYLES
            ======================================== */
         .sr-only {
             position: absolute;
@@ -893,6 +977,34 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+        }
+        .btn-add-to-cart {
+            padding: 6px 14px;
+            font-size: var(--font-xs);
+            min-height: 32px;
+            border-radius: var(--radius-full);
+            background: var(--primary-gradient);
+            color: var(--white);
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .btn-add-to-cart:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-primary);
+        }
+        .btn-add-to-cart:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-add-to-cart.added {
+            background: var(--success);
         }
 
         .btn-loading {
@@ -1205,7 +1317,7 @@
         .offline-banner .retry-btn:hover { background: rgba(255, 255, 255, 0.3); }
 
         /* ========================================
-           CATEGORY CARD WITH IMAGES
+           CATEGORY CARD
            ======================================== */
         .category-card {
             position: relative;
@@ -1224,17 +1336,6 @@
         .category-card:hover {
             transform: translateY(-6px) scale(1.02);
             box-shadow: var(--shadow-xl);
-        }
-        .category-card .category-bg {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition-slow);
-        }
-        .category-card:hover .category-bg {
-            transform: scale(1.1);
         }
         .category-card .category-overlay {
             position: absolute;
@@ -1272,17 +1373,7 @@
             letter-spacing: 1px;
             font-size: var(--font-sm);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: shimmerText 3s ease-in-out infinite;
         }
-        .category-card .category-content .category-name .highlight {
-            color: var(--accent);
-        }
-
-        @keyframes shimmerText {
-            0%, 100% { text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-            50% { text-shadow: 0 2px 20px rgba(255,255,255,0.2), 0 0 40px rgba(108,60,225,0.2); }
-        }
-
         .category-card .category-content .category-count {
             font-size: var(--font-xs);
             opacity: 0.85;
@@ -1291,7 +1382,6 @@
             font-weight: 400;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
-
         .category-card.no-image .category-content .category-name {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -1301,7 +1391,7 @@
         }
 
         /* ========================================
-           PRODUCT CARD
+           PRODUCT CARD - UPDATED
            ======================================== */
         .product-card {
             display: flex;
@@ -1402,12 +1492,19 @@
         .product-card .product-content .product-rating .stars {
             color: var(--warning);
         }
+
         .product-card .product-content .product-price {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin-top: auto;
+            padding-top: var(--space-2);
+        }
+        .product-card .product-content .product-price .price-row {
             display: flex;
             align-items: center;
             gap: var(--space-2);
-            margin-top: auto;
-            padding-top: var(--space-2);
+            flex-wrap: wrap;
         }
         .product-card .product-content .product-price .current {
             font-size: var(--font-lg);
@@ -1418,6 +1515,7 @@
             font-size: var(--font-sm);
             color: var(--gray-400);
             text-decoration: line-through;
+            order: -1;
         }
         .product-card .product-content .product-stock {
             font-size: var(--font-xs);
@@ -1428,6 +1526,32 @@
         }
         .product-card .product-content .product-stock.out-of-stock {
             color: var(--danger);
+        }
+
+        .product-card .product-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-top: var(--space-2);
+            padding-top: var(--space-2);
+            border-top: 1px solid var(--gray-100);
+        }
+        .product-card .product-actions .product-price-mini {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .product-card .product-actions .product-price-mini .current {
+            font-size: var(--font-base);
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .product-card .product-actions .product-price-mini .original {
+            font-size: var(--font-xs);
+            color: var(--gray-400);
+            text-decoration: line-through;
+            order: -1;
         }
 
         .product-grid-empty {
@@ -1465,6 +1589,14 @@
             .section-title { font-size: var(--font-xl); }
             .modal { padding: var(--space-6); margin: var(--space-4); }
             .toast-container { top: auto; bottom: var(--space-4); right: var(--space-4); left: var(--space-4); max-width: 100%; }
+            .product-card .product-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .product-card .product-actions .btn-add-to-cart {
+                width: 100%;
+                justify-content: center;
+            }
         }
         @media (max-width: 480px) {
             .grid-3, .grid-4, .grid-5 { grid-template-columns: repeat(2, 1fr); }
@@ -1518,7 +1650,7 @@
     </div>
 
     <!-- ========================================
-    HEADER - FIXED RESPONSIVE
+    HEADER
     ======================================== -->
     <header id="header">
         <div class="container">
@@ -1530,11 +1662,7 @@
             <div class="desktop-search">
                 <div>
                     <i class="fas fa-search"></i>
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Search for products, brands, categories..."
-                    />
+                    <input type="text" id="searchInput" placeholder="Search for products, brands, categories..." />
                     <button id="searchBtn">Search</button>
                 </div>
             </div>
@@ -1563,9 +1691,7 @@
                     <a href="/login.html" id="loginBtn" class="btn btn-primary btn-sm">
                         <i class="fas fa-user"></i> Sign In
                     </a>
-                    <a href="/profile.html" id="userAvatarLink" style="display:none;">
-                        U
-                    </a>
+                    <a href="/profile.html" id="userAvatarLink" style="display:none;">U</a>
                 </div>
 
                 <button id="mobileMenuToggle" aria-label="Menu">
@@ -1574,34 +1700,10 @@
             </div>
         </div>
 
-        <!-- Mobile Dropdown Menu -->
-        <div id="mobileDropdown">
-            <div class="dropdown-user-info" id="dropdownUserInfo" style="display:none;">
-                <div class="name" id="dropdownUserName">User</div>
-                <div class="email" id="dropdownUserEmail">user@example.com</div>
-            </div>
-            <a href="/profile.html"><i class="fas fa-user"></i> Profile</a>
-            <a href="/orders.html"><i class="fas fa-box"></i> Orders</a>
-            <a href="/wallet.html"><i class="fas fa-wallet"></i> Wallet</a>
-            <a href="/wishlist.html"><i class="fas fa-heart"></i> Wishlist</a>
-            <a href="/vouchers.html"><i class="fas fa-ticket-alt"></i> Vouchers</a>
-            <div class="dropdown-divider"></div>
-            <a href="/support-chat.html"><i class="fas fa-headset"></i> Support Chat</a>
-            <a href="/support.html"><i class="fas fa-question-circle"></i> Help Center</a>
-            <div class="dropdown-divider"></div>
-            <button onclick="logoutUser()" style="color:var(--danger);">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </div>
-
         <div id="mobileSearch">
             <div>
                 <i class="fas fa-search"></i>
-                <input
-                    type="text"
-                    id="mobileSearchInput"
-                    placeholder="Search products..."
-                />
+                <input type="text" id="mobileSearchInput" placeholder="Search products..." />
             </div>
         </div>
 
@@ -1633,13 +1735,47 @@
     </header>
 
     <!-- ========================================
+    MOBILE SIDE MENU - SLIDE IN FROM RIGHT
+    ======================================== -->
+    <div id="menuOverlay"></div>
+
+    <div id="mobileSideMenu">
+        <div class="menu-header">
+            <span class="menu-logo">SHOP <span>GOOD</span></span>
+            <button class="menu-close" id="menuCloseBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="menu-user-info" id="menuUserInfo" style="display:none;">
+            <div class="name" id="menuUserName">User</div>
+            <div class="email" id="menuUserEmail">user@example.com</div>
+        </div>
+
+        <a href="/profile.html" class="menu-item"><i class="fas fa-user"></i> Profile</a>
+        <a href="/orders.html" class="menu-item"><i class="fas fa-box"></i> Orders</a>
+        <a href="/wallet.html" class="menu-item"><i class="fas fa-wallet"></i> Wallet</a>
+        <a href="/wishlist.html" class="menu-item"><i class="fas fa-heart"></i> Wishlist</a>
+        <a href="/vouchers.html" class="menu-item"><i class="fas fa-ticket-alt"></i> Vouchers</a>
+
+        <div class="menu-divider"></div>
+
+        <a href="/support-chat.html" class="menu-item"><i class="fas fa-headset"></i> Support Chat</a>
+        <a href="/support.html" class="menu-item"><i class="fas fa-question-circle"></i> Help Center</a>
+
+        <div class="menu-divider"></div>
+
+        <button onclick="logoutUser()" class="menu-item menu-logout">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+
+    <!-- ========================================
     MAIN CONTENT
     ======================================== -->
     <main>
 
-        <!-- ========================================
-        HERO BANNER SECTION
-        ======================================== -->
+        <!-- HERO BANNER -->
         <section style="padding:var(--space-8) 0 var(--space-4);">
             <div class="container">
                 <div style="position:relative;border-radius:var(--radius-xl);overflow:hidden;background:var(--primary-gradient);padding:var(--space-10) var(--space-8);min-height:280px;display:flex;flex-direction:column;justify-content:center;color:var(--white);">
@@ -1663,9 +1799,7 @@
             </div>
         </section>
 
-        <!-- ========================================
-        CATEGORIES SECTION WITH IMAGES
-        ======================================== -->
+        <!-- CATEGORIES -->
         <section class="section" style="padding-top:0;">
             <div class="container">
                 <div class="section-header">
@@ -1673,12 +1807,9 @@
                         <h2 class="section-title">Browse Categories</h2>
                         <p class="section-subtitle">Find exactly what you're looking for</p>
                     </div>
-                    <a href="/shop.html" class="section-link">
-                        View All <i class="fas fa-arrow-right"></i>
-                    </a>
+                    <a href="/shop.html" class="section-link">View All <i class="fas fa-arrow-right"></i></a>
                 </div>
                 <div id="categoriesGrid" class="grid-5" style="gap:var(--space-3);">
-                    <!-- Categories loaded dynamically with images -->
                     <div class="skeleton" style="height:120px;border-radius:var(--radius-md);"></div>
                     <div class="skeleton" style="height:120px;border-radius:var(--radius-md);"></div>
                     <div class="skeleton" style="height:120px;border-radius:var(--radius-md);"></div>
@@ -1688,9 +1819,7 @@
             </div>
         </section>
 
-        <!-- ========================================
-        FLASH DEALS SECTION
-        ======================================== -->
+        <!-- FLASH DEALS -->
         <section class="section" style="padding-top:0;">
             <div class="container">
                 <div class="section-header">
@@ -1712,9 +1841,7 @@
             </div>
         </section>
 
-        <!-- ========================================
-        FEATURED PRODUCTS - RANDOM/SHUFFLED
-        ======================================== -->
+        <!-- FEATURED PRODUCTS -->
         <section class="section" style="padding-top:0;">
             <div class="container">
                 <div class="section-header">
@@ -1722,9 +1849,7 @@
                         <h2 class="section-title">Featured Products</h2>
                         <p class="section-subtitle">Curated just for you</p>
                     </div>
-                    <a href="/shop.html" class="section-link">
-                        View All <i class="fas fa-arrow-right"></i>
-                    </a>
+                    <a href="/shop.html" class="section-link">View All <i class="fas fa-arrow-right"></i></a>
                 </div>
                 <div id="featuredGrid" class="grid-4" style="gap:var(--space-4);">
                     <div class="skeleton" style="height:320px;border-radius:var(--radius-lg);"></div>
@@ -1735,9 +1860,7 @@
             </div>
         </section>
 
-        <!-- ========================================
-        BEST SELLERS SECTION
-        ======================================== -->
+        <!-- BEST SELLERS -->
         <section class="section" style="padding-top:0;">
             <div class="container">
                 <div class="section-header">
@@ -1745,9 +1868,7 @@
                         <h2 class="section-title">Best Sellers</h2>
                         <p class="section-subtitle">Customer favorites</p>
                     </div>
-                    <a href="/shop.html" class="section-link">
-                        View All <i class="fas fa-arrow-right"></i>
-                    </a>
+                    <a href="/shop.html" class="section-link">View All <i class="fas fa-arrow-right"></i></a>
                 </div>
                 <div id="bestsellersGrid" class="grid-4" style="gap:var(--space-4);">
                     <div class="skeleton" style="height:320px;border-radius:var(--radius-lg);"></div>
@@ -1761,7 +1882,7 @@
     </main>
 
     <!-- ========================================
-    FOOTER - FIXED RESPONSIVE
+    FOOTER
     ======================================== -->
     <footer>
         <div class="container">
@@ -1770,9 +1891,7 @@
                     <span style="font-size:var(--font-2xl);font-weight:900;color:var(--white);letter-spacing:-0.03em;display:block;margin-bottom:var(--space-3);">
                         SHOP <span style="color:var(--primary);">GOOD</span>
                     </span>
-                    <p>
-                        Premium e-commerce platform bringing you the best products at the best prices. Quality guaranteed.
-                    </p>
+                    <p>Premium e-commerce platform bringing you the best products at the best prices. Quality guaranteed.</p>
                     <div class="social-icons">
                         <a href="#"><i class="fab fa-facebook"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -1820,7 +1939,7 @@
     </footer>
 
     <!-- ========================================
-    JAVASCRIPT (ALL INLINED) - UPGRADED
+    JAVASCRIPT
     ======================================== -->
     <script>
         // ========================================
@@ -1858,7 +1977,12 @@
         const loginBtn = document.getElementById('loginBtn');
         const userAvatarLink = document.getElementById('userAvatarLink');
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const mobileDropdown = document.getElementById('mobileDropdown');
+        const mobileSideMenu = document.getElementById('mobileSideMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const menuCloseBtn = document.getElementById('menuCloseBtn');
+        const menuUserName = document.getElementById('menuUserName');
+        const menuUserEmail = document.getElementById('menuUserEmail');
+        const menuUserInfo = document.getElementById('menuUserInfo');
         const mobileSearch = document.getElementById('mobileSearch');
         const bottomNav = document.getElementById('bottomNav');
         const categoriesGrid = document.getElementById('categoriesGrid');
@@ -1866,9 +1990,6 @@
         const featuredGrid = document.getElementById('featuredGrid');
         const bestsellersGrid = document.getElementById('bestsellersGrid');
         const timerDisplay = document.getElementById('timerDisplay');
-        const dropdownUserName = document.getElementById('dropdownUserName');
-        const dropdownUserEmail = document.getElementById('dropdownUserEmail');
-        const dropdownUserInfo = document.getElementById('dropdownUserInfo');
 
         // ========================================
         // STATE
@@ -2029,6 +2150,42 @@
         });
 
         // ========================================
+        // MOBILE SIDE MENU - SLIDE IN
+        // ========================================
+        function openMenu() {
+            mobileSideMenu.classList.add('active');
+            menuOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            mobileMenuToggle.innerHTML = '<i class="fas fa-times"></i>';
+        }
+
+        function closeMenu() {
+            mobileSideMenu.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            mobileMenuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+        }
+
+        mobileMenuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (mobileSideMenu.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        menuCloseBtn.addEventListener('click', closeMenu);
+        menuOverlay.addEventListener('click', closeMenu);
+
+        // Close menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileSideMenu.classList.contains('active')) {
+                closeMenu();
+            }
+        });
+
+        // ========================================
         // AUTHENTICATION
         // ========================================
         auth.onAuthStateChanged((user) => {
@@ -2042,28 +2199,25 @@
                     userAvatarLink.textContent = displayName.charAt(0).toUpperCase();
                 }
 
-                // Update dropdown user info
-                if (dropdownUserName) {
-                    dropdownUserName.textContent = user.displayName || 'User';
+                if (menuUserName) {
+                    menuUserName.textContent = user.displayName || 'User';
                 }
-                if (dropdownUserEmail) {
-                    dropdownUserEmail.textContent = user.email || '';
+                if (menuUserEmail) {
+                    menuUserEmail.textContent = user.email || '';
                 }
-                if (dropdownUserInfo) {
-                    dropdownUserInfo.style.display = 'block';
+                if (menuUserInfo) {
+                    menuUserInfo.style.display = 'block';
                 }
 
                 loadUserData(user.uid);
                 loadNotifications(user.uid);
                 loadCartCount(user.uid);
                 loadWishlist(user.uid);
-                
-                // SHUFFLE FEATURED ON LOGIN
                 shuffleFeatured();
             } else {
                 if (loginBtn) loginBtn.style.display = 'inline-flex';
                 if (userAvatarLink) userAvatarLink.style.display = 'none';
-                if (dropdownUserInfo) dropdownUserInfo.style.display = 'none';
+                if (menuUserInfo) menuUserInfo.style.display = 'none';
                 wishlist = {};
             }
         });
@@ -2073,45 +2227,19 @@
                 showToast('success', 'Logged Out', 'You have been successfully logged out.');
                 if (loginBtn) loginBtn.style.display = 'inline-flex';
                 if (userAvatarLink) userAvatarLink.style.display = 'none';
-                if (dropdownUserInfo) dropdownUserInfo.style.display = 'none';
-                mobileDropdown.classList.remove('active');
-                mobileMenuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                if (menuUserInfo) menuUserInfo.style.display = 'none';
+                closeMenu();
             }).catch((error) => {
                 showToast('error', 'Logout Failed', error.message);
             });
         }
 
-        // ========================================
-        // MOBILE MENU TOGGLE
-        // ========================================
-        if (mobileMenuToggle) {
-            mobileMenuToggle.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const isOpen = mobileDropdown.classList.contains('active');
-                mobileDropdown.classList.toggle('active');
-                this.innerHTML = isOpen ? 
-                    '<i class="fas fa-bars"></i>' : 
-                    '<i class="fas fa-times"></i>';
-            });
-        }
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (mobileDropdown.classList.contains('active')) {
-                const isClickInside = mobileDropdown.contains(e.target) || mobileMenuToggle.contains(e.target);
-                if (!isClickInside) {
-                    mobileDropdown.classList.remove('active');
-                    mobileMenuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                }
-            }
-        });
-
         function loadUserData(uid) {
             db.ref(`users/${uid}`).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    if (dropdownUserName && data.displayName) {
-                        dropdownUserName.textContent = data.displayName;
+                    if (menuUserName && data.displayName) {
+                        menuUserName.textContent = data.displayName;
                     }
                     if (userAvatarLink && data.displayName && !auth.currentUser?.photoURL) {
                         userAvatarLink.textContent = data.displayName.charAt(0).toUpperCase();
@@ -2167,7 +2295,7 @@
         }
 
         // ========================================
-        // LOAD CATEGORIES WITH IMAGES
+        // LOAD CATEGORIES
         // ========================================
         function loadCategories() {
             db.ref('categories').on('value', (snapshot) => {
@@ -2186,13 +2314,11 @@
                     card.href = `/category.html?id=${category.id}`;
                     card.className = `category-card ${!category.image ? 'no-image' : ''}`;
                     
-                    // Style with background image if available
                     if (category.image) {
                         card.style.backgroundImage = `url(${category.image})`;
                         card.style.backgroundSize = 'cover';
                         card.style.backgroundPosition = 'center';
                     } else {
-                        // Generate a nice gradient based on category name
                         const colors = [
                             'linear-gradient(135deg, #6C3CE1, #A855F7)',
                             'linear-gradient(135deg, #EC4899, #F472B6)',
@@ -2201,15 +2327,12 @@
                             'linear-gradient(135deg, #3B82F6, #60A5FA)',
                             'linear-gradient(135deg, #EF4444, #F87171)',
                             'linear-gradient(135deg, #8B5CF6, #A78BFA)',
-                            'linear-gradient(135deg, #14B8A6, #2DD4BF)',
-                            'linear-gradient(135deg, #F472B6, #F9A8D4)',
-                            'linear-gradient(135deg, #F97316, #FB923C)'
+                            'linear-gradient(135deg, #14B8A6, #2DD4BF)'
                         ];
                         const index = category.name.length % colors.length;
                         card.style.background = colors[index];
                     }
 
-                    // Count products in this category
                     const productCount = allProducts.filter(p => p.categoryId === category.id).length;
 
                     card.innerHTML = `
@@ -2234,23 +2357,16 @@
         // SHUFFLE FEATURED PRODUCTS
         // ========================================
         function shuffleFeatured() {
-            // Only shuffle if we have products loaded
             if (allProducts.length === 0) return;
 
-            // Get all active products
             const activeProducts = allProducts.filter(p => p.status === 'active');
-            
-            // Shuffle array using Fisher-Yates
             const shuffled = [...activeProducts];
             for (let i = shuffled.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
 
-            // Take first 4
             const featured = shuffled.slice(0, 4);
-            
-            // Render featured grid
             renderFeaturedProducts(featured);
         }
 
@@ -2301,7 +2417,6 @@
                     startTimer();
                 }
 
-                let loadedCount = 0;
                 deals.forEach(deal => {
                     if (deal.products && deal.products.length > 0) {
                         deal.products.forEach(productId => {
@@ -2312,7 +2427,6 @@
                                     flashDeals.push(flashProduct);
                                     flashDealsGrid.appendChild(createProductCard(flashProduct, true));
                                 }
-                                loadedCount++;
                             });
                         });
                     }
@@ -2381,22 +2495,21 @@
                 const data = snapshot.val();
                 if (data) {
                     allProducts = Object.values(data);
-                    // Load categories after products
                     loadCategories();
-                    // Shuffle featured if user is logged in or on load
                     shuffleFeatured();
                 }
             });
         }
 
         // ========================================
-        // CREATE PRODUCT CARD
+        // CREATE PRODUCT CARD - WITH ADD TO CART
         // ========================================
         function createProductCard(product, isFlash = false) {
             const card = document.createElement('a');
             card.href = `/product.html?id=${product.id}`;
             card.className = 'product-card';
 
+            // Image Container
             const imgContainer = document.createElement('div');
             imgContainer.className = 'img-container';
 
@@ -2414,6 +2527,7 @@
             `;
             imgContainer.appendChild(img);
 
+            // Badges
             const badges = document.createElement('div');
             badges.className = 'product-badges';
 
@@ -2433,6 +2547,7 @@
 
             imgContainer.appendChild(badges);
 
+            // Wishlist Button
             const wishBtn = document.createElement('button');
             wishBtn.className = 'wishlist-btn';
             const isWishlisted = wishlist[product.id] !== undefined;
@@ -2447,6 +2562,7 @@
 
             card.appendChild(imgContainer);
 
+            // Content
             const content = document.createElement('div');
             content.className = 'product-content';
 
@@ -2470,20 +2586,24 @@
                 content.appendChild(rating);
             }
 
+            // Price - Original on top, Current below
             const priceContainer = document.createElement('div');
             priceContainer.className = 'product-price';
-            const currentPrice = document.createElement('span');
-            currentPrice.className = 'current';
+
             const displayPrice = product.price?.display || product.price?.base || 0;
-            currentPrice.textContent = `₦${Number(displayPrice).toLocaleString()}`;
-            priceContainer.appendChild(currentPrice);
+            const originalPrice = product.price?.base || 0;
 
             if (product.price?.discountPercent > 0) {
-                const originalPrice = document.createElement('span');
-                originalPrice.className = 'original';
-                originalPrice.textContent = `₦${Number(product.price?.base || 0).toLocaleString()}`;
-                priceContainer.appendChild(originalPrice);
+                const originalEl = document.createElement('span');
+                originalEl.className = 'original';
+                originalEl.textContent = `₦${Number(originalPrice).toLocaleString()}`;
+                priceContainer.appendChild(originalEl);
             }
+
+            const currentEl = document.createElement('span');
+            currentEl.className = 'current';
+            currentEl.textContent = `₦${Number(displayPrice).toLocaleString()}`;
+            priceContainer.appendChild(currentEl);
 
             content.appendChild(priceContainer);
 
@@ -2496,7 +2616,83 @@
 
             card.appendChild(content);
 
+            // Actions - Add to Cart Button
+            const actions = document.createElement('div');
+            actions.className = 'product-actions';
+
+            const priceMini = document.createElement('div');
+            priceMini.className = 'product-price-mini';
+            if (product.price?.discountPercent > 0) {
+                const orig = document.createElement('span');
+                orig.className = 'original';
+                orig.textContent = `₦${Number(originalPrice).toLocaleString()}`;
+                priceMini.appendChild(orig);
+            }
+            const curr = document.createElement('span');
+            curr.className = 'current';
+            curr.textContent = `₦${Number(displayPrice).toLocaleString()}`;
+            priceMini.appendChild(curr);
+            actions.appendChild(priceMini);
+
+            const addBtn = document.createElement('button');
+            addBtn.className = 'btn-add-to-cart';
+            addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add';
+            addBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                addToCart(product.id, product.name, displayPrice, product.thumbnail);
+            });
+            if (product.stock?.available <= 0) {
+                addBtn.disabled = true;
+                addBtn.innerHTML = '<i class="fas fa-times"></i> Out of Stock';
+            }
+            actions.appendChild(addBtn);
+
+            card.appendChild(actions);
+
             return card;
+        }
+
+        // ========================================
+        // ADD TO CART
+        // ========================================
+        function addToCart(productId, productName, price, thumbnail) {
+            const user = auth.currentUser;
+            if (!user) {
+                showModal('warning', 'Sign In Required',
+                    'Please sign in to add items to your cart.', [{
+                        label: 'Sign In',
+                        class: 'btn-primary',
+                        action: () => window.location.href = '/login.html'
+                    }]
+                );
+                return;
+            }
+
+            const cartRef = db.ref(`cart/${user.uid}/items/${productId}`);
+            cartRef.once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    const currentQty = snapshot.val().quantity || 0;
+                    cartRef.update({
+                        quantity: currentQty + 1
+                    }).then(() => {
+                        showToast('success', 'Added to Cart',
+                            `${productName} quantity updated in your cart.`);
+                    });
+                } else {
+                    cartRef.set({
+                        productId: productId,
+                        name: productName,
+                        price: price,
+                        thumbnail: thumbnail || '',
+                        quantity: 1,
+                        addedAt: Date.now()
+                    }).then(() => {
+                        showToast('success', 'Added to Cart',
+                            `${productName} has been added to your cart.`);
+                    });
+                }
+            });
         }
 
         // ========================================
@@ -2537,67 +2733,44 @@
         }
 
         // ========================================
-        // RENDER ALL PRODUCTS (re-render function)
+        // RENDER ALL PRODUCTS
         // ========================================
         function renderAllProducts() {
-            // Re-render flash deals to update wishlist buttons
-            // The flash deals grid will be re-populated
-            // Since we have listeners, they'll handle it
+            // Re-render all product grids
+            // The listeners will handle it
         }
 
         // ========================================
         // SEARCH
         // ========================================
         function performSearch(query) {
-            if (!query || query.trim().length < 2) {
-                return;
-            }
+            if (!query || query.trim().length < 2) return;
             window.location.href = `/search.html?q=${encodeURIComponent(query.trim())}`;
         }
 
-        if (searchBtn) {
-            searchBtn.addEventListener('click', () => {
-                performSearch(searchInput.value);
-            });
-        }
-
-        if (searchInput) {
-            searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    performSearch(searchInput.value);
-                }
-            });
-        }
-
-        if (mobileSearchInput) {
-            mobileSearchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    performSearch(mobileSearchInput.value);
-                }
-            });
-        }
+        searchBtn.addEventListener('click', () => performSearch(searchInput.value));
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performSearch(searchInput.value);
+        });
+        mobileSearchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performSearch(mobileSearchInput.value);
+        });
 
         // ========================================
-        // RESPONSIVE - UPDATED
+        // RESPONSIVE
         // ========================================
         function handleResponsive() {
             const width = window.innerWidth;
-
-            // Header actions visibility
             const headerActions = document.querySelector('.header-actions');
             
             if (width < 480) {
-                // On very small screens, hide some icons
                 const icons = headerActions.querySelectorAll('.badge-container, .btn-icon');
                 icons.forEach((icon, index) => {
-                    // Keep theme toggle, notification, cart, and user menu visible
-                    // Hide wishlist on very small screens (it's in bottom nav anyway)
                     if (index === 2) { // wishlist
                         icon.style.display = 'none';
                     }
                 });
             } else {
-                // Show all icons on larger screens
                 const icons = headerActions.querySelectorAll('.badge-container, .btn-icon');
                 icons.forEach(icon => {
                     icon.style.display = 'flex';
@@ -2606,18 +2779,16 @@
         }
 
         window.addEventListener('resize', handleResponsive);
-        // Call once on load
         setTimeout(handleResponsive, 100);
 
         // ========================================
-        // INITIALIZE APP
+        // INITIALIZE
         // ========================================
         function initApp() {
             setTimeout(() => {
                 loadingScreen.classList.add('hidden');
             }, 800);
 
-            // Load all data
             loadAllProducts();
             loadFlashDeals();
             loadBestSellers();
@@ -2648,6 +2819,9 @@
         window.checkConnection = checkConnection;
         window.toggleWishlist = toggleWishlist;
         window.performSearch = performSearch;
+        window.addToCart = addToCart;
+        window.openMenu = openMenu;
+        window.closeMenu = closeMenu;
     </script>
 
 </body>
