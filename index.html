@@ -1380,7 +1380,7 @@
         }
 
         /* ========================================
-           PRODUCT CARD - FIXED PRICE DISPLAY
+           PRODUCT CARD - SINGLE PRICE DISPLAY
            ======================================== */
         .product-card {
             display: flex;
@@ -1521,22 +1521,9 @@
             padding-top: var(--space-2);
             border-top: 1px solid var(--gray-100);
         }
-        .product-card .product-actions .product-price-mini {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-        }
-        .product-card .product-actions .product-price-mini .original {
-            font-size: var(--font-xs);
-            color: var(--gray-400);
-            text-decoration: line-through;
-            order: -1;
-        }
-        .product-card .product-actions .product-price-mini .current {
-            font-size: var(--font-base);
-            font-weight: 700;
-            color: var(--primary);
+        .product-card .product-actions .btn-add-to-cart {
+            width: 100%;
+            justify-content: center;
         }
 
         .product-grid-empty {
@@ -2487,7 +2474,7 @@
         }
 
         // ========================================
-        // CREATE PRODUCT CARD - FIXED PRICE DISPLAY
+        // CREATE PRODUCT CARD - SINGLE PRICE DISPLAY
         // ========================================
         function createProductCard(product, isFlash = false) {
             const card = document.createElement('a');
@@ -2602,28 +2589,13 @@
 
             card.appendChild(content);
 
-            // Actions - Add to Cart Button
+            // Actions - Add to Cart Button Only (No duplicate price)
             const actions = document.createElement('div');
             actions.className = 'product-actions';
 
-            const priceMini = document.createElement('div');
-            priceMini.className = 'product-price-mini';
-            // Only show original in mini if there's a discount
-            if (product.price?.discountPercent > 0 && originalPrice > displayPrice) {
-                const orig = document.createElement('span');
-                orig.className = 'original';
-                orig.textContent = `₦${Number(originalPrice).toLocaleString()}`;
-                priceMini.appendChild(orig);
-            }
-            const curr = document.createElement('span');
-            curr.className = 'current';
-            curr.textContent = `₦${Number(displayPrice).toLocaleString()}`;
-            priceMini.appendChild(curr);
-            actions.appendChild(priceMini);
-
             const addBtn = document.createElement('button');
             addBtn.className = 'btn-add-to-cart';
-            addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add';
+            addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
             addBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
