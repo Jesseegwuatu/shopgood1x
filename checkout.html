@@ -15,7 +15,7 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    <!-- Paystack Inline JS -->
+    <!-- Paystack Inline JS (still needed for some features but we'll use redirect) -->
     <script src="https://js.paystack.co/v1/inline.js"></script>
 
     <!-- Firebase SDK -->
@@ -1775,7 +1775,7 @@
         }
 
         // ========================================
-        // PLACE ORDER - FIXED WITH API
+        // PLACE ORDER - UPDATED WITH REDIRECT METHOD
         // ========================================
         async function placeOrder() {
             if (isProcessing) return;
@@ -1917,11 +1917,11 @@
         }
 
         // ========================================
-        // HANDLE PAYSTACK PAYMENT - UPDATED WITH DEBUG LOGGING
+        // HANDLE PAYSTACK PAYMENT - USING REDIRECT METHOD
         // ========================================
         async function handlePaystackPayment(orderId, orderNumber, amount, user) {
             try {
-                console.log('🔵 Starting Paystack payment flow...');
+                console.log('🔵 Starting Paystack payment flow (redirect method)...');
                 console.log('📦 Order ID:', orderId);
                 console.log('💰 Amount:', amount);
                 console.log('👤 User:', user.email);
@@ -1958,110 +1958,81 @@
                     console.error('❌ Payment initialization failed:', initResult);
                     showToast('error', 'Payment Init Failed', initResult.message || 'Could not initialize payment.');
                     isProcessing = false;
-                    // Don't redirect immediately, let the user see the error
                     return;
                 }
 
-                // Get the public key from the API
-                console.log('📡 Calling /api/config/paystack...');
-                const configResponse = await fetch(`${API_BASE}/config/paystack`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                const configResult = await configResponse.json();
-                console.log('📡 Config response:', configResult);
-
-                const publicKey = configResult.publicKey || '';
-
-                if (!publicKey) {
-                    console.error('❌ No public key received');
-                    showToast('error', 'Payment Error', 'Paystack is not configured. Please contact support.');
-                    isProcessing = false;
-                    return;
-                }
-
-                console.log('✅ Public key obtained:', publicKey.substring(0, 10) + '...');
-
-                // Define the callback function (synchronous - required by Paystack)
-                const paymentCallback = function(response) {
-                    console.log('🔵 Paystack callback received:', response);
-                    // Call the async verification function
-                    handlePaymentVerification(response, orderId, token);
+                // Store order info in session for after payment
+                const paymentData = {
+                    orderId: orderId,
+                    orderNumber: orderNumber,
+                    amount: amount
                 };
+                sessionStorage.setItem('pendingOrderPayment', JSON.stringify(paymentData));
 
-                // Now open Paystack popup with the callback
-                console.log('🔵 Opening Paystack popup...');
-                const handler = PaystackPop.setup({
-                    key: publicKey,
-                    email: user.email,
-                    amount: Math.round(amount * 100),
-                    currency: 'NGN',
-                    ref: initResult.reference || orderNumber,
-                    callback: paymentCallback,
-                    onClose: function() {
-                        console.log('🔵 Paystack popup closed');
-                        if (confirm('Payment was not completed. Do you want to cancel your order?')) {
-                            // Cancel order
-                            db.ref(`orders/${orderId}/orderStatus`).set('cancelled');
-                            db.ref(`orders/${orderId}/statusHistory`).push({
-                                status: 'cancelled',
-                                note: 'Payment cancelled by user',
-                                updatedBy: 'system',
-                                timestamp: Date.now()
-                            });
-                            showToast('warning', 'Payment Cancelled', 'Your order has been cancelled.');
-                            window.location.href = '/orders.html';
-                        } else {
-                            // Re-open Paystack
-                            handler.openIframe();
-                        }
-                    }
-                });
-
-                handler.openIframe();
+                console.log('🔵 Redirecting to Paystack...');
+                // Redirect to Paystack checkout
+                window.location.href = initResult.authorization_url;
 
             } catch (error) {
                 console.error('❌ Paystack initialization error:', error);
                 showToast('error', 'Payment Error', 'Failed to initialize payment. Please try again.');
                 isProcessing = false;
-                // Don't redirect immediately, let the user see the error
             }
         }
 
         // ========================================
-        // HANDLE PAYMENT VERIFICATION (Separate async function)
+        // HANDLE PAYMENT VERIFICATION (Called when returning from Paystack)
         // ========================================
-        async function handlePaymentVerification(response, orderId, token) {
-            try {
-                console.log('🔵 Verifying payment:', response.reference);
+        async function handlePaymentVerification() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const reference = urlParams.get('reference');
+
+            if (reference) {
+                console.log('🔵 Verifying payment:', reference);
                 
-                // Verify payment via API
-                const verifyResponse = await fetch(`${API_BASE}/payments/verify?reference=${response.reference}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
+                try {
+                    const user = auth.currentUser;
+                    if (!user) return;
+
+                    const token = await user.getIdToken();
+
+                    const response = await fetch(`${API_BASE}/payments/verify?reference=${reference}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const result = await response.json();
+                    console.log('🔵 Verification result:', result);
+
+                    if (result.success && result.status === 'completed') {
+                        // Get pending order data
+                        const pendingOrder = sessionStorage.getItem('pendingOrderPayment');
+                        if (pendingOrder) {
+                            const orderData = JSON.parse(pendingOrder);
+                            await confirmOrderAfterPayment(orderData.orderId, 'paystack', reference);
+                            sessionStorage.removeItem('pendingOrderPayment');
+                        } else {
+                            showToast('success', 'Payment Successful!',
+                                `Payment of ₦${Number(result.amount).toLocaleString()} was successful.`);
+                            window.location.href = '/orders.html';
+                        }
+                    } else if (result.success && result.status === 'failed') {
+                        showToast('error', 'Payment Failed',
+                            'Your payment was not successful. Please try again.');
+                        const newUrl = window.location.pathname;
+                        window.history.replaceState({}, document.title, newUrl);
                     }
-                });
 
-                const result = await verifyResponse.json();
-                console.log('🔵 Verification result:', result);
+                    // Remove the reference from URL
+                    const newUrl = window.location.pathname;
+                    window.history.replaceState({}, document.title, newUrl);
 
-                if (result.success && result.status === 'completed') {
-                    await confirmOrderAfterPayment(orderId, 'paystack', response.reference);
-                } else {
-                    showToast('error', 'Payment Verification Failed',
-                        'We could not verify your payment. Please contact support.');
-                    isProcessing = false;
-                    window.location.href = '/orders.html';
+                } catch (error) {
+                    console.error('Payment verification error:', error);
                 }
-            } catch (error) {
-                console.error('❌ Payment verification error:', error);
-                showToast('error', 'Payment Failed',
-                    'Something went wrong. Please contact support.');
-                isProcessing = false;
-                window.location.href = '/orders.html';
             }
         }
 
@@ -2285,49 +2256,6 @@
         handleResponsive();
 
         // ========================================
-        // CHECK PAYMENT STATUS ON PAGE LOAD
-        // ========================================
-        async function checkPaymentStatus() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const reference = urlParams.get('reference');
-
-            if (reference) {
-                try {
-                    const user = auth.currentUser;
-                    if (!user) return;
-
-                    const token = await user.getIdToken();
-
-                    const response = await fetch(`${API_BASE}/payments/verify?reference=${reference}`, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-
-                    const result = await response.json();
-
-                    if (result.success && result.status === 'completed') {
-                        showToast('success', 'Payment Successful!',
-                            `Payment of ₦${Number(result.amount).toLocaleString()} was successful.`);
-
-                        // Remove the reference from URL
-                        const newUrl = window.location.pathname;
-                        window.history.replaceState({}, document.title, newUrl);
-                    } else if (result.success && result.status === 'failed') {
-                        showToast('error', 'Payment Failed',
-                            'Your payment was not successful. Please try again.');
-                        const newUrl = window.location.pathname;
-                        window.history.replaceState({}, document.title, newUrl);
-                    }
-                } catch (error) {
-                    console.error('Payment status check error:', error);
-                }
-            }
-        }
-
-        // ========================================
         // INITIALIZE
         // ========================================
         function initApp() {
@@ -2337,8 +2265,8 @@
                 loadCartCount(auth.currentUser.uid);
             }
 
-            // Check payment status on load
-            checkPaymentStatus();
+            // Check payment status on load (for redirect method)
+            handlePaymentVerification();
 
             console.log('📋 Shop Good Checkout page initialized successfully!');
             console.log(`📡 API Base URL: ${API_BASE}`);
@@ -2364,7 +2292,6 @@
         window.selectPaymentMethod = selectPaymentMethod;
         window.showAddAddressForm = showAddAddressForm;
         window.placeOrder = placeOrder;
-        window.checkPaymentStatus = checkPaymentStatus;
     </script>
 
 </body>
