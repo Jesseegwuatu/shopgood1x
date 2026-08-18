@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
     <meta name="theme-color" content="#6C3CE1" />
-    <meta name="description" content="Shop Good - Your shopping cart" />
-    <title>Cart — Shop Good</title>
+    <meta name="description" content="Shop Good - AI-powered live chat support" />
+    <title>Live Chat — Shop Good</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -110,9 +110,7 @@
             --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2);
         }
 
-        *,
-        *::before,
-        *::after {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -136,60 +134,18 @@
             overflow-x: hidden;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-        button {
-            cursor: pointer;
-            font-family: inherit;
-            border: none;
-            background: none;
-            color: inherit;
-        }
-        input {
-            font-family: inherit;
-            font-size: inherit;
-            color: inherit;
-            background: none;
-            border: none;
-            outline: none;
-        }
-        img {
-            display: block;
-            max-width: 100%;
-        }
-        ul {
-            list-style: none;
-        }
+        a { text-decoration: none; color: inherit; }
+        button { cursor: pointer; font-family: inherit; border: none; background: none; color: inherit; }
+        input { font-family: inherit; font-size: inherit; color: inherit; background: none; border: none; outline: none; }
+        img { display: block; max-width: 100%; }
+        ul { list-style: none; }
 
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--gray-100);
-            border-radius: var(--radius-full);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: var(--radius-full);
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-dark);
-        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--gray-100); border-radius: var(--radius-full); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: var(--radius-full); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
 
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 var(--space-4);
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--space-4);
-        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 var(--space-4); }
 
         .btn {
             display: inline-flex;
@@ -212,73 +168,21 @@
             color: var(--white);
             box-shadow: var(--shadow-primary);
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(108, 60, 225, 0.45);
-        }
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(108, 60, 225, 0.45); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-        .btn-secondary {
-            background: var(--gray-200);
-            color: var(--gray-800);
-        }
-        .btn-secondary:hover {
-            background: var(--gray-300);
-        }
+        .btn-secondary { background: var(--gray-200); color: var(--gray-800); }
+        .btn-secondary:hover { background: var(--gray-300); }
 
-        .btn-outline {
-            background: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-        .btn-outline:hover {
-            background: var(--primary);
-            color: var(--white);
-        }
+        .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary); color: var(--white); }
 
-        .btn-danger {
-            background: var(--danger);
-            color: var(--white);
-        }
-        .btn-danger:hover {
-            background: #DC2626;
-        }
+        .btn-ghost { color: var(--gray-600); }
+        .btn-ghost:hover { color: var(--gray-900); background: var(--gray-100); }
 
-        .btn-success {
-            background: var(--success);
-            color: var(--white);
-        }
-        .btn-success:hover {
-            background: #059669;
-        }
-
-        .btn-ghost {
-            color: var(--gray-600);
-        }
-        .btn-ghost:hover {
-            color: var(--gray-900);
-            background: var(--gray-100);
-        }
-
-        .btn-sm {
-            padding: 8px 16px;
-            font-size: var(--font-xs);
-            min-height: 36px;
-        }
-
-        .btn-icon {
-            width: 48px;
-            height: 48px;
-            padding: 0;
-            border-radius: var(--radius-full);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .btn-sm { padding: 8px 16px; font-size: var(--font-xs); min-height: 36px; }
+        .btn-icon { width: 48px; height: 48px; padding: 0; border-radius: var(--radius-full); display: inline-flex; align-items: center; justify-content: center; }
+        .btn-block { width: 100%; }
 
         .btn-loading {
             position: relative;
@@ -296,11 +200,7 @@
             animation: spin 0.8s linear infinite;
         }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .badge {
             display: inline-flex;
@@ -311,14 +211,11 @@
             font-size: var(--font-xs);
             font-weight: 600;
         }
-        .badge-danger {
-            background: var(--danger-light);
-            color: var(--danger);
-        }
-        .badge-success {
-            background: var(--success-light);
-            color: var(--success);
-        }
+        .badge-success { background: var(--success-light); color: var(--success); }
+        .badge-danger { background: var(--danger-light); color: var(--danger); }
+        .badge-warning { background: var(--warning-light); color: var(--warning); }
+        .badge-info { background: var(--info-light); color: var(--info); }
+        .badge-primary { background: var(--primary); color: var(--white); }
 
         .modal-overlay {
             position: fixed;
@@ -335,10 +232,7 @@
             visibility: hidden;
             transition: var(--transition);
         }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
 
         .modal {
             background: var(--white);
@@ -353,9 +247,7 @@
             box-shadow: var(--shadow-2xl);
             position: relative;
         }
-        .modal-overlay.active .modal {
-            transform: scale(1);
-        }
+        .modal-overlay.active .modal { transform: scale(1); }
 
         .modal-icon {
             width: 64px;
@@ -367,42 +259,15 @@
             font-size: 28px;
             margin: 0 auto var(--space-4);
         }
-        .modal-icon.success {
-            background: var(--success-light);
-            color: var(--success);
-        }
-        .modal-icon.error {
-            background: var(--danger-light);
-            color: var(--danger);
-        }
-        .modal-icon.warning {
-            background: var(--warning-light);
-            color: var(--warning);
-        }
+        .modal-icon.success { background: var(--success-light); color: var(--success); }
+        .modal-icon.error { background: var(--danger-light); color: var(--danger); }
+        .modal-icon.warning { background: var(--warning-light); color: var(--warning); }
+        .modal-icon.info { background: var(--info-light); color: var(--info); }
 
-        .modal-title {
-            font-size: var(--font-xl);
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: var(--space-2);
-        }
-        .modal-message {
-            text-align: center;
-            color: var(--gray-500);
-            font-size: var(--font-sm);
-            line-height: 1.6;
-            margin-bottom: var(--space-6);
-        }
-        .modal-actions {
-            display: flex;
-            gap: var(--space-3);
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .modal-actions .btn {
-            width: auto;
-            min-width: 100px;
-        }
+        .modal-title { font-size: var(--font-xl); font-weight: 700; text-align: center; margin-bottom: var(--space-2); }
+        .modal-message { text-align: center; color: var(--gray-500); font-size: var(--font-sm); line-height: 1.6; margin-bottom: var(--space-6); }
+        .modal-actions { display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap; }
+        .modal-actions .btn { width: auto; min-width: 100px; }
 
         .modal-close {
             position: absolute;
@@ -418,10 +283,7 @@
             color: var(--gray-500);
             transition: var(--transition);
         }
-        .modal-close:hover {
-            background: var(--gray-200);
-            color: var(--gray-900);
-        }
+        .modal-close:hover { background: var(--gray-200); color: var(--gray-900); }
 
         .toast-container {
             position: fixed;
@@ -451,51 +313,22 @@
             transition: var(--transition);
             border: 1px solid var(--gray-100);
         }
-        .toast.show {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        .toast.success {
-            border-left-color: var(--success);
-        }
-        .toast.error {
-            border-left-color: var(--danger);
-        }
+        .toast.show { transform: translateX(0); opacity: 1; }
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); }
 
-        .toast-icon {
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-        .toast.success .toast-icon {
-            color: var(--success);
-        }
-        .toast.error .toast-icon {
-            color: var(--danger);
-        }
+        .toast-icon { font-size: 20px; flex-shrink: 0; }
+        .toast.success .toast-icon { color: var(--success); }
+        .toast.error .toast-icon { color: var(--danger); }
+        .toast.warning .toast-icon { color: var(--warning); }
 
-        .toast-content {
-            flex: 1;
-        }
-        .toast-title {
-            font-weight: 600;
-            font-size: var(--font-sm);
-        }
-        .toast-message {
-            font-size: var(--font-xs);
-            color: var(--gray-500);
-        }
+        .toast-content { flex: 1; }
+        .toast-title { font-weight: 600; font-size: var(--font-sm); }
+        .toast-message { font-size: var(--font-xs); color: var(--gray-500); }
 
-        .toast-close {
-            color: var(--gray-400);
-            padding: 4px;
-            transition: var(--transition);
-            background: none;
-            border: none;
-            font-size: 16px;
-        }
-        .toast-close:hover {
-            color: var(--gray-600);
-        }
+        .toast-close { color: var(--gray-400); padding: 4px; transition: var(--transition); background: none; border: none; font-size: 16px; }
+        .toast-close:hover { color: var(--gray-600); }
 
         .loading-screen {
             position: fixed;
@@ -508,11 +341,7 @@
             justify-content: center;
             transition: var(--transition);
         }
-        .loading-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
+        .loading-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
         .loading-spinner {
             width: 64px;
@@ -524,58 +353,12 @@
             margin-bottom: var(--space-4);
         }
 
-        .loading-logo {
-            font-size: var(--font-4xl);
-            font-weight: 900;
-            letter-spacing: -0.03em;
-        }
-        .loading-logo span {
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+        .loading-logo { font-size: var(--font-4xl); font-weight: 900; letter-spacing: -0.03em; }
+        .loading-logo span { background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
-        .loading-text {
-            color: var(--gray-400);
-            font-size: var(--font-sm);
-            margin-top: var(--space-2);
-            animation: pulse 1.5s ease-in-out infinite;
-        }
+        .loading-text { color: var(--gray-400); font-size: var(--font-sm); margin-top: var(--space-2); animation: pulse 1.5s ease-in-out infinite; }
 
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        .skeleton {
-            background: var(--gray-200);
-            border-radius: var(--radius-sm);
-            animation: shimmer 1.5s ease-in-out infinite;
-            position: relative;
-            overflow: hidden;
-        }
-        .skeleton::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            animation: shimmer 1.5s ease-in-out infinite;
-        }
-
-        @keyframes shimmer {
-            0% {
-                transform: translateX(-100%);
-            }
-            100% {
-                transform: translateX(100%);
-            }
-        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         .offline-banner {
             position: fixed;
@@ -595,26 +378,14 @@
             gap: var(--space-3);
             flex-wrap: wrap;
         }
-        .offline-banner.visible {
-            display: flex;
-        }
-        .offline-banner .retry-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: var(--white);
-            padding: 4px 16px;
-            border-radius: var(--radius-full);
-            font-weight: 600;
-            font-size: var(--font-xs);
-            transition: var(--transition);
-        }
-        .offline-banner .retry-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
+        .offline-banner.visible { display: flex; }
+        .offline-banner .retry-btn { background: rgba(255, 255, 255, 0.2); color: var(--white); padding: 4px 16px; border-radius: var(--radius-full); font-weight: 600; font-size: var(--font-xs); transition: var(--transition); }
+        .offline-banner .retry-btn:hover { background: rgba(255, 255, 255, 0.3); }
 
         /* ========================================
-           CART PAGE SPECIFIC STYLES
+           CHAT PAGE SPECIFIC STYLES
            ======================================== */
-        .cart-hero {
+        .chat-hero {
             background: var(--primary-gradient);
             padding: var(--space-6) 0;
             color: var(--white);
@@ -623,7 +394,7 @@
             position: relative;
             overflow: hidden;
         }
-        .cart-hero::after {
+        .chat-hero::after {
             content: '';
             position: absolute;
             top: -50%;
@@ -634,273 +405,162 @@
             border-radius: 50%;
             pointer-events: none;
         }
-        .cart-hero .container {
-            position: relative;
-            z-index: 1;
-        }
-        .cart-hero h1 {
-            font-size: var(--font-3xl);
-            font-weight: 900;
-            letter-spacing: -0.03em;
-        }
-        .cart-hero p {
-            opacity: 0.9;
-            font-size: var(--font-base);
-        }
+        .chat-hero .container { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4); }
+        .chat-hero .hero-left h1 { font-size: var(--font-3xl); font-weight: 900; letter-spacing: -0.03em; }
+        .chat-hero .hero-left p { opacity: 0.9; font-size: var(--font-base); }
+        .chat-hero .hero-right { display: flex; align-items: center; gap: var(--space-3); background: rgba(255, 255, 255, 0.1); padding: var(--space-2) var(--space-4); border-radius: var(--radius-full); backdrop-filter: blur(4px); }
+        .chat-hero .hero-right .vortex-icon { width: 40px; height: 40px; border-radius: var(--radius-full); background: rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .chat-hero .hero-right .vortex-label { font-size: var(--font-sm); font-weight: 500; }
+        .chat-hero .hero-right .vortex-label span { font-weight: 700; }
 
-        .cart-layout {
-            display: grid;
-            grid-template-columns: 1fr 360px;
-            gap: var(--space-8);
-            align-items: start;
-        }
-
-        /* Cart Items */
-        .cart-items {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-4);
-        }
-
-        .cart-item {
-            display: flex;
-            gap: var(--space-4);
+        .chat-container {
             background: var(--white);
-            border-radius: var(--radius-lg);
-            padding: var(--space-4);
+            border-radius: var(--radius-xl);
             border: 1px solid var(--gray-100);
-            transition: var(--transition);
-            position: relative;
-        }
-        .cart-item:hover {
-            box-shadow: var(--shadow-md);
-        }
-
-        .cart-item .item-image {
-            width: 100px;
-            height: 100px;
-            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
             overflow: hidden;
-            flex-shrink: 0;
-            background: var(--gray-100);
-        }
-        .cart-item .item-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .cart-item .item-details {
-            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: var(--space-1);
-        }
-        .cart-item .item-details .item-name {
-            font-weight: 600;
-            font-size: var(--font-base);
-            color: var(--gray-900);
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .cart-item .item-details .item-variation {
-            font-size: var(--font-sm);
-            color: var(--gray-500);
-        }
-        .cart-item .item-details .item-price {
-            font-size: var(--font-lg);
-            font-weight: 700;
-            color: var(--primary);
+            height: 600px;
+            max-height: 70vh;
         }
 
-        .cart-item .item-actions {
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-4) var(--space-6);
+            border-bottom: 1px solid var(--gray-100);
+            background: var(--gray-50);
+        }
+        .chat-header .chat-info { display: flex; align-items: center; gap: var(--space-3); }
+        .chat-header .chat-info .avatar { width: 44px; height: 44px; border-radius: var(--radius-full); background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--white); }
+        .chat-header .chat-info .name { font-weight: 700; font-size: var(--font-base); }
+        .chat-header .chat-info .status { font-size: var(--font-xs); color: var(--success); display: flex; align-items: center; gap: var(--space-1); }
+        .chat-header .chat-info .status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--success); display: inline-block; animation: pulse-dot 2s infinite; }
+        @keyframes pulse-dot { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+        .chat-header .chat-actions { display: flex; gap: var(--space-2); }
+        .chat-header .chat-actions .btn { padding: 6px 12px; font-size: var(--font-xs); min-height: 32px; }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-4) var(--space-6);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            background: var(--gray-50);
+        }
+        .chat-messages::-webkit-scrollbar { width: 4px; }
+        .chat-messages::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: var(--radius-full); }
+
+        .message { display: flex; gap: var(--space-3); max-width: 85%; animation: messageIn 0.3s ease; }
+        @keyframes messageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .message.user { align-self: flex-end; flex-direction: row-reverse; }
+        .message .msg-avatar { width: 36px; height: 36px; border-radius: var(--radius-full); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+        .message .msg-avatar.bot { background: var(--primary-gradient); color: var(--white); }
+        .message .msg-avatar.user { background: var(--gray-300); color: var(--gray-700); }
+        .message .msg-bubble { padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg); font-size: var(--font-sm); line-height: 1.6; position: relative; word-wrap: break-word; }
+        .message .msg-bubble.bot { background: var(--white); border: 1px solid var(--gray-200); border-top-left-radius: 4px; color: var(--gray-800); }
+        .message .msg-bubble.user { background: var(--primary-gradient); color: var(--white); border-top-right-radius: 4px; }
+        .message .msg-bubble .msg-time { font-size: var(--font-xs); color: var(--gray-400); margin-top: var(--space-1); display: block; }
+        .message .msg-bubble.user .msg-time { color: rgba(255, 255, 255, 0.7); }
+        .message .msg-bubble .typing-indicator { display: flex; gap: 4px; padding: 4px 0; }
+        .message .msg-bubble .typing-indicator span { width: 8px; height: 8px; border-radius: 50%; background: var(--gray-400); animation: typing 1.4s infinite both; }
+        .message .msg-bubble .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .message .msg-bubble .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(1); opacity: 0.4; } }
+
+        .chat-input {
             display: flex;
             align-items: center;
             gap: var(--space-3);
-            margin-top: auto;
-            flex-wrap: wrap;
-        }
-        .cart-item .item-actions .qty-controls {
-            display: flex;
-            align-items: center;
-            border: 2px solid var(--gray-200);
-            border-radius: var(--radius-full);
-            overflow: hidden;
-        }
-        .cart-item .item-actions .qty-controls button {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 700;
-            transition: var(--transition);
-            color: var(--gray-600);
+            padding: var(--space-3) var(--space-6);
+            border-top: 1px solid var(--gray-100);
             background: var(--white);
         }
-        .cart-item .item-actions .qty-controls button:hover {
+        .chat-input .input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
             background: var(--gray-100);
-        }
-        .cart-item .item-actions .qty-controls input {
-            width: 36px;
-            text-align: center;
-            font-weight: 600;
-            font-size: var(--font-sm);
-            padding: 2px 0;
-            background: var(--white);
-            border: none;
-            border-left: 1px solid var(--gray-200);
-            border-right: 1px solid var(--gray-200);
-        }
-
-        .cart-item .item-actions .remove-btn {
-            color: var(--gray-400);
+            border-radius: var(--radius-full);
+            padding: 0 var(--space-4);
             transition: var(--transition);
-            font-size: 14px;
-            padding: 4px 8px;
+            border: 2px solid transparent;
         }
-        .cart-item .item-actions .remove-btn:hover {
-            color: var(--danger);
-        }
+        .chat-input .input-wrapper:focus-within { border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 4px rgba(108, 60, 225, 0.1); }
+        .chat-input .input-wrapper input { flex: 1; padding: 12px var(--space-3); font-size: var(--font-sm); min-height: 48px; background: transparent; }
+        .chat-input .input-wrapper .input-icon { color: var(--gray-400); font-size: 14px; }
+        .chat-input .send-btn { width: 48px; height: 48px; border-radius: var(--radius-full); background: var(--primary-gradient); color: var(--white); display: flex; align-items: center; justify-content: center; transition: var(--transition); flex-shrink: 0; border: none; font-size: 18px; }
+        .chat-input .send-btn:hover { transform: scale(1.05); box-shadow: var(--shadow-primary); }
+        .chat-input .send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        .cart-item .item-total {
-            font-weight: 700;
-            font-size: var(--font-base);
-            color: var(--gray-900);
-            margin-left: auto;
-            align-self: center;
-        }
-
-        /* Cart Summary */
-        .cart-summary {
-            background: var(--white);
-            border-radius: var(--radius-xl);
-            padding: var(--space-6);
-            border: 1px solid var(--gray-100);
-            box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: 80px;
-        }
-        .cart-summary h2 {
-            font-size: var(--font-xl);
-            font-weight: 700;
-            margin-bottom: var(--space-4);
-            padding-bottom: var(--space-3);
-            border-bottom: 1px solid var(--gray-100);
-        }
-
-        .cart-summary .summary-row {
+        .chat-suggestions {
             display: flex;
-            justify-content: space-between;
-            padding: var(--space-2) 0;
-            font-size: var(--font-sm);
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-6) var(--space-3);
+            flex-wrap: wrap;
+            border-top: 1px solid var(--gray-100);
+            background: var(--gray-50);
+        }
+        .chat-suggestions .suggestion-chip {
+            padding: 6px 16px;
+            border-radius: var(--radius-full);
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            font-size: var(--font-xs);
             color: var(--gray-600);
-        }
-        .cart-summary .summary-row.total {
-            font-size: var(--font-lg);
-            font-weight: 700;
-            color: var(--gray-900);
-            border-top: 2px solid var(--gray-100);
-            padding-top: var(--space-3);
-            margin-top: var(--space-2);
-        }
-        .cart-summary .summary-row .amount {
-            font-weight: 600;
-        }
-        .cart-summary .summary-row.total .amount {
-            color: var(--primary);
-            font-size: var(--font-xl);
-        }
-
-        .cart-summary .checkout-btn {
-            width: 100%;
-            margin-top: var(--space-4);
-            padding: 14px;
-            font-size: var(--font-base);
-        }
-
-        .cart-summary .continue-shopping {
-            display: block;
-            text-align: center;
-            margin-top: var(--space-3);
-            color: var(--gray-500);
-            font-size: var(--font-sm);
+            cursor: pointer;
             transition: var(--transition);
         }
-        .cart-summary .continue-shopping:hover {
-            color: var(--primary);
-        }
+        .chat-suggestions .suggestion-chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); background-opacity: 0.05; }
 
-        /* Empty Cart */
-        .cart-empty {
-            text-align: center;
-            padding: var(--space-16) 0;
-            color: var(--gray-500);
+        .chat-welcome { text-align: center; padding: var(--space-8) var(--space-4); color: var(--gray-500); }
+        .chat-welcome .welcome-icon { font-size: 56px; color: var(--primary-light); margin-bottom: var(--space-4); display: block; }
+        .chat-welcome h3 { font-size: var(--font-xl); color: var(--gray-700); margin-bottom: var(--space-2); }
+        .chat-welcome p { max-width: 400px; margin: 0 auto; font-size: var(--font-sm); color: var(--gray-500); }
+
+        /* API Source Badge */
+        .api-source-badge {
+            display: inline-block;
+            font-size: var(--font-xs);
+            padding: 2px 10px;
+            border-radius: var(--radius-full);
+            margin-top: var(--space-1);
+            font-weight: 500;
         }
-        .cart-empty i {
-            font-size: 72px;
-            color: var(--gray-300);
-            margin-bottom: var(--space-4);
-            display: block;
+        .api-source-badge.openrouter {
+            background: var(--success-light);
+            color: var(--success);
         }
-        .cart-empty h2 {
-            font-size: var(--font-2xl);
-            color: var(--gray-700);
-            margin-bottom: var(--space-2);
-        }
-        .cart-empty p {
-            color: var(--gray-400);
-            margin-bottom: var(--space-6);
+        .api-source-badge.fallback {
+            background: var(--warning-light);
+            color: var(--warning);
         }
 
         /* Responsive */
-        @media (max-width: 1024px) {
-            .cart-layout {
-                grid-template-columns: 1fr;
-            }
-            .cart-summary {
-                position: static;
-            }
-        }
-
         @media (max-width: 768px) {
-            .cart-item {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .cart-item .item-image {
-                width: 100%;
-                height: 200px;
-            }
-            .cart-item .item-total {
-                margin-left: 0;
-                text-align: right;
-            }
-            .cart-item .item-actions {
-                justify-content: space-between;
-            }
-
-            .cart-hero h1 {
-                font-size: var(--font-2xl);
-            }
-            .cart-hero p {
-                font-size: var(--font-sm);
-            }
+            .chat-hero .container { flex-direction: column; align-items: flex-start; }
+            .chat-hero .hero-left h1 { font-size: var(--font-2xl); }
+            .chat-hero .hero-left p { font-size: var(--font-sm); }
+            .chat-hero .hero-right { width: 100%; justify-content: center; }
+            .chat-container { height: 500px; max-height: 60vh; border-radius: var(--radius-lg); }
+            .chat-header { padding: var(--space-3) var(--space-4); }
+            .chat-messages { padding: var(--space-3) var(--space-4); }
+            .chat-input { padding: var(--space-2) var(--space-4); }
+            .chat-suggestions { padding: var(--space-2) var(--space-4) var(--space-2); }
+            .message { max-width: 95%; }
         }
 
         @media (max-width: 480px) {
-            .cart-item .item-image {
-                height: 160px;
-            }
-            .cart-item .item-actions {
-                flex-wrap: wrap;
-            }
-            .cart-summary {
-                padding: var(--space-4);
-            }
+            .chat-container { height: 400px; max-height: 50vh; }
+            .chat-header .chat-info .avatar { width: 36px; height: 36px; font-size: 14px; }
+            .chat-header .chat-info .name { font-size: var(--font-sm); }
+            .message .msg-avatar { width: 28px; height: 28px; font-size: 12px; }
+            .message .msg-bubble { padding: var(--space-2) var(--space-3); font-size: var(--font-xs); }
+            .chat-input .input-wrapper input { padding: 10px var(--space-2); font-size: var(--font-xs); min-height: 40px; }
+            .chat-input .send-btn { width: 40px; height: 40px; font-size: 16px; }
         }
     </style>
 </head>
@@ -912,7 +572,7 @@
     <div id="loadingScreen" class="loading-screen">
         <div class="loading-spinner"></div>
         <div class="loading-logo">SHOP <span>GOOD</span></div>
-        <p class="loading-text">Loading your cart...</p>
+        <p class="loading-text">Loading chat...</p>
     </div>
 
     <!-- ========================================
@@ -986,8 +646,9 @@
                     <span id="notifBadge" style="position:absolute;top:2px;right:2px;background:var(--danger);color:var(--white);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;">0</span>
                 </a>
 
-                <a href="/wishlist.html" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:var(--radius-full);transition:var(--transition);color:var(--gray-600);">
+                <a href="/wishlist.html" style="position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:var(--radius-full);transition:var(--transition);color:var(--gray-600);">
                     <i class="fas fa-heart" style="font-size:18px;"></i>
+                    <span id="wishlistBadge" style="position:absolute;top:2px;right:2px;background:var(--danger);color:var(--white);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;">0</span>
                 </a>
 
                 <a href="/cart.html" style="position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:var(--radius-full);transition:var(--transition);color:var(--gray-600);">
@@ -1062,9 +723,10 @@
                     <span>Cart</span>
                     <span id="bottomCartBadge" style="position:absolute;top:0;right:4px;background:var(--primary);color:var(--white);font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;">0</span>
                 </a>
-                <a href="/wishlist.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--gray-500);transition:var(--transition);padding:4px 12px;">
+                <a href="/wishlist.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--gray-500);transition:var(--transition);padding:4px 12px;position:relative;">
                     <i class="fas fa-heart" style="font-size:20px;"></i>
                     <span>Wishlist</span>
+                    <span id="bottomWishlistBadge" style="position:absolute;top:0;right:4px;background:var(--danger);color:var(--white);font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;">0</span>
                 </a>
                 <a href="/profile.html" style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--gray-500);transition:var(--transition);padding:4px 12px;">
                     <i class="fas fa-user" style="font-size:20px;"></i>
@@ -1079,19 +741,89 @@
     ======================================== -->
     <main>
 
-        <!-- Cart Hero -->
-        <section class="cart-hero">
+        <!-- Chat Hero -->
+        <section class="chat-hero">
             <div class="container">
-                <h1>Shopping Cart</h1>
-                <p id="cartStatus">Review your items before checkout</p>
+                <div class="hero-left">
+                    <h1>Live Chat Support</h1>
+                    <p>Get instant help from our AI assistant</p>
+                </div>
+                <div class="hero-right">
+                    <div class="vortex-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="vortex-label">
+                        Powered by <span>Vortex AI</span>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Cart Content -->
+        <!-- Chat Container -->
         <section style="padding-bottom:var(--space-12);">
             <div class="container">
-                <div id="cartContent">
-                    <!-- Cart loaded dynamically -->
+                <div class="chat-container">
+                    <!-- Chat Header -->
+                    <div class="chat-header">
+                        <div class="chat-info">
+                            <div class="avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div>
+                                <div class="name">Vortex AI Assistant</div>
+                                <div class="status">Online</div>
+                            </div>
+                        </div>
+                        <div class="chat-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="clearChat()" title="Clear chat">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="refreshChat()" title="Refresh">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Messages will be loaded dynamically -->
+                    </div>
+
+                    <!-- Chat Input -->
+                    <div class="chat-input">
+                        <div class="input-wrapper">
+                            <i class="fas fa-search input-icon"></i>
+                            <input
+                            type="text"
+                            id="chatInput"
+                            placeholder="Type your message..."
+                            onkeypress="handleKeyPress(event)"
+                            autofocus
+                            />
+                        </div>
+                        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+
+                    <!-- Suggestions -->
+                    <div class="chat-suggestions" id="suggestionsContainer">
+                        <button class="suggestion-chip" onclick="sendSuggestion('How do I place an order?')">
+                            How to place an order?
+                        </button>
+                        <button class="suggestion-chip" onclick="sendSuggestion('What payment methods do you accept?')">
+                            Payment methods
+                        </button>
+                        <button class="suggestion-chip" onclick="sendSuggestion('How long does delivery take?')">
+                            Delivery time
+                        </button>
+                        <button class="suggestion-chip" onclick="sendSuggestion('How do I track my order?')">
+                            Track order
+                        </button>
+                        <button class="suggestion-chip" onclick="sendSuggestion('What is Shop Good Wallet?')">
+                            Shop Good Wallet
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1180,6 +912,56 @@
         const db = firebase.database();
 
         // ========================================
+        // API BASE URL - Auto-detects local vs production
+        // ========================================
+        const getApiBase = () => {
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                return 'http://localhost:3000/api';
+            }
+            return '/api';
+        };
+
+        const API_BASE = getApiBase();
+
+        // ========================================
+        // API REQUEST HELPER - SAME AS OTHER FILES
+        // ========================================
+        async function apiRequest(endpoint, options = {}) {
+            const user = auth.currentUser;
+            let token = null;
+            
+            if (user) {
+                try {
+                    token = await user.getIdToken();
+                } catch (e) {
+                    console.warn('Could not get auth token:', e);
+                }
+            }
+
+            const headers = {
+                'Content-Type': 'application/json',
+                ...options.headers,
+            };
+
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const response = await fetch(`${API_BASE}${endpoint}`, {
+                ...options,
+                headers: headers,
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || data.error || 'API request failed');
+            }
+
+            return data;
+        }
+
+        // ========================================
         // DOM REFERENCES
         // ========================================
         const loadingScreen = document.getElementById('loadingScreen');
@@ -1193,6 +975,8 @@
         const notifBadge = document.getElementById('notifBadge');
         const cartCount = document.getElementById('cartCount');
         const bottomCartBadge = document.getElementById('bottomCartBadge');
+        const wishlistBadge = document.getElementById('wishlistBadge');
+        const bottomWishlistBadge = document.getElementById('bottomWishlistBadge');
         const loginBtn = document.getElementById('loginBtn');
         const userMenu = document.getElementById('userMenu');
         const userAvatar = document.getElementById('userAvatar');
@@ -1204,16 +988,17 @@
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const mobileSearch = document.getElementById('mobileSearch');
         const bottomNav = document.getElementById('bottomNav');
-        const cartContent = document.getElementById('cartContent');
-        const cartStatus = document.getElementById('cartStatus');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const suggestionsContainer = document.getElementById('suggestionsContainer');
 
         // ========================================
         // STATE
         // ========================================
-        let cartItems = {};
-        let cartItemKeys = [];
-        let deliveryFee = 3000;
-        let minCOD = 6000;
+        let isProcessing = false;
+        let messageHistory = [];
+        const MAX_HISTORY = 20;
 
         // ========================================
         // THEME MANAGEMENT
@@ -1408,15 +1193,15 @@
                 updateUserAvatar(user);
                 loadUserData(user.uid);
                 loadNotifications(user.uid);
-                loadCart(user.uid);
-                loadWishlist(user.uid);
+                loadCartCount(user.uid);
+                loadWishlistBadge(user.uid);
+                initializeChat(user);
             } else {
                 if (loginBtn) loginBtn.style.display = 'inline-flex';
                 if (userMenu) userMenu.style.display = 'none';
                 if (userDropdown) userDropdown.style.display = 'none';
                 updateUserAvatar(null);
-                cartContent.innerHTML = getLoginRequiredHTML();
-                cartStatus.textContent = 'Please sign in to view your cart';
+                initializeChat(null);
                 loadingScreen.classList.add('hidden');
             }
         });
@@ -1473,364 +1258,327 @@
             });
         }
 
-        function loadWishlist(uid) {
-            db.ref(`wishlists/${uid}/items`).on('value', (snapshot) => {
-                // Wishlist loaded for cart items
-            });
-        }
-
-        // ========================================
-        // LOAD CART
-        // ========================================
-        let cartListener = null;
-
-        function loadCart(uid) {
-            if (cartListener) {
-                cartListener.off();
-            }
-
-            cartListener = db.ref(`cart/${uid}/items`);
-            cartListener.on('value', (snapshot) => {
+        function loadCartCount(uid) {
+            db.ref(`cart/${uid}/items`).on('value', (snapshot) => {
                 const data = snapshot.val();
-
-                if (!data) {
-                    cartItems = {};
-                    cartItemKeys = [];
-                    renderCart();
-                    loadingScreen.classList.add('hidden');
-                    return;
-                }
-
-                // Get cart items with their keys
-                cartItemKeys = Object.keys(data);
-                cartItems = data;
-
-                // Load product details for each cart item
-                loadProductDetails();
-            });
-        }
-
-        // ========================================
-        // LOAD PRODUCT DETAILS FOR CART ITEMS
-        // ========================================
-        async function loadProductDetails() {
-            const updatedItems = {};
-
-            for (const [key, item] of Object.entries(cartItems)) {
-                try {
-                    const productSnapshot = await db.ref(`products/${item.productId}`).once('value');
-                    const product = productSnapshot.val();
-
-                    if (product) {
-                        updatedItems[key] = {
-                            ...item,
-                            productName: product.name,
-                            productThumbnail: product.thumbnail || product.images?.[0] || '',
-                            productPrice: product.price?.display || product.price?.base || 0,
-                            productStock: product.stock?.available || 0,
-                            productStatus: product.status || 'inactive',
-                            variations: product.variations || {}
-                        };
+                if (data) {
+                    const count = Object.keys(data).length;
+                    if (count > 0) {
+                        cartCount.style.display = 'flex';
+                        cartCount.textContent = count;
+                        bottomCartBadge.style.display = 'flex';
+                        bottomCartBadge.textContent = count;
                     } else {
-                        // Product no longer exists
-                        updatedItems[key] = {
-                            ...item,
-                            productName: 'Product Unavailable',
-                            productThumbnail: '',
-                            productPrice: 0,
-                            productStock: 0,
-                            productStatus: 'inactive',
-                            variations: {}
-                        };
+                        cartCount.style.display = 'none';
+                        bottomCartBadge.style.display = 'none';
                     }
-                } catch (error) {
-                    console.error('Error loading product:', error);
-                    updatedItems[key] = {
-                        ...item,
-                        productName: 'Error loading product',
-                        productThumbnail: '',
-                        productPrice: 0,
-                        productStock: 0,
-                        productStatus: 'inactive',
-                        variations: {}
-                    };
+                } else {
+                    cartCount.style.display = 'none';
+                    bottomCartBadge.style.display = 'none';
                 }
+            });
+        }
+
+        function loadWishlistBadge(uid) {
+            db.ref(`wishlists/${uid}/items`).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    const count = Object.keys(data).length;
+                    if (count > 0) {
+                        wishlistBadge.style.display = 'flex';
+                        wishlistBadge.textContent = count;
+                        bottomWishlistBadge.style.display = 'flex';
+                        bottomWishlistBadge.textContent = count;
+                    } else {
+                        wishlistBadge.style.display = 'none';
+                        bottomWishlistBadge.style.display = 'none';
+                    }
+                } else {
+                    wishlistBadge.style.display = 'none';
+                    bottomWishlistBadge.style.display = 'none';
+                }
+            });
+        }
+
+        // ========================================
+        // INITIALIZE CHAT
+        // ========================================
+        function initializeChat(user) {
+            chatMessages.innerHTML = '';
+
+            const welcomeDiv = document.createElement('div');
+            welcomeDiv.className = 'chat-welcome';
+            welcomeDiv.innerHTML = `
+                <span class="welcome-icon"><i class="fas fa-robot"></i></span>
+                <h3>Welcome to Vortex AI Support</h3>
+                <p>Hi there! I'm Vortex AI, your virtual assistant. I'm here to help you with any questions about Shop Good. How can I assist you today?</p>
+            `;
+            chatMessages.appendChild(welcomeDiv);
+
+            if (user) {
+                const displayName = user.displayName || 'there';
+                const greeting = document.createElement('div');
+                greeting.className = 'message bot';
+                greeting.innerHTML = `
+                    <div class="msg-avatar bot"><i class="fas fa-robot"></i></div>
+                    <div class="msg-bubble bot">
+                        Hello ${displayName}! 👋 I'm Vortex AI, your virtual shopping assistant. Feel free to ask me anything about Shop Good!
+                        <span class="msg-time">Just now</span>
+                    </div>
+                `;
+                welcomeDiv.style.display = 'none';
+                chatMessages.appendChild(greeting);
             }
 
-            cartItems = updatedItems;
-            renderCart();
+            chatMessages.scrollTop = chatMessages.scrollHeight;
             loadingScreen.classList.add('hidden');
+
+            setTimeout(() => {
+                chatInput.focus();
+            }, 500);
         }
 
         // ========================================
-        // RENDER CART
+        // SEND MESSAGE - UPDATED TO USE apiRequest
         // ========================================
-        function renderCart() {
-            const items = Object.values(cartItems);
-            const keys = Object.keys(cartItems);
+        async function sendMessage() {
+            const message = chatInput.value.trim();
 
-            if (items.length === 0) {
-                cartContent.innerHTML = getEmptyCartHTML();
-                cartStatus.textContent = 'Your cart is empty';
-                updateCartCount(0);
+            if (!message || isProcessing) {
                 return;
             }
 
-            // Filter out unavailable products
-            const availableItems = items.filter(item => item.productStatus === 'active' && item.productStock > 0);
-            const unavailableItems = items.filter(item => item.productStatus !== 'active' || item.productStock === 0);
+            const welcome = chatMessages.querySelector('.chat-welcome');
+            if (welcome) {
+                welcome.style.display = 'none';
+            }
 
-            let html = '<div class="cart-layout">';
-            html += '<div class="cart-items">';
+            chatInput.value = '';
+            chatInput.focus();
 
-            // Available items
-            availableItems.forEach((item, index) => {
-                const actualKey = keys[items.indexOf(item)];
-                html += createCartItemHTML(item, actualKey);
-            });
+            isProcessing = true;
+            sendBtn.disabled = true;
 
-            // Unavailable items (grayed out)
-            unavailableItems.forEach((item, index) => {
-                const actualKey = keys[items.indexOf(item)];
-                html += createUnavailableItemHTML(item, actualKey);
-            });
+            addMessage('user', message);
 
-            html += '</div>';
+            const typingId = showTypingIndicator();
 
-            // Cart Summary
-            html += getCartSummaryHTML(availableItems);
+            try {
+                const user = auth.currentUser;
+                const userName = user?.displayName || 'Guest';
+                const userEmail = user?.email || '';
 
-            html += '</div>';
+                console.log('🔵 Sending chat message...');
+                console.log('📡 API Base URL:', API_BASE);
 
-            cartContent.innerHTML = html;
+                // Use the apiRequest helper
+                const response = await apiRequest('/support/chat', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        message: message,
+                        userName: userName,
+                        userEmail: userEmail,
+                        history: messageHistory.slice(-MAX_HISTORY)
+                    })
+                });
 
-            // Update cart count in header
-            updateCartCount(availableItems.length);
+                removeTypingIndicator(typingId);
 
-            // Update status
-            cartStatus.textContent = `You have ${availableItems.length} item${availableItems.length !== 1 ? 's' : ''} in your cart`;
-            if (unavailableItems.length > 0) {
-                cartStatus.textContent += ` (${unavailableItems.length} item${unavailableItems.length !== 1 ? 's' : ''} unavailable)`;
+                if (response.success) {
+                    const responseText = response.response || 'I apologize, but I\'m having trouble responding right now. Please try again in a moment. 🙏';
+                    addMessage('bot', responseText);
+
+                    // Show source badge if available
+                    if (response.source) {
+                        const sourceBadge = document.createElement('div');
+                        sourceBadge.className = `api-source-badge ${response.source === 'openrouter' ? 'openrouter' : 'fallback'}`;
+                        sourceBadge.textContent = response.source === 'openrouter' ? '🤖 AI Powered' : '📝 Offline Mode';
+                        const lastMessage = chatMessages.lastElementChild;
+                        if (lastMessage) {
+                            const bubble = lastMessage.querySelector('.msg-bubble');
+                            if (bubble) {
+                                bubble.appendChild(sourceBadge);
+                            }
+                        }
+                    }
+
+                    messageHistory.push({
+                        role: 'user',
+                        content: message
+                    });
+                    messageHistory.push({
+                        role: 'assistant',
+                        content: responseText
+                    });
+
+                    if (messageHistory.length > MAX_HISTORY * 2) {
+                        messageHistory = messageHistory.slice(-MAX_HISTORY * 2);
+                    }
+                } else {
+                    throw new Error(response.error || 'Failed to get response');
+                }
+
+            } catch (error) {
+                console.error('❌ Chat error:', error);
+                removeTypingIndicator(typingId);
+                
+                let errorMessage = 'I apologize, but I\'m having trouble connecting right now. Please try again in a moment, or contact our support team at support@shopgood.com for immediate assistance. 🙏';
+                
+                // Show more specific error messages for common issues
+                if (error.message.includes('429')) {
+                    errorMessage = 'I\'m getting a lot of requests right now. Please wait a moment and try again. 🙏';
+                } else if (error.message.includes('503') || error.message.includes('unavailable')) {
+                    errorMessage = 'The AI service is currently unavailable. Please try again in a few minutes, or contact support@shopgood.com for help. 🙏';
+                } else if (error.message.includes('404')) {
+                    errorMessage = 'The chat service is not available right now. Please contact support@shopgood.com for assistance. 🙏';
+                }
+                
+                addMessage('bot', errorMessage);
+            } finally {
+                isProcessing = false;
+                sendBtn.disabled = false;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             }
         }
 
         // ========================================
-        // CREATE CART ITEM HTML
+        // ADD MESSAGE
         // ========================================
-        function createCartItemHTML(item, key) {
-            const total = item.quantity * item.productPrice;
-            const stock = item.productStock || 0;
-            const maxQty = Math.min(stock, 99);
+        function addMessage(type, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.animation = 'none';
 
-            return `
-                <div class="cart-item" data-key="${key}">
-                    <div class="item-image">
-                        <img src="${item.productThumbnail || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"%3E%3Crect width="200" height="200" fill="%23E2E8F0"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%2394A3B8" font-family="sans-serif" font-size="14"%3ENo Image%3C/text%3E%3C/svg%3E'}" alt="${item.productName}" />
-                    </div>
-                    <div class="item-details">
-                        <a href="/product.html?id=${item.productId}" class="item-name">${item.productName}</a>
-                        ${item.variationName ? `<div class="item-variation"><i class="fas fa-tag"></i> ${item.variationName}</div>` : ''}
-                        <div class="item-price">₦${Number(item.productPrice).toLocaleString()}</div>
-                        <div class="item-actions">
-                            <div class="qty-controls">
-                                <button onclick="updateQuantity('${key}', -1)" ${item.quantity <= 1 ? 'disabled' : ''}>−</button>
-                                <input type="number" id="qty_${key}" value="${item.quantity}" min="1" max="${maxQty}" onchange="setQuantity('${key}', this.value)" />
-                                <button onclick="updateQuantity('${key}', 1)" ${item.quantity >= maxQty ? 'disabled' : ''}>+</button>
-                            </div>
-                            <button class="remove-btn" onclick="removeFromCart('${key}')">
-                                <i class="fas fa-trash-alt"></i> Remove
-                            </button>
-                            <span class="item-total">₦${Number(total).toLocaleString()}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // ========================================
-        // CREATE UNAVAILABLE ITEM HTML
-        // ========================================
-        function createUnavailableItemHTML(item, key) {
-            return `
-                <div class="cart-item" style="opacity:0.6;filter:grayscale(0.5);" data-key="${key}">
-                    <div class="item-image">
-                        <img src="${item.productThumbnail || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"%3E%3Crect width="200" height="200" fill="%23E2E8F0"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%2394A3B8" font-family="sans-serif" font-size="14"%3ENo Image%3C/text%3E%3C/svg%3E'}" alt="${item.productName}" />
-                    </div>
-                    <div class="item-details">
-                        <div class="item-name">${item.productName}</div>
-                        ${item.variationName ? `<div class="item-variation"><i class="fas fa-tag"></i> ${item.variationName}</div>` : ''}
-                        <div class="item-price" style="color:var(--gray-500);">₦${Number(item.productPrice).toLocaleString()}</div>
-                        <div class="item-actions">
-                            <span style="color:var(--danger);font-weight:600;font-size:var(--font-sm);">
-                                <i class="fas fa-exclamation-triangle"></i> ${item.productStatus !== 'active' ? 'Product Unavailable' : 'Out of Stock'}
-                            </span>
-                            <button class="remove-btn" onclick="removeFromCart('${key}')">
-                                <i class="fas fa-trash-alt"></i> Remove
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // ========================================
-        // CART SUMMARY HTML
-        // ========================================
-        function getCartSummaryHTML(items) {
-            const subtotal = items.reduce((sum, item) => sum + (item.quantity * item.productPrice), 0);
-            const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-            const delivery = subtotal > 0 ? deliveryFee : 0;
-            const total = subtotal + delivery;
-
-            // Check if COD is available (subtotal >= minCOD)
-            const codAvailable = subtotal >= minCOD;
-
-            return `
-                <div class="cart-summary">
-                    <h2>Order Summary</h2>
-                    <div class="summary-row">
-                        <span>Subtotal (${totalItems} items)</span>
-                        <span class="amount">₦${Number(subtotal).toLocaleString()}</span>
-                    </div>
-                    <div class="summary-row">
-                        <span>Delivery Fee</span>
-                        <span class="amount">${subtotal > 0 ? '₦' + Number(delivery).toLocaleString() : '—'}</span>
-                    </div>
-                    ${subtotal > 0 ? `
-                    <div class="summary-row total">
-                        <span>Total</span>
-                        <span class="amount">₦${Number(total).toLocaleString()}</span>
-                    </div>
-                    ` : ''}
-                    <button class="btn btn-primary checkout-btn" onclick="proceedToCheckout()" ${items.length === 0 ? 'disabled' : ''}>
-                        <i class="fas fa-lock"></i> Proceed to Checkout
-                    </button>
-                    ${codAvailable ? `<div style="text-align:center;font-size:var(--font-xs);color:var(--gray-500);margin-top:var(--space-2);">
-                        <i class="fas fa-check-circle" style="color:var(--success);"></i> Pay on Delivery available
-                    </div>` : ''}
-                    <a href="/shop.html" class="continue-shopping">
-                        <i class="fas fa-arrow-left"></i> Continue Shopping
-                    </a>
-                </div>
-            `;
-        }
-
-        // ========================================
-        // EMPTY CART HTML
-        // ========================================
-        function getEmptyCartHTML() {
-            return `
-                <div class="cart-empty">
-                    <i class="fas fa-shopping-bag"></i>
-                    <h2>Your cart is empty</h2>
-                    <p>Looks like you haven't added any items to your cart yet.</p>
-                    <a href="/shop.html" class="btn btn-primary">
-                        <i class="fas fa-arrow-left"></i> Start Shopping
-                    </a>
-                </div>
-            `;
-        }
-
-        // ========================================
-        // LOGIN REQUIRED HTML
-        // ========================================
-        function getLoginRequiredHTML() {
-            return `
-                <div class="cart-empty">
-                    <i class="fas fa-lock"></i>
-                    <h2>Sign In Required</h2>
-                    <p>Please sign in to view and manage your cart.</p>
-                    <a href="/login.html" class="btn btn-primary">
-                        <i class="fas fa-user"></i> Sign In
-                    </a>
-                </div>
-            `;
-        }
-
-        // ========================================
-        // UPDATE CART COUNT
-        // ========================================
-        function updateCartCount(count) {
-            const cartCountEl = document.getElementById('cartCount');
-            const bottomCartBadge = document.getElementById('bottomCartBadge');
-
-            if (count > 0) {
-                if (cartCountEl) { cartCountEl.style.display = 'flex';
-                    cartCountEl.textContent = count; }
-                if (bottomCartBadge) { bottomCartBadge.style.display = 'flex';
-                    bottomCartBadge.textContent = count; }
+            const avatar = document.createElement('div');
+            avatar.className = `msg-avatar ${type}`;
+            if (type === 'bot') {
+                avatar.innerHTML = '<i class="fas fa-robot"></i>';
             } else {
-                if (cartCountEl) cartCountEl.style.display = 'none';
-                if (bottomCartBadge) bottomCartBadge.style.display = 'none';
+                const user = auth.currentUser;
+                const initial = user?.displayName ? user.displayName.charAt(0).toUpperCase() : 'U';
+                avatar.textContent = initial;
+            }
+
+            const bubble = document.createElement('div');
+            bubble.className = `msg-bubble ${type}`;
+
+            const formattedContent = content.replace(/\n/g, '<br>');
+            bubble.innerHTML = `
+                ${formattedContent}
+                <span class="msg-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            `;
+
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(bubble);
+
+            const welcome = chatMessages.querySelector('.chat-welcome');
+            if (welcome) {
+                welcome.style.display = 'none';
+            }
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            requestAnimationFrame(() => {
+                messageDiv.style.animation = 'messageIn 0.3s ease';
+            });
+        }
+
+        // ========================================
+        // SHOW TYPING INDICATOR
+        // ========================================
+        function showTypingIndicator() {
+            const id = 'typing-' + Date.now();
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = id;
+
+            typingDiv.innerHTML = `
+                <div class="msg-avatar bot"><i class="fas fa-robot"></i></div>
+                <div class="msg-bubble bot">
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            `;
+
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            return id;
+        }
+
+        // ========================================
+        // REMOVE TYPING INDICATOR
+        // ========================================
+        function removeTypingIndicator(id) {
+            const typing = document.getElementById(id);
+            if (typing) {
+                typing.remove();
             }
         }
 
         // ========================================
-        // UPDATE QUANTITY
+        // HANDLE KEY PRESS
         // ========================================
-        function updateQuantity(key, delta) {
-            const user = auth.currentUser;
-            if (!user) return;
-
-            const item = cartItems[key];
-            if (!item) return;
-
-            const newQty = Math.max(1, Math.min(99, item.quantity + delta));
-            const maxStock = item.productStock || 99;
-
-            if (newQty > maxStock) {
-                showToast('warning', 'Stock Limit', `Only ${maxStock} items available in stock.`);
-                return;
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMessage();
             }
-
-            db.ref(`cart/${user.uid}/items/${key}/quantity`).set(newQty);
         }
 
         // ========================================
-        // SET QUANTITY
+        // SEND SUGGESTION
         // ========================================
-        function setQuantity(key, value) {
-            const user = auth.currentUser;
-            if (!user) return;
-
-            const item = cartItems[key];
-            if (!item) return;
-
-            let newQty = parseInt(value) || 1;
-            newQty = Math.max(1, Math.min(99, newQty));
-
-            const maxStock = item.productStock || 99;
-            if (newQty > maxStock) {
-                showToast('warning', 'Stock Limit', `Only ${maxStock} items available in stock.`);
-                newQty = maxStock;
-                document.getElementById(`qty_${key}`).value = newQty;
-            }
-
-            db.ref(`cart/${user.uid}/items/${key}/quantity`).set(newQty);
+        function sendSuggestion(text) {
+            chatInput.value = text;
+            sendMessage();
         }
 
         // ========================================
-        // REMOVE FROM CART
+        // CLEAR CHAT
         // ========================================
-        function removeFromCart(key) {
-            const user = auth.currentUser;
-            if (!user) return;
-
-            showModal('warning', 'Remove Item',
-                'Are you sure you want to remove this item from your cart?', [{
+        function clearChat() {
+            showModal('warning', 'Clear Chat',
+                'Are you sure you want to clear the chat history?', [{
                     label: 'Cancel',
                     class: 'btn-secondary',
                     action: () => {},
                     close: true
                 }, {
-                    label: 'Remove',
+                    label: 'Clear',
                     class: 'btn-danger',
                     action: () => {
-                        db.ref(`cart/${user.uid}/items/${key}`).remove().then(() => {
-                            showToast('success', 'Removed', 'Item removed from cart');
-                        }).catch((error) => {
-                            showToast('error', 'Error', 'Failed to remove item');
-                        });
+                        chatMessages.innerHTML = '';
+                        messageHistory = [];
+                        const user = auth.currentUser;
+                        if (user) {
+                            const displayName = user.displayName || 'there';
+                            const greeting = document.createElement('div');
+                            greeting.className = 'message bot';
+                            greeting.innerHTML = `
+                                <div class="msg-avatar bot"><i class="fas fa-robot"></i></div>
+                                <div class="msg-bubble bot">
+                                    Chat cleared! 👋 How can I help you today?
+                                    <span class="msg-time">Just now</span>
+                                </div>
+                            `;
+                            chatMessages.appendChild(greeting);
+                        } else {
+                            const welcome = document.createElement('div');
+                            welcome.className = 'chat-welcome';
+                            welcome.innerHTML = `
+                                <span class="welcome-icon"><i class="fas fa-robot"></i></span>
+                                <h3>Welcome to Vortex AI Support</h3>
+                                <p>Hi there! I'm Vortex AI, your virtual assistant. I'm here to help you with any questions about Shop Good. How can I assist you today?</p>
+                            `;
+                            chatMessages.appendChild(welcome);
+                        }
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                        chatInput.focus();
                     },
                     close: true
                 }]
@@ -1838,38 +1586,11 @@
         }
 
         // ========================================
-        // PROCEED TO CHECKOUT
+        // REFRESH CHAT
         // ========================================
-        function proceedToCheckout() {
-            const user = auth.currentUser;
-            if (!user) {
-                window.location.href = '/login.html';
-                return;
-            }
-
-            const items = Object.values(cartItems);
-            const availableItems = items.filter(item => item.productStatus === 'active' && item.productStock > 0);
-
-            if (availableItems.length === 0) {
-                showToast('warning', 'Cart Empty', 'Your cart is empty or contains unavailable items.');
-                return;
-            }
-
-            // Store cart items in session for checkout
-            const checkoutItems = availableItems.map(item => ({
-                productId: item.productId,
-                name: item.productName,
-                quantity: item.quantity,
-                price: item.productPrice,
-                thumbnail: item.productThumbnail,
-                variationName: item.variationName || '',
-                cartKey: Object.keys(cartItems).find(key => cartItems[key] === item)
-            }));
-
-            sessionStorage.setItem('checkoutItems', JSON.stringify(checkoutItems));
-
-            // Navigate to checkout
-            window.location.href = '/checkout.html';
+        function refreshChat() {
+            showToast('info', 'Refreshed', 'Chat session refreshed.');
+            chatInput.focus();
         }
 
         // ========================================
@@ -1948,15 +1669,16 @@
         // INITIALIZE
         // ========================================
         function initApp() {
-            // Check if user is logged in
             if (auth.currentUser) {
                 loadUserData(auth.currentUser.uid);
                 loadNotifications(auth.currentUser.uid);
-                loadCart(auth.currentUser.uid);
-                loadWishlist(auth.currentUser.uid);
+                loadCartCount(auth.currentUser.uid);
+                loadWishlistBadge(auth.currentUser.uid);
+                initializeChat(auth.currentUser);
             }
 
-            console.log('🛒 Shop Good Cart page initialized successfully!');
+            console.log('💬 Shop Good Support Chat page initialized successfully!');
+            console.log(`📡 API Base URL: ${API_BASE}`);
         }
 
         if (document.readyState === 'loading') {
@@ -1974,10 +1696,11 @@
         window.logoutUser = logoutUser;
         window.checkConnection = checkConnection;
         window.performSearch = performSearch;
-        window.updateQuantity = updateQuantity;
-        window.setQuantity = setQuantity;
-        window.removeFromCart = removeFromCart;
-        window.proceedToCheckout = proceedToCheckout;
+        window.sendMessage = sendMessage;
+        window.handleKeyPress = handleKeyPress;
+        window.sendSuggestion = sendSuggestion;
+        window.clearChat = clearChat;
+        window.refreshChat = refreshChat;
     </script>
 
 </body>
